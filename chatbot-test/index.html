@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plush AI Chatbot Tester v2</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0a0a0a;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .header {
+      background: linear-gradient(90deg, #ff6b9d, #c44569);
+      padding: 15px 20px;
+      text-align: center;
+    }
+    .header h1 { font-size: 1.3rem; }
+    .header p { font-size: 0.85rem; opacity: 0.9; }
+    
+    .chat-container {
+      flex: 1;
+      max-width: 600px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+    
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding-bottom: 20px;
+    }
+    
+    .message {
+      margin-bottom: 15px;
+      display: flex;
+      flex-direction: column;
+    }
+    .message.fan { align-items: flex-end; }
+    .message.model { align-items: flex-start; }
+    
+    .message-bubble {
+      max-width: 80%;
+      padding: 12px 16px;
+      border-radius: 18px;
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+    .fan .message-bubble {
+      background: #0084ff;
+      border-bottom-right-radius: 4px;
+    }
+    .model .message-bubble {
+      background: #333;
+      border-bottom-left-radius: 4px;
+    }
+    
+    .ppv-card {
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      border: 1px solid #ff6b9d;
+      border-radius: 12px;
+      padding: 15px;
+      margin-top: 10px;
+      max-width: 80%;
+    }
+    .ppv-card .preview {
+      background: #000;
+      height: 120px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .ppv-card .preview .lock { font-size: 2rem; }
+    .ppv-card .preview .type { color: #ff6b9d; font-size: 0.85rem; }
+    .ppv-card .bundle-info {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 10px;
+      justify-content: center;
+    }
+    .ppv-card .bundle-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: #888;
+      font-size: 0.85rem;
+    }
+    .ppv-card .price {
+      background: #ff6b9d;
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 20px;
+      text-align: center;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .ppv-card .price:hover { background: #c44569; }
+    .ppv-card .desc { color: #ccc; font-size: 0.9rem; margin-bottom: 10px; text-align: center; }
+    
+    .input-area {
+      display: flex;
+      gap: 10px;
+      padding: 15px;
+      background: #111;
+      border-radius: 25px;
+    }
+    .input-area input {
+      flex: 1;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+    }
+    .input-area button {
+      background: #ff6b9d;
+      border: none;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .input-area button:hover { background: #c44569; }
+    
+    .tips {
+      background: rgba(255,107,157,0.1);
+      border: 1px solid rgba(255,107,157,0.3);
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 20px;
+      font-size: 0.85rem;
+    }
+    .tips h3 { color: #ff6b9d; margin-bottom: 8px; }
+    .tips ul { padding-left: 20px; color: #888; }
+    .tips li { margin-bottom: 4px; }
+    
+    .intent-tag {
+      font-size: 0.7rem;
+      background: rgba(255,255,255,0.1);
+      padding: 2px 8px;
+      border-radius: 10px;
+      margin-top: 5px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🤖 Plush AI Chatbot v2</h1>
+    <p>Dynamic responses + bundle details!</p>
+  </div>
+  
+  <div class="chat-container">
+    <div class="tips">
+      <h3>💡 Try specific requests:</h3>
+      <ul>
+        <li>"topless?" / "tits?" / "boobs?" → Topless bundle</li>
+        <li>"pussy?" / "spread?" → Explicit bundle</li>
+        <li>"full nude" / "everything" → Premium bundle</li>
+        <li>"video?" / "vid?" → Video content</li>
+        <li>"that's too expensive" → Counter-offer</li>
+        <li>"yes" / "send it" → Close sale</li>
+      </ul>
+    </div>
+    
+    <div class="messages" id="messages">
+      <div class="message model">
+        <div class="message-bubble">Hey babe! 😘 So happy you're here... what made you click on me? 🤭</div>
+        <span class="intent-tag">welcome_message</span>
+      </div>
+    </div>
+    
+    <div class="input-area">
+      <input type="text" id="input" placeholder="Type as a fan..." onkeypress="if(event.key==='Enter')sendMessage()">
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <script>
+    // Plush AI Chatbot v2 - Dynamic responses + bundles
+    const chatbot = {
+      lastIntent: null,
+      conversationState: 'greeting',
+      
+      // Detect intent with better pattern matching
+      classifyIntent(message) {
+        const lower = message.toLowerCase().trim();
+        
+        // Specific content requests
+        if (/(topless|tits|boobs|titties|breasts|\bbra\b)/.test(lower)) {
+          return { intent: 'request_topless', contentType: 'topless' };
+        }
+        if (/(pussy|spread|vagina|kitty|down there)/.test(lower)) {
+          return { intent: 'request_pussy', contentType: 'pussy' };
+        }
+        if (/(ass|booty|butt|behind|bent over)/.test(lower)) {
+          return { intent: 'request_ass', contentType: 'ass' };
+        }
+        if (/(full nude|everything|all of you|naked|nude)/.test(lower)) {
+          return { intent: 'request_full', contentType: 'full_nude' };
+        }
+        if (/(video|vid|clip|moving|watch you)/.test(lower)) {
+          return { intent: 'request_video', contentType: 'video' };
+        }
+        if (/(see (more|you)|show me|what.*got|pics|pictures|photos)/.test(lower)) {
+          return { intent: 'request_general', contentType: 'tease' };
+        }
+        
+        // Price inquiry
+        if (/(how much|price|cost|\$|pay|rates)/.test(lower)) {
+          return { intent: 'price_inquiry', contentType: null };
+        }
+        
+        // Rejection / too expensive
+        if (/(too (much|expensive)|can't afford|no thanks|maybe later|not now|broke|poor)/.test(lower)) {
+          return { intent: 'rejection', contentType: null };
+        }
+        
+        // Affirmative - ready to buy
+        if (/^(yes|yeah|ok|okay|sure|yep|definitely|absolutely|send it|do it|bet|deal|fine|alright)$/i.test(lower)) {
+          return { intent: 'affirmative', contentType: null };
+        }
+        
+        // Attention seeking
+        if (/(where.*you|why.*texting|miss.*you|ignoring|don't.*reply|hello\?|there\?)/.test(lower)) {
+          return { intent: 'attention_seeking', contentType: null };
+        }
+        
+        // Custom request
+        if (/(custom|specific|request|can you|will you|make me|just for me)/.test(lower)) {
+          return { intent: 'custom_request', contentType: null };
+        }
+        
+        // Compliment
+        if (/(beautiful|gorgeous|hot|sexy|amazing|love|perfect|stunning|cute|pretty)/.test(lower)) {
+          return { intent: 'compliment', contentType: null };
+        }
+        
+        // Greeting
+        if (/^(hi|hey|hello|sup|yo|what's up|how are you)/i.test(lower)) {
+          return { intent: 'greeting', contentType: null };
+        }
+        
+        return { intent: 'general', contentType: null };
+      },
+
+      // Pick random from array
+      pick(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+      },
+
+      // Generate response based on intent
+      getResponse(intentData, message) {
+        const { intent, contentType } = intentData;
+        this.lastIntent = intent;
+        
+        // Content bundles with specific details
+        const bundles = {
+          topless: {
+            texts: [
+              "Mmm you wanna see my tits? 😏 I just took these for you...",
+              "Ooh good choice 🔥 My boobs look amazing in these...",
+              "You like my tits huh? 😘 Wait till you see this set..."
+            ],
+            ppv: { price: 15, videos: 1, pics: 4, desc: "Topless tease set 🔥", type: "topless" }
+          },
+          pussy: {
+            texts: [
+              "Mmm you want to see that? 😈 I've got something really naughty for you...",
+              "Oooh you're being bold 🥵 I like it... here's something special...",
+              "You want the good stuff huh? 💦 This is gonna drive you crazy..."
+            ],
+            ppv: { price: 25, videos: 2, pics: 6, desc: "Explicit close-up set 💦", type: "explicit" }
+          },
+          ass: {
+            texts: [
+              "You like my booty? 🍑 Wait till you see this...",
+              "Mmm I knew you'd ask 😏 My ass looks so good in these...",
+              "Good choice baby 🔥 This angle is everything..."
+            ],
+            ppv: { price: 18, videos: 1, pics: 5, desc: "Booty tease set 🍑", type: "ass" }
+          },
+          full_nude: {
+            texts: [
+              "You want ALL of me? 😈 Okay but this is my premium set...",
+              "Oooh going straight for everything 🥵 I respect that...",
+              "The full package huh? 💕 This is my best content..."
+            ],
+            ppv: { price: 35, videos: 3, pics: 8, desc: "Full nude premium bundle 👑", type: "premium" }
+          },
+          video: {
+            texts: [
+              "You want to watch me? 🎬 I've got something really hot...",
+              "Ooh a video guy 😏 I love that... check this out...",
+              "Moving pictures huh? 🔥 This one's gonna make your day..."
+            ],
+            ppv: { price: 28, videos: 2, pics: 2, desc: "Exclusive video bundle 🎬", type: "video" }
+          },
+          tease: {
+            texts: [
+              "You want to see more? 😘 I've got a little preview for you...",
+              "Let me show you what I've got 🔥",
+              "Here's a taste of what's coming... 😏"
+            ],
+            ppv: { price: 12, videos: 1, pics: 3, desc: "Sexy tease bundle 😘", type: "tease" }
+          }
+        };
+
+        const responses = {
+          request_topless: () => {
+            const b = bundles.topless;
+            return { text: this.pick(b.texts), ppv: b.ppv };
+          },
+          request_pussy: () => {
+            const b = bundles.pussy;
+            return { text: this.pick(b.texts), ppv: b.ppv };
+          },
+          request_ass: () => {
+            const b = bundles.ass;
+            return { text: this.pick(b.texts), ppv: b.ppv };
+          },
+          request_full: () => {
+            const b = bundles.full_nude;
+            return { text: this.pick(b.texts), ppv: b.ppv };
+          },
+          request_video: () => {
+            const b = bundles.video;
+            return { text: this.pick(b.texts), ppv: b.ppv };
+          },
+          request_general: () => {
+            const b = bundles.tease;
+            return { text: this.pick(b.texts), ppv: b.ppv };
+          },
+          
+          price_inquiry: () => ({
+            text: this.pick([
+              "I have different options for you babe! 💕\n\n💋 Tease set: $12 (1 vid + 3 pics)\n🔥 Topless: $15 (1 vid + 4 pics)\n🍑 Booty: $18 (1 vid + 5 pics)\n💦 Explicit: $25 (2 vids + 6 pics)\n👑 Full nude: $35 (3 vids + 8 pics)\n\nWhat sounds good? 😘",
+              "Here's what I've got for you 💕\n\nStarter: $12\nMid-tier: $18-25\nPremium: $35+\n\nWhat are you in the mood for? 😏"
+            ]),
+            ppv: null
+          }),
+          
+          rejection: () => ({
+            text: this.pick([
+              "I totally get it babe 🥺 How about I do $10 instead? That's literally my lowest but I really want you to have this 💕",
+              "Aww okay... what if I throw in an extra video? Same price but more content? 😘",
+              "Hmm what about $12? I don't usually go this low but you're cute 😏"
+            ]),
+            ppv: { price: 10, videos: 1, pics: 3, desc: "Special discount! 💕", type: "discount" }
+          }),
+          
+          affirmative: () => ({
+            text: this.pick([
+              "Yay! 😍 Coming right up baby... you're gonna love this 🔥💦",
+              "Perfect! 💕 Let me send this over... get ready 😈",
+              "Mmm good choice 🥵 Here it comes..."
+            ]),
+            ppv: { price: 18, videos: 2, pics: 4, desc: "Unlocking now... 🔓", type: "closing" }
+          }),
+          
+          attention_seeking: () => ({
+            text: this.pick([
+              "Omg I'm so sorry baby! 🥺 I've been SO busy but I'm here now... let me make it up to you 😘",
+              "Aww did you miss me? 💕 I'm here now! Want me to send you something special?",
+              "I know I know 😭 forgive me? I have something that might cheer you up..."
+            ]),
+            ppv: { price: 12, videos: 1, pics: 3, desc: "Make-up gift for you 🎁", type: "reengage" }
+          }),
+          
+          custom_request: () => ({
+            text: this.pick([
+              "Mmm I don't usually do customs but... for you I might make an exception 😏 What exactly did you have in mind?",
+              "Ooh a custom request 🤭 Tell me more... what are you picturing?",
+              "I'm usually pretty shy about customs but... you convinced me 😘 What do you want to see?"
+            ]),
+            ppv: null
+          }),
+          
+          compliment: () => ({
+            text: this.pick([
+              "Aww you're making me blush! 🥰 Want to see what you do to me? 😏",
+              "Stop you're so sweet! 💕 I have something to show you...",
+              "Omg thank you baby! 😘 You deserve a little reward..."
+            ]),
+            ppv: { price: 12, videos: 1, pics: 3, desc: "A thank you gift 💕", type: "tease" }
+          }),
+          
+          greeting: () => ({
+            text: this.pick([
+              "Heyyy! 😘 So glad you messaged! What are you in the mood for today?",
+              "Hi baby! 💕 I was just thinking about what to send you...",
+              "Hey you! 🥰 Perfect timing... I just took some new pics 📸"
+            ]),
+            ppv: null
+          }),
+          
+          general: () => ({
+            text: this.pick([
+              "Hehe you're fun 😘 Want me to show you something?",
+              "Mmm I like you 💕 I have an idea...",
+              "You're making me curious 🤭 Want to see what I've got?"
+            ]),
+            ppv: { price: 12, videos: 1, pics: 3, desc: "A little surprise 🔥", type: "soft_sell" }
+          })
+        };
+        
+        const handler = responses[intent] || responses.general;
+        return handler();
+      }
+    };
+
+    function sendMessage() {
+      const input = document.getElementById('input');
+      const messages = document.getElementById('messages');
+      const text = input.value.trim();
+      
+      if (!text) return;
+      
+      // Add fan message
+      const fanMsg = document.createElement('div');
+      fanMsg.className = 'message fan';
+      fanMsg.innerHTML = `<div class="message-bubble">${escapeHtml(text)}</div>`;
+      messages.appendChild(fanMsg);
+      
+      // Get AI response
+      const intentData = chatbot.classifyIntent(text);
+      const response = chatbot.getResponse(intentData, text);
+      
+      // Add bot response after short delay
+      setTimeout(() => {
+        const botMsg = document.createElement('div');
+        botMsg.className = 'message model';
+        
+        let html = `<div class="message-bubble">${escapeHtml(response.text).replace(/\n/g, '<br>')}</div>`;
+        html += `<span class="intent-tag">intent: ${intentData.intent}${intentData.contentType ? ' → ' + intentData.contentType : ''}</span>`;
+        
+        if (response.ppv) {
+          html += `
+            <div class="ppv-card">
+              <div class="preview">
+                <div class="lock">🔒</div>
+                <div class="type">${response.ppv.type.toUpperCase()}</div>
+              </div>
+              <div class="bundle-info">
+                <div class="bundle-item">🎬 ${response.ppv.videos} video${response.ppv.videos > 1 ? 's' : ''}</div>
+                <div class="bundle-item">📸 ${response.ppv.pics} pics</div>
+              </div>
+              <div class="desc">${response.ppv.desc}</div>
+              <div class="price">💎 Unlock for $${response.ppv.price}</div>
+            </div>
+          `;
+        }
+        
+        botMsg.innerHTML = html;
+        messages.appendChild(botMsg);
+        messages.scrollTop = messages.scrollHeight;
+      }, 500 + Math.random() * 800);
+      
+      input.value = '';
+      messages.scrollTop = messages.scrollHeight;
+    }
+    
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+  </script>
+</body>
+</html>

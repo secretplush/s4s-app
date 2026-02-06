@@ -1,0 +1,42 @@
+{
+  "accounts": [
+    {
+      "name": "biancaawoods",
+      "handle": "@biancaawoods",
+      "accountId": "acct_54e3119e77da4429b6537f7dd2883a05",
+      "email": "annakav@plush.la",
+      "status": "authenticated"
+    },
+    {
+      "name": "aviannaarose",
+      "handle": "@aviannaarose",
+      "accountId": "acct_2648cedf59644b0993ade9608bd868a1",
+      "email": "paulaurb@iluvplush.com",
+      "status": "authenticated"
+    },
+    {
+      "name": "zoeemonroe",
+      "handle": "@zoeemonroe",
+      "accountId": "acct_fbd172e2681f4dfbb6026ce806ecaa28",
+      "email": "paisleylop@iluvplush.com",
+      "status": "authenticated"
+    },
+    {
+      "name": "maddieharperr",
+      "handle": "@maddieharperr",
+      "accountId": "acct_a50799a789a6422c8389d7d055fcbd1a",
+      "email": "brydiehop@iluvplush.com",
+      "status": "authenticated"
+    },
+    {
+      "name": "jackiesmithh",
+      "handle": "@jackiesmithh",
+      "accountId": "acct_5802030761bb4184a4347e90ce55db40",
+      "email": "jaydenkel@plush.la",
+      "status": "authenticating"
+    }
+  ],
+  "apiKey": "ofapi_bT4J1Er2YBow46EihDfjlSFf5HRmiM15M4DCOoHn7889d8b4",
+  "plan": "pro",
+  "lastUpdated": "2026-02-05T04:55:00Z"
+}

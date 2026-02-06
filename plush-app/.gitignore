@@ -1,0 +1,20 @@
+# Environment variables - NEVER COMMIT
+.env
+.env.local
+.env.*.local
+
+# Credentials
+*.credentials
+secrets/
+
+# Node
+node_modules/
+npm-debug.log
+
+# Logs
+logs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

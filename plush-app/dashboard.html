@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🔥 Plush Tagging Dashboard</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: #fff;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 30px;
+    }
+    h1 { font-size: 28px; }
+    h1 span { color: #ff6b6b; }
+    .status-badge {
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .status-running { background: #00b894; }
+    .status-stopped { background: #636e72; }
+    
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+    
+    .card {
+      background: rgba(255,255,255,0.05);
+      border-radius: 16px;
+      padding: 24px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .card h2 {
+      font-size: 16px;
+      color: #a0a0a0;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .big-button {
+      width: 100%;
+      padding: 16px;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .big-button:hover { transform: translateY(-2px); }
+    .big-button.start { background: linear-gradient(135deg, #00b894, #00cec9); color: #fff; }
+    .big-button.stop { background: linear-gradient(135deg, #d63031, #e17055); color: #fff; }
+    .big-button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      text-align: center;
+    }
+    .stat-item .value {
+      font-size: 36px;
+      font-weight: bold;
+      color: #fff;
+    }
+    .stat-item .label {
+      font-size: 12px;
+      color: #a0a0a0;
+      margin-top: 4px;
+    }
+    .stat-item.created .value { color: #00b894; }
+    .stat-item.deleted .value { color: #fdcb6e; }
+    .stat-item.errors .value { color: #d63031; }
+    
+    .model-list { list-style: none; }
+    .model-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .model-item:last-child { border-bottom: none; }
+    .model-name { font-weight: 500; }
+    .model-status {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.1);
+    }
+    .model-status.ready { background: rgba(0,184,148,0.2); color: #00b894; }
+    .model-status.pending { background: rgba(253,203,110,0.2); color: #fdcb6e; }
+    
+    .activity-log {
+      max-height: 300px;
+      overflow-y: auto;
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 12px;
+    }
+    .log-entry {
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .log-time { color: #636e72; margin-right: 10px; }
+    .log-info { color: #74b9ff; }
+    .log-warn { color: #fdcb6e; }
+    .log-error { color: #d63031; }
+    
+    .current-action {
+      text-align: center;
+      padding: 20px;
+      background: rgba(255,107,107,0.1);
+      border-radius: 12px;
+      margin-top: 16px;
+    }
+    .current-action .label { color: #a0a0a0; font-size: 12px; }
+    .current-action .pair { font-size: 24px; font-weight: bold; margin-top: 8px; }
+    
+    .settings-form { display: grid; gap: 16px; }
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      color: #a0a0a0;
+      margin-bottom: 6px;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.05);
+      color: #fff;
+      font-size: 14px;
+    }
+    
+    .pending-deletes {
+      font-size: 14px;
+      color: #fdcb6e;
+      text-align: center;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🔥 <span>Plush</span> Tagging Dashboard</h1>
+      <div id="statusBadge" class="status-badge status-stopped">STOPPED</div>
+    </header>
+    
+    <div class="grid">
+      <!-- Controls -->
+      <div class="card">
+        <h2>Controls</h2>
+        <button id="startBtn" class="big-button start" onclick="startAutomation()">
+          ▶️ START AUTOMATION
+        </button>
+        <button id="stopBtn" class="big-button stop" onclick="stopAutomation()" style="display:none;">
+          ⏹️ STOP AUTOMATION
+        </button>
+        <div id="currentAction" class="current-action" style="display:none;">
+          <div class="label">CURRENTLY TAGGING</div>
+          <div class="pair" id="currentPair">-</div>
+        </div>
+        <div id="pendingDeletes" class="pending-deletes"></div>
+      </div>
+      
+      <!-- Stats -->
+      <div class="card">
+        <h2>Statistics</h2>
+        <div class="stats-grid">
+          <div class="stat-item created">
+            <div class="value" id="statCreated">0</div>
+            <div class="label">Posts Created</div>
+          </div>
+          <div class="stat-item deleted">
+            <div class="value" id="statDeleted">0</div>
+            <div class="label">Posts Deleted</div>
+          </div>
+          <div class="stat-item errors">
+            <div class="value" id="statErrors">0</div>
+            <div class="label">Errors</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Models -->
+      <div class="card">
+        <h2>Connected Models</h2>
+        <ul class="model-list" id="modelList">
+          <li class="model-item">Loading...</li>
+        </ul>
+      </div>
+      
+      <!-- Activity Log -->
+      <div class="card" style="grid-column: span 2;">
+        <h2>Activity Log</h2>
+        <div class="activity-log" id="activityLog">
+          <div class="log-entry">Waiting for activity...</div>
+        </div>
+      </div>
+      
+      <!-- Settings -->
+      <div class="card">
+        <h2>Settings</h2>
+        <div class="settings-form">
+          <div class="form-group">
+            <label>Post Duration (minutes)</label>
+            <input type="number" id="settingDuration" value="5" min="1" max="60">
+          </div>
+          <div class="form-group">
+            <label>Delay Between Posts (seconds)</label>
+            <input type="number" id="settingDelay" value="30" min="10" max="300">
+          </div>
+          <button class="big-button start" onclick="saveSettings()" style="margin-top: 10px;">
+            💾 Save Settings
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    const API = '';
+    
+    async function fetchStatus() {
+      try {
+        const res = await fetch(`${API}/api/status`);
+        const data = await res.json();
+        updateUI(data);
+      } catch (err) {
+        console.error('Failed to fetch status:', err);
+      }
+    }
+    
+    function updateUI(data) {
+      // Status badge
+      const badge = document.getElementById('statusBadge');
+      badge.textContent = data.running ? 'RUNNING' : 'STOPPED';
+      badge.className = `status-badge ${data.running ? 'status-running' : 'status-stopped'}`;
+      
+      // Buttons
+      document.getElementById('startBtn').style.display = data.running ? 'none' : 'block';
+      document.getElementById('stopBtn').style.display = data.running ? 'block' : 'none';
+      
+      // Current action
+      const actionDiv = document.getElementById('currentAction');
+      if (data.running && data.currentPair) {
+        actionDiv.style.display = 'block';
+        document.getElementById('currentPair').textContent = data.currentPair;
+      } else {
+        actionDiv.style.display = 'none';
+      }
+      
+      // Pending deletes
+      const pendingDiv = document.getElementById('pendingDeletes');
+      if (data.pendingDeletes > 0) {
+        pendingDiv.textContent = `⏳ ${data.pendingDeletes} post(s) pending deletion`;
+      } else {
+        pendingDiv.textContent = '';
+      }
+      
+      // Stats
+      document.getElementById('statCreated').textContent = data.stats.postsCreated;
+      document.getElementById('statDeleted').textContent = data.stats.postsDeleted;
+      document.getElementById('statErrors').textContent = data.stats.errors;
+      
+      // Models
+      const modelList = document.getElementById('modelList');
+      modelList.innerHTML = data.models.map(m => `
+        <li class="model-item">
+          <span class="model-name">@${m.name}</span>
+          <span class="model-status ${m.foldersConfigured > 0 ? 'ready' : 'pending'}">
+            ${m.foldersConfigured > 0 ? `${m.foldersConfigured} folders` : 'No folders'}
+          </span>
+        </li>
+      `).join('');
+      
+      // Activity log
+      const logDiv = document.getElementById('activityLog');
+      if (data.activityLog.length > 0) {
+        logDiv.innerHTML = data.activityLog.map(entry => {
+          const time = new Date(entry.time).toLocaleTimeString();
+          return `
+            <div class="log-entry">
+              <span class="log-time">${time}</span>
+              <span class="log-${entry.type}">${entry.message}</span>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+    
+    async function startAutomation() {
+      await fetch(`${API}/api/start`, { method: 'POST' });
+      fetchStatus();
+    }
+    
+    async function stopAutomation() {
+      await fetch(`${API}/api/stop`, { method: 'POST' });
+      fetchStatus();
+    }
+    
+    async function saveSettings() {
+      const res = await fetch(`${API}/api/config`);
+      const config = await res.json();
+      
+      config.settings.postDurationMinutes = parseInt(document.getElementById('settingDuration').value);
+      config.settings.delayBetweenPostsSeconds = parseInt(document.getElementById('settingDelay').value);
+      
+      await fetch(`${API}/api/config`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(config)
+      });
+      
+      alert('Settings saved!');
+    }
+    
+    // Initial fetch and poll every 2 seconds
+    fetchStatus();
+    setInterval(fetchStatus, 2000);
+  </script>
+</body>
+</html>

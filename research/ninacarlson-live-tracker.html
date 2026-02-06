@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔴 LIVE: Plush AI Chatbot Dashboard</title>
+    <meta http-equiv="refresh" content="30">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1600px; margin: 0 auto; }
+        .header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+        .live-dot { width: 16px; height: 16px; background: #ff0000; border-radius: 50%; animation: pulse 1s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        h1 { font-size: 1.8rem; color: #ff6b9d; }
+        .subtitle { color: #666; font-size: 0.9rem; }
+        
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab { padding: 10px 20px; background: rgba(255,255,255,0.05); border-radius: 8px; cursor: pointer; color: #888; }
+        .tab.active { background: rgba(255,107,157,0.2); color: #ff6b9d; }
+        
+        .stats-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 20px; }
+        .stat-card { background: rgba(255,255,255,0.05); border-radius: 10px; padding: 15px; text-align: center; }
+        .stat-value { font-size: 2rem; font-weight: 700; color: #ff6b9d; }
+        .stat-value.green { color: #00ff88; }
+        .stat-label { color: #888; font-size: 0.75rem; text-transform: uppercase; }
+        
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        
+        .section { background: rgba(255,255,255,0.03); border-radius: 10px; padding: 15px; }
+        .section-title { font-size: 1rem; color: #fff; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        
+        .tag-item { display: grid; grid-template-columns: 35px 1fr 80px 60px; padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; }
+        .tag-num { font-weight: 700; color: #ff6b9d; }
+        .tag-name { font-weight: 500; }
+        .tag-handle { color: #666; font-size: 0.75rem; }
+        .tag-interval { background: rgba(255,107,157,0.2); color: #ff6b9d; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; text-align: center; }
+        
+        .script-card { background: rgba(0,0,0,0.3); border-radius: 8px; padding: 12px; margin-bottom: 10px; border-left: 3px solid #ff6b9d; }
+        .script-label { color: #ff6b9d; font-size: 0.75rem; font-weight: 600; margin-bottom: 5px; }
+        .script-text { color: #ccc; font-size: 0.85rem; line-height: 1.5; }
+        .script-text em { color: #888; font-style: italic; }
+        
+        .code-block { background: #1a1a2e; border-radius: 8px; padding: 15px; font-family: 'Monaco', monospace; font-size: 0.8rem; color: #a0d8ff; overflow-x: auto; }
+        .code-comment { color: #6a6a8a; }
+        .code-keyword { color: #ff79c6; }
+        .code-string { color: #f1fa8c; }
+        .code-function { color: #50fa7b; }
+        
+        .insight-box { background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.3); border-radius: 10px; padding: 15px; }
+        .insight-box h3 { color: #00ff88; margin-bottom: 8px; }
+        .insight-box p { color: #aaa; font-size: 0.9rem; }
+        
+        .last-update { text-align: center; color: #444; font-size: 0.75rem; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="live-dot"></div>
+            <div>
+                <h1>Plush AI Chatbot Dashboard</h1>
+                <div class="subtitle">Live Tag Tracking + Chatter Scripts + AI Architecture</div>
+            </div>
+        </div>
+        
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-value">27</div>
+                <div class="stat-label">Tags Tracked</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">3</div>
+                <div class="stat-label">Mentions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">798</div>
+                <div class="stat-label">Fans</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value green">+102</div>
+                <div class="stat-label">Growth (157 min)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value green">~39/hr</div>
+                <div class="stat-label">Fan Growth Rate</div>
+            </div>
+        </div>
+        
+        <div class="grid-3">
+            <!-- Tag Tracking -->
+            <div class="section">
+                <div class="section-title">📍 Live Tag Rotation</div>
+                <div class="tag-item"><div class="tag-num">#1</div><div><div class="tag-name">Nikki 🥰</div><div class="tag-handle">@nikkihayes</div></div><div>12:40</div><div class="tag-interval">START</div></div>
+                <div class="tag-item"><div class="tag-num">#2</div><div><div class="tag-name">Lani 🦋</div><div class="tag-handle">@lanitaylor</div></div><div>12:44</div><div class="tag-interval">+4m</div></div>
+                <div class="tag-item"><div class="tag-num">#3</div><div><div class="tag-name">Hannah 🥹🌸</div><div class="tag-handle">@hannahpriv</div></div><div>12:49</div><div class="tag-interval">+5m</div></div>
+                <div class="tag-item"><div class="tag-num">#4</div><div><div class="tag-name">Connie</div><div class="tag-handle">@connierivers</div></div><div>12:52</div><div class="tag-interval">+3m</div></div>
+                <div class="tag-item"><div class="tag-num">#5</div><div><div class="tag-name">Bailey 💕</div><div class="tag-handle">@baileylewis1</div></div><div>12:54</div><div class="tag-interval">+2m</div></div>
+                <div class="tag-item"><div class="tag-num">#6</div><div><div class="tag-name">Ivy 🥹💗</div><div class="tag-handle">@ivyraye</div></div><div>1:00</div><div class="tag-interval">+6m</div></div>
+                <div class="tag-item"><div class="tag-num">#7</div><div><div class="tag-name">Sofia ✌🏼</div><div class="tag-handle">@sofiaalto</div></div><div>1:04</div><div class="tag-interval">+4m</div></div>
+                <div class="tag-item" style="background:rgba(0,255,0,0.1)"><div class="tag-num">#8</div><div><div class="tag-name">Amelia 💞</div><div class="tag-handle">@ameliaking1</div></div><div>1:05</div><div class="tag-interval">+1m</div></div>
+            </div>
+            
+            <!-- Counter-Offer Scripts -->
+            <div class="section">
+                <div class="section-title">💰 Counter-Offer Scripts</div>
+                <div class="script-card">
+                    <div class="script-label">REJECTION #1 (Drop to 70%)</div>
+                    <div class="script-text">"I totally get it babe! 💕 How about $<em>[new price]</em> instead? That work better for you?"</div>
+                </div>
+                <div class="script-card">
+                    <div class="script-label">REJECTION #2 (Drop to 50%)</div>
+                    <div class="script-text">"Ugh you drive a hard bargain 🙈 Fine, $<em>[new price]</em>. But only because I like you!"</div>
+                </div>
+                <div class="script-card">
+                    <div class="script-label">REJECTION #3 (Floor + Urgency)</div>
+                    <div class="script-text">"$<em>[floor]</em> is literally the lowest I can go 🥺 But unlock in the next 6 mins and I'll throw in a bonus! 🎁"</div>
+                </div>
+            </div>
+            
+            <!-- Follow-Up Scripts -->
+            <div class="section">
+                <div class="section-title">😢 Unopened PPV Follow-Ups</div>
+                <div class="script-card">
+                    <div class="script-label">SOFT (< 12 hours)</div>
+                    <div class="script-text">"Hey babe, did you see what I sent you earlier? 👀 I'm curious what you think..."</div>
+                </div>
+                <div class="script-card">
+                    <div class="script-label">GUILT (12-24 hours)</div>
+                    <div class="script-text">"You didn't open my message 🥺 Did I do something wrong?"</div>
+                </div>
+                <div class="script-card">
+                    <div class="script-label">URGENT (> 24 hours)</div>
+                    <div class="script-text">"Last chance babe! That content is about to expire 🕐 Grab it before it's gone!"</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="grid-2">
+            <!-- Welcome Sequence -->
+            <div class="section">
+                <div class="section-title">🎁 Welcome Sequence (Auto-DM on Subscribe)</div>
+                <div class="script-card">
+                    <div class="script-label">STEP 1: Greeting</div>
+                    <div class="script-text">"Hey <em>[name]</em>! 😍 OMG I'm so excited you're here! I've been waiting for someone like you 💕"</div>
+                </div>
+                <div class="script-card">
+                    <div class="script-label">STEP 2: Welcome PPV ($18)</div>
+                    <div class="script-text">"I have a special welcome gift for you... 🎁<br><br>Here's a little taste of what I can show you 🙈 Unlock to see what you've been missing..."</div>
+                </div>
+            </div>
+            
+            <!-- Custom Request Handling -->
+            <div class="section">
+                <div class="section-title">🙈 Custom Request Scripts (Fake Hesitation)</div>
+                <div class="script-card">
+                    <div class="script-label">HESITATION OPENER</div>
+                    <div class="script-text">"Mmm I don't usually do that for everyone but... for you I might make an exception 🙈 Let me think about it..."</div>
+                </div>
+                <div class="script-card">
+                    <div class="script-label">AGREEMENT</div>
+                    <div class="script-text">"I'm usually pretty shy about that kind of thing... but okay, you convinced me 🙈 What exactly were you picturing?"</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="insight-box" style="margin-bottom: 20px;">
+            <h3>🤖 AI Chatbot Code Created!</h3>
+            <p>Built a complete chatbot system at <code>plush-app/src/chatbot/</code> with:</p>
+            <ul style="color: #aaa; margin-top: 10px; margin-left: 20px;">
+                <li><strong>SalesEngine</strong> - Counter-offers, urgency tactics, follow-ups</li>
+                <li><strong>BundleBuilder</strong> - Auto-creates PPV bundles based on fan preferences</li>
+                <li><strong>OnlyFansAPIClient</strong> - Integrates with OnlyFansAPI.com for messaging</li>
+                <li><strong>Intent Classification</strong> - Detects price inquiries, rejections, custom requests</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">🔧 AI Chatbot Architecture</div>
+            <div class="code-block">
+<span class="code-comment">// How the AI processes incoming messages</span>
+<span class="code-keyword">async</span> <span class="code-function">processMessage</span>(message, context) {
+  <span class="code-comment">// 1. Get fan's spending profile (whale/buyer/engaged/silent)</span>
+  <span class="code-keyword">const</span> fanProfile = <span class="code-keyword">await</span> this.getFanProfile(message.senderId);
+  
+  <span class="code-comment">// 2. Classify what they want (price inquiry, rejection, custom request...)</span>
+  <span class="code-keyword">const</span> intent = <span class="code-keyword">await</span> this.classifyIntent(message.text);
+  
+  <span class="code-comment">// 3. Generate response using competitor-proven scripts</span>
+  <span class="code-keyword">switch</span> (intent.type) {
+    <span class="code-keyword">case</span> <span class="code-string">'price_rejection'</span>:
+      <span class="code-comment">// NEVER say "no worries" - ALWAYS counter-offer!</span>
+      <span class="code-keyword">return</span> this.salesEngine.<span class="code-function">getCounterOffer</span>(currentPrice, rejectionCount);
+      
+    <span class="code-keyword">case</span> <span class="code-string">'custom_request'</span>:
+      <span class="code-comment">// Use fake hesitation tactic</span>
+      <span class="code-keyword">return</span> <span class="code-string">"I don't usually do that but... for you 🙈"</span>;
+  }
+}
+            </div>
+        </div>
+        
+        <div class="last-update">
+            Last updated: Feb 6, 2026 3:19 AM AST • Auto-refreshes every 30s
+        </div>
+    </div>
+</body>
+</html>

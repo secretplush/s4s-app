@@ -1,0 +1,39 @@
+{
+  "testGroup": {
+    "description": "Initial 5 models for tagging system test",
+    "models": [
+      {
+        "handle": "jennilii",
+        "envKey": "MODEL_1",
+        "status": "ready"
+      },
+      {
+        "handle": "delaneybabe",
+        "envKey": "MODEL_2",
+        "status": "ready"
+      },
+      {
+        "handle": "chloecollinsxo",
+        "envKey": "MODEL_3",
+        "status": "ready"
+      },
+      {
+        "handle": "biancaawoods",
+        "envKey": "MODEL_4",
+        "status": "ready"
+      },
+      {
+        "handle": "aviannaarose",
+        "envKey": "MODEL_5",
+        "status": "ready"
+      }
+    ]
+  },
+  "settings": {
+    "rotationIntervalMinutes": 5,
+    "autoDeleteAfterMinutes": 5,
+    "postsPerCycle": 1,
+    "safetyMode": true,
+    "requireManualApproval": true
+  }
+}
