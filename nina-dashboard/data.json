@@ -53,7 +53,8 @@
     {"username": "carlenewalker", "display_name": "Carlene ✨", "timestamp": "2026-02-06T13:41:00-04:00", "sequence": 48, "network": "collegeclubb"},
     {"username": "natalierhoades18", "display_name": "Natalie Rhoades💗", "timestamp": "2026-02-06T14:09:00-04:00", "sequence": 49, "network": "collegeclubb", "note": "380.9K likes - big account!"},
     {"username": "briellatate", "display_name": "Briella 🌸", "timestamp": "2026-02-06T14:14:00-04:00", "sequence": 50, "network": "collegeclubb", "note": "99.5K likes"},
-    {"username": "rowanpierce", "display_name": "Rowan 🌺", "timestamp": "2026-02-06T14:17:00-04:00", "sequence": 51, "network": "collegebesties", "note": "🔄 LOOP - same as #19, #47"}
+    {"username": "rowanpierce", "display_name": "Rowan 🌺", "timestamp": "2026-02-06T14:17:00-04:00", "sequence": 51, "network": "collegebesties", "note": "🔄 LOOP - same as #19, #47"},
+    {"username": "calliereece", "display_name": "Callie🦋", "timestamp": "2026-02-06T14:39:00-04:00", "sequence": 52, "network": "collegebesties", "note": "🔄 LOOP - same as #23, #39"}
   ],
   "mentions": [
     {"username": "naomisteele", "display_name": "Naomi 🌸", "timestamp": "2026-02-05T23:59:00-04:00", "sequence": 1, "network": "myfriendss"},
@@ -65,7 +66,7 @@
     {"username": "tammymoore", "display_name": "Tammy 💖", "timestamp": "2026-02-06T13:58:00-04:00", "sequence": 7, "network": "collegeclubb", "note": "🔄 LOOP - same as mention #5 from 3:50am"}
   ],
   "rotation_analysis": {
-    "total_tags": 51,
+    "total_tags": 52,
     "total_mentions": 7,
     "estimated_interval_minutes": 3.5,
     "loop_detected": true,
@@ -73,11 +74,11 @@
     "full_cycle_minutes": 210,
     "full_cycle_hours": 3.5,
     "unique_models_in_rotation": "~60 (estimated)",
-    "fan_count_current": 1065,
-    "fan_growth": "696 → 1,065 (+369 fans in ~15.5 hours)",
-    "growth_rate": "~24 fans/hour",
-    "last_check": "2026-02-06T14:17:00-04:00",
-    "last_check_status": "ACTIVE - 51 tags, 7 mentions, briellatate + rowanpierce loop",
+    "fan_count_current": 1077,
+    "fan_growth": "696 → 1,077 (+381 fans in ~17 hours)",
+    "growth_rate": "~22 fans/hour",
+    "last_check": "2026-02-06T14:39:00-04:00",
+    "last_check_status": "ACTIVE - 52 tags, 7 mentions, WHALE: Daniel $230 PPV today!",
     "mention_window": "Active - 5 mentions captured (3:19-3:50am)",
     "first_purchase": "Detected at 3:51am!",
     "network_breakdown": {
