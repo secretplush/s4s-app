@@ -50,7 +50,8 @@
     {"username": "avajean", "display_name": "Ava 🌼", "timestamp": "2026-02-06T13:06:00-04:00", "sequence": 45, "network": "collegeclubb", "note": "254K likes"},
     {"username": "finleyrhodes", "display_name": "Finley 🍓", "timestamp": "2026-02-06T13:06:00-04:00", "sequence": 46, "network": "collegeclubb", "note": "🔄 LOOP 4 - same as #36"},
     {"username": "rowanpierce", "display_name": "Rowan 🌺", "timestamp": "2026-02-06T13:36:00-04:00", "sequence": 47, "network": "collegebesties", "note": "🔄 LOOP - same as #19"},
-    {"username": "carlenewalker", "display_name": "Carlene ✨", "timestamp": "2026-02-06T13:41:00-04:00", "sequence": 48, "network": "collegeclubb"}
+    {"username": "carlenewalker", "display_name": "Carlene ✨", "timestamp": "2026-02-06T13:41:00-04:00", "sequence": 48, "network": "collegeclubb"},
+    {"username": "natalierhoades18", "display_name": "Natalie Rhoades💗", "timestamp": "2026-02-06T14:09:00-04:00", "sequence": 49, "network": "collegeclubb", "note": "380.9K likes - big account!"}
   ],
   "mentions": [
     {"username": "naomisteele", "display_name": "Naomi 🌸", "timestamp": "2026-02-05T23:59:00-04:00", "sequence": 1, "network": "myfriendss"},
@@ -62,7 +63,7 @@
     {"username": "tammymoore", "display_name": "Tammy 💖", "timestamp": "2026-02-06T13:58:00-04:00", "sequence": 7, "network": "collegeclubb", "note": "🔄 LOOP - same as mention #5 from 3:50am"}
   ],
   "rotation_analysis": {
-    "total_tags": 48,
+    "total_tags": 49,
     "total_mentions": 7,
     "estimated_interval_minutes": 3.5,
     "loop_detected": true,
@@ -70,17 +71,17 @@
     "full_cycle_minutes": 210,
     "full_cycle_hours": 3.5,
     "unique_models_in_rotation": "~60 (estimated)",
-    "fan_count_current": 1060,
-    "fan_growth": "696 → 1,060 (+364 fans in ~15 hours)",
-    "growth_rate": "~25 fans/hour",
-    "last_check": "2026-02-06T13:59:00-04:00",
-    "last_check_status": "ACTIVE - 48 tags, 7 mentions, rotation loops confirmed",
+    "fan_count_current": 1064,
+    "fan_growth": "696 → 1,064 (+368 fans in ~15.5 hours)",
+    "growth_rate": "~24 fans/hour",
+    "last_check": "2026-02-06T14:12:00-04:00",
+    "last_check_status": "ACTIVE - 49 tags, 7 mentions, natalierhoades18 (380K) just tagged",
     "mention_window": "Active - 5 mentions captured (3:19-3:50am)",
     "first_purchase": "Detected at 3:51am!",
     "network_breakdown": {
       "collegebesties": 23,
       "myfriendss": 1,
-      "collegeclubb": 23
+      "collegeclubb": 24
     }
   }
 }
