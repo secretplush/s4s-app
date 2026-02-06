@@ -45,7 +45,8 @@
     {"username": "kenzieblake", "display_name": "Kenzie ❤️‍🔥", "timestamp": "2026-02-06T11:48:00-04:00", "sequence": 40, "network": "collegeclubb", "caption": "Everyone's college crush finally launched her OF 🤭 💕"},
     {"username": "livdavies", "display_name": "livdavies", "timestamp": "2026-02-06T12:08:00-04:00", "sequence": 41, "network": "collegeclubb", "note": "422K likes - big account"},
     {"username": "ryleeadams", "display_name": "Rylee🍒", "timestamp": "2026-02-06T12:11:00-04:00", "sequence": 42, "network": "collegeclubb", "caption": "Everyone's college crush finally launched her OF 🤭 💕"},
-    {"username": "mckinleyevans", "display_name": "Mckinley❤️‍🔥", "timestamp": "2026-02-06T12:38:00-04:00", "sequence": 43, "network": "collegeclubb"}
+    {"username": "mckinleyevans", "display_name": "Mckinley❤️‍🔥", "timestamp": "2026-02-06T12:38:00-04:00", "sequence": 43, "network": "collegeclubb"},
+    {"username": "ellabbyxo", "display_name": "ella rose 😽", "timestamp": "2026-02-06T12:48:00-04:00", "sequence": 44, "network": "collegeclubb", "note": "720K likes - big account"}
   ],
   "mentions": [
     {"username": "naomisteele", "display_name": "Naomi 🌸", "timestamp": "2026-02-05T23:59:00-04:00", "sequence": 1, "network": "myfriendss"},
@@ -55,7 +56,7 @@
     {"username": "tammymoore", "display_name": "Tammy 💖", "timestamp": "2026-02-06T03:50:00-04:00", "sequence": 5, "network": "collegeclubb"}
   ],
   "rotation_analysis": {
-    "total_tags": 43,
+    "total_tags": 44,
     "total_mentions": 5,
     "estimated_interval_minutes": 3.5,
     "loop_detected": true,
@@ -63,17 +64,17 @@
     "full_cycle_minutes": 210,
     "full_cycle_hours": 3.5,
     "unique_models_in_rotation": "~60 (estimated)",
-    "fan_count_current": 1032,
-    "fan_growth": "696 → 1,032 (+336 fans in ~13 hours)",
+    "fan_count_current": 1034,
+    "fan_growth": "696 → 1,034 (+338 fans in ~13 hours)",
     "growth_rate": "~26 fans/hour",
-    "last_check": "2026-02-06T12:42:00-04:00",
-    "last_check_status": "ACTIVE - 43 tags captured",
+    "last_check": "2026-02-06T12:51:00-04:00",
+    "last_check_status": "ACTIVE - 44 tags captured",
     "mention_window": "Active - 5 mentions captured (3:19-3:50am)",
     "first_purchase": "Detected at 3:51am!",
     "network_breakdown": {
       "collegebesties": 22,
       "myfriendss": 1,
-      "collegeclubb": 19
+      "collegeclubb": 20
     }
   }
 }
