@@ -42,7 +42,8 @@
     {"username": "blakelycarter", "display_name": "Blakely 💖", "timestamp": "2026-02-06T10:00:00-04:00", "sequence": 37, "network": "TBD"},
     {"username": "kayleebrooks", "display_name": "Kaylee 💋", "timestamp": "2026-02-06T10:21:00-04:00", "sequence": 38, "network": "collegeclubb", "caption": "Everyone's college crush finally launched her OF 🤭 💕"},
     {"username": "calliereece", "display_name": "Callie🦋", "timestamp": "2026-02-06T10:34:00-04:00", "sequence": 39, "network": "collegebesties", "note": "🔄 LOOP 3 - same as #23"},
-    {"username": "kenzieblake", "display_name": "Kenzie ❤️‍🔥", "timestamp": "2026-02-06T11:48:00-04:00", "sequence": 40, "network": "collegeclubb", "caption": "Everyone's college crush finally launched her OF 🤭 💕"}
+    {"username": "kenzieblake", "display_name": "Kenzie ❤️‍🔥", "timestamp": "2026-02-06T11:48:00-04:00", "sequence": 40, "network": "collegeclubb", "caption": "Everyone's college crush finally launched her OF 🤭 💕"},
+    {"username": "livdavies", "display_name": "livdavies", "timestamp": "2026-02-06T12:08:00-04:00", "sequence": 41, "network": "collegeclubb", "note": "422K likes - big account"}
   ],
   "mentions": [
     {"username": "naomisteele", "display_name": "Naomi 🌸", "timestamp": "2026-02-05T23:59:00-04:00", "sequence": 1, "network": "myfriendss"},
@@ -52,7 +53,7 @@
     {"username": "tammymoore", "display_name": "Tammy 💖", "timestamp": "2026-02-06T03:50:00-04:00", "sequence": 5, "network": "collegeclubb"}
   ],
   "rotation_analysis": {
-    "total_tags": 40,
+    "total_tags": 41,
     "total_mentions": 5,
     "estimated_interval_minutes": 3.5,
     "loop_detected": true,
@@ -63,14 +64,14 @@
     "fan_count_current": 1010,
     "fan_growth": "696 → 1,010 (+314 fans in ~12 hours) 🎉 1K MILESTONE!",
     "growth_rate": "~27 fans/hour",
-    "last_check": "2026-02-06T11:48:00-04:00",
-    "last_check_status": "ACTIVE - 40 tags captured, 1K fans hit!",
+    "last_check": "2026-02-06T12:11:00-04:00",
+    "last_check_status": "ACTIVE - 41 tags captured",
     "mention_window": "Active - 5 mentions captured (3:19-3:50am)",
     "first_purchase": "Detected at 3:51am!",
     "network_breakdown": {
       "collegebesties": 22,
       "myfriendss": 1,
-      "collegeclubb": 16
+      "collegeclubb": 17
     }
   }
 }
