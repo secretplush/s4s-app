@@ -48,7 +48,8 @@
     {"username": "mckinleyevans", "display_name": "Mckinley❤️‍🔥", "timestamp": "2026-02-06T12:38:00-04:00", "sequence": 43, "network": "collegeclubb"},
     {"username": "ellabbyxo", "display_name": "ella rose 😽", "timestamp": "2026-02-06T12:48:00-04:00", "sequence": 44, "network": "collegeclubb", "note": "720K likes - big account"},
     {"username": "avajean", "display_name": "Ava 🌼", "timestamp": "2026-02-06T13:06:00-04:00", "sequence": 45, "network": "collegeclubb", "note": "254K likes"},
-    {"username": "finleyrhodes", "display_name": "Finley 🍓", "timestamp": "2026-02-06T13:06:00-04:00", "sequence": 46, "network": "collegeclubb", "note": "🔄 LOOP 4 - same as #36"}
+    {"username": "finleyrhodes", "display_name": "Finley 🍓", "timestamp": "2026-02-06T13:06:00-04:00", "sequence": 46, "network": "collegeclubb", "note": "🔄 LOOP 4 - same as #36"},
+    {"username": "rowanpierce", "display_name": "Rowan 🌺", "timestamp": "2026-02-06T13:36:00-04:00", "sequence": 47, "network": "collegebesties", "note": "🔄 LOOP - same as #19"}
   ],
   "mentions": [
     {"username": "naomisteele", "display_name": "Naomi 🌸", "timestamp": "2026-02-05T23:59:00-04:00", "sequence": 1, "network": "myfriendss"},
@@ -58,7 +59,7 @@
     {"username": "tammymoore", "display_name": "Tammy 💖", "timestamp": "2026-02-06T03:50:00-04:00", "sequence": 5, "network": "collegeclubb"}
   ],
   "rotation_analysis": {
-    "total_tags": 46,
+    "total_tags": 47,
     "total_mentions": 5,
     "estimated_interval_minutes": 3.5,
     "loop_detected": true,
@@ -66,15 +67,15 @@
     "full_cycle_minutes": 210,
     "full_cycle_hours": 3.5,
     "unique_models_in_rotation": "~60 (estimated)",
-    "fan_count_current": 1042,
-    "fan_growth": "696 → 1,042 (+346 fans in ~13.5 hours)",
-    "growth_rate": "~26 fans/hour",
-    "last_check": "2026-02-06T13:09:00-04:00",
-    "last_check_status": "ACTIVE - 46 tags captured, Loop 4 confirmed",
+    "fan_count_current": 1052,
+    "fan_growth": "696 → 1,052 (+356 fans in ~14 hours)",
+    "growth_rate": "~25 fans/hour",
+    "last_check": "2026-02-06T13:36:00-04:00",
+    "last_check_status": "ACTIVE - 47 tags captured, multiple loops confirmed",
     "mention_window": "Active - 5 mentions captured (3:19-3:50am)",
     "first_purchase": "Detected at 3:51am!",
     "network_breakdown": {
-      "collegebesties": 22,
+      "collegebesties": 23,
       "myfriendss": 1,
       "collegeclubb": 22
     }
