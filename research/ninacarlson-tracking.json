@@ -49,35 +49,37 @@
     {"username": "ellabbyxo", "display_name": "ella rose 😽", "timestamp": "2026-02-06T12:48:00-04:00", "sequence": 44, "network": "collegeclubb", "note": "720K likes - big account"},
     {"username": "avajean", "display_name": "Ava 🌼", "timestamp": "2026-02-06T13:06:00-04:00", "sequence": 45, "network": "collegeclubb", "note": "254K likes"},
     {"username": "finleyrhodes", "display_name": "Finley 🍓", "timestamp": "2026-02-06T13:06:00-04:00", "sequence": 46, "network": "collegeclubb", "note": "🔄 LOOP 4 - same as #36"},
-    {"username": "rowanpierce", "display_name": "Rowan 🌺", "timestamp": "2026-02-06T13:36:00-04:00", "sequence": 47, "network": "collegebesties", "note": "🔄 LOOP - same as #19"}
+    {"username": "rowanpierce", "display_name": "Rowan 🌺", "timestamp": "2026-02-06T13:36:00-04:00", "sequence": 47, "network": "collegebesties", "note": "🔄 LOOP - same as #19"},
+    {"username": "carlenewalker", "display_name": "Carlene ✨", "timestamp": "2026-02-06T13:41:00-04:00", "sequence": 48, "network": "collegeclubb"}
   ],
   "mentions": [
     {"username": "naomisteele", "display_name": "Naomi 🌸", "timestamp": "2026-02-05T23:59:00-04:00", "sequence": 1, "network": "myfriendss"},
     {"username": "tillyharper", "display_name": "Tilly 🦋", "timestamp": "2026-02-06T03:19:00-04:00", "sequence": 2, "network": "collegebesties"},
     {"username": "shaybennett", "display_name": "Shay 💫", "timestamp": "2026-02-06T03:19:00-04:00", "sequence": 3, "network": "collegeclubb"},
     {"username": "norahart", "display_name": "Nora 🌹", "timestamp": "2026-02-06T03:23:00-04:00", "sequence": 4, "network": "collegeclubb"},
-    {"username": "tammymoore", "display_name": "Tammy 💖", "timestamp": "2026-02-06T03:50:00-04:00", "sequence": 5, "network": "collegeclubb"}
+    {"username": "tammymoore", "display_name": "Tammy 💖", "timestamp": "2026-02-06T03:50:00-04:00", "sequence": 5, "network": "collegeclubb"},
+    {"username": "rowanpierce", "display_name": "Rowan 🌺", "timestamp": "2026-02-06T13:36:00-04:00", "sequence": 6, "network": "collegebesties"}
   ],
   "rotation_analysis": {
-    "total_tags": 47,
-    "total_mentions": 5,
+    "total_tags": 48,
+    "total_mentions": 6,
     "estimated_interval_minutes": 3.5,
     "loop_detected": true,
     "loop_confirmed_at": "2026-02-06T04:10:00-04:00",
     "full_cycle_minutes": 210,
     "full_cycle_hours": 3.5,
     "unique_models_in_rotation": "~60 (estimated)",
-    "fan_count_current": 1052,
-    "fan_growth": "696 → 1,052 (+356 fans in ~14 hours)",
+    "fan_count_current": 1056,
+    "fan_growth": "696 → 1,056 (+360 fans in ~14.5 hours)",
     "growth_rate": "~25 fans/hour",
-    "last_check": "2026-02-06T13:36:00-04:00",
-    "last_check_status": "ACTIVE - 47 tags captured, multiple loops confirmed",
+    "last_check": "2026-02-06T13:41:00-04:00",
+    "last_check_status": "ACTIVE - 48 tags captured, 6 mentions, multiple loops confirmed",
     "mention_window": "Active - 5 mentions captured (3:19-3:50am)",
     "first_purchase": "Detected at 3:51am!",
     "network_breakdown": {
       "collegebesties": 23,
       "myfriendss": 1,
-      "collegeclubb": 22
+      "collegeclubb": 23
     }
   }
 }
