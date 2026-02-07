@@ -39,7 +39,7 @@
     {"username": "macyywoods", "display_name": "Macy Woods", "timestamp": "2026-02-06T04:30:00-04:00", "sequence": 34, "network": "collegeclubb"},
     {"username": "kaylenlane", "display_name": "Kaylen 🌸", "timestamp": "2026-02-06T04:31:00-04:00", "sequence": 35, "network": "collegeclubb"},
     {"username": "finleyrhodes", "display_name": "Finley 🍓", "timestamp": "2026-02-06T09:50:00-04:00", "sequence": 36, "network": "collegeclubb", "note": "Tracking resumed"},
-    {"username": "blakelycarter", "display_name": "Blakely 💖", "timestamp": "2026-02-06T10:00:00-04:00", "sequence": 37, "network": "TBD"},
+    {"username": "blakelycarter", "display_name": "Blakely ❤️‍🔥", "timestamp": "2026-02-06T10:00:00-04:00", "sequence": 37, "network": "collegeclubb", "likes": "87.7K"},
     {"username": "kayleebrooks", "display_name": "Kaylee 💋", "timestamp": "2026-02-06T10:21:00-04:00", "sequence": 38, "network": "collegeclubb", "caption": "Everyone's college crush finally launched her OF 🤭 💕"},
     {"username": "calliereece", "display_name": "Callie🦋", "timestamp": "2026-02-06T10:34:00-04:00", "sequence": 39, "network": "collegebesties", "note": "🔄 LOOP 3 - same as #23"},
     {"username": "kenzieblake", "display_name": "Kenzie ❤️‍🔥", "timestamp": "2026-02-06T11:48:00-04:00", "sequence": 40, "network": "collegeclubb", "caption": "Everyone's college crush finally launched her OF 🤭 💕"},
@@ -98,29 +98,32 @@
     {"username": "ryleeadams", "display_name": "Rylee🍒", "timestamp": "2026-02-06T20:43:00-04:00", "sequence": 31, "network": "collegeclubb", "post_url": "https://onlyfans.com/2262292902/ryleeadams", "note": "🔄 LOOP - same as tag #42"},
     {"username": "giarileyy", "display_name": "Gia 🌸", "timestamp": "2026-02-06T21:03:00-04:00", "sequence": 32, "network": "collegeclubb", "post_url": "https://onlyfans.com/2262308281/giarileyy", "likes": "148.7K", "note": "⭐ NEW MODEL - was 0-shoutout on website"},
     {"username": "zoedalby", "display_name": "Zoe", "timestamp": "2026-02-06T21:04:00-04:00", "sequence": 33, "network": "myfriendss", "post_url": "https://onlyfans.com/2261821504/zoedalby", "likes": "230.7K", "note": "🔥 BIG ACCOUNT - myfriendss network!"},
-    {"username": "abbybeaumont", "display_name": "Abby 🌺", "timestamp": "2026-02-06T21:11:00-04:00", "sequence": 34, "network": "collegeclubb", "post_url": "https://onlyfans.com/2262313441/abbybeaumont", "likes": "14.6K", "note": "🔄 LOOP - same as mention #16"}
+    {"username": "abbybeaumont", "display_name": "Abby 🌺", "timestamp": "2026-02-06T21:11:00-04:00", "sequence": 34, "network": "collegeclubb", "post_url": "https://onlyfans.com/2262313441/abbybeaumont", "likes": "14.6K", "note": "🔄 LOOP - same as mention #16"},
+    {"username": "blakelycarter", "display_name": "Blakely ❤️‍🔥", "timestamp": "2026-02-06T21:21:00-04:00", "sequence": 35, "network": "collegeclubb", "post_url": "https://onlyfans.com/2262319755/blakelycarter", "likes": "87.7K", "note": "Network now confirmed - was TBD in tag #37"},
+    {"username": "avajean", "display_name": "Ava 🌼", "timestamp": "2026-02-06T21:51:00-04:00", "sequence": 36, "network": "collegeclubb", "post_url": "https://onlyfans.com/2262337653/avajean", "likes": "254K", "note": "🔄 LOOP - same as tag #45"},
+    {"username": "ashlynnbrooks", "display_name": "Ashlynn 💕", "timestamp": "2026-02-06T21:51:00-04:00", "sequence": 37, "network": "collegeclubb", "post_url": "https://onlyfans.com/2262337642/ashlynnbrooks", "note": "🔄 LOOP - same as tag #21"}
   ],
   "rotation_analysis": {
     "total_tags": 60,
-    "total_mentions": 34,
+    "total_mentions": 37,
     "estimated_interval_minutes": 3.5,
     "loop_detected": true,
     "loop_confirmed_at": "2026-02-06T04:10:00-04:00",
     "full_cycle_minutes": 210,
     "full_cycle_hours": 3.5,
     "unique_models_in_rotation": "~60 (estimated)",
-    "fan_count_current": 1242,
-    "fan_growth": "696 → 1,242 (+546 fans in ~24.5 hours)",
+    "fan_count_current": 1283,
+    "fan_growth": "696 → 1,283 (+587 fans in ~26.5 hours)",
     "growth_rate": "~22 fans/hour",
-    "last_check": "2026-02-06T21:11:00-04:00",
-    "last_check_status": "⭐ NEW: Tag #60 giarileyy (148.7K), Mentions #33 zoedalby (230.7K, myfriendss), #34 abbybeaumont (14.6K). Revenue: +$17 purchase. Fans: 1,242.",
-    "revenue_today": "$215 ($198 + $17 new purchase)",
+    "last_check": "2026-02-06T22:01:00-04:00",
+    "last_check_status": "Stats update: 1,283 fans steady. +$18 purchase (jose papa). Revenue now $243.",
+    "revenue_today": "$243 ($225 + $18 PPV jose papa)",
     "mention_window": "Active - 5 mentions captured (3:19-3:50am)",
     "first_purchase": "Detected at 3:51am!",
     "network_breakdown": {
       "collegebesties": 25,
       "myfriendss": 2,
-      "collegeclubb": 29
+      "collegeclubb": 30
     }
   }
 }
