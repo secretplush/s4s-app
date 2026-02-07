@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Crushes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f5f0eb;
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 30px 20px 20px;
+        }
+        
+        /* Floating bookmark tooltip */
+        .bookmark-tooltip {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4a4a4a;
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 100;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .bookmark-tooltip .star {
+            color: #ffc107;
+            margin: 0 4px;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        @media (max-width: 480px) {
+            .bookmark-tooltip {
+                font-size: 12px;
+                padding: 10px 16px;
+                top: 10px;
+                right: 10px;
+            }
+        }
+        
+        .badges {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .badge {
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .badge.popular {
+            background: #d4e157;
+            color: #333;
+        }
+        
+        .badge.trusted {
+            background: transparent;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .badge.trusted .heart-icon {
+            font-size: 16px;
+        }
+        
+        .title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #333;
+            line-height: 1.3;
+        }
+        
+        .title-accent {
+            color: #ff6b9d;
+            font-style: italic;
+            font-size: 38px;
+        }
+        
+        @media (max-width: 480px) {
+            .title {
+                font-size: 26px;
+            }
+            .title-accent {
+                font-size: 30px;
+            }
+        }
+        
+        /* Model Grid - 2 columns like collegebesties */
+        .model-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            padding: 20px 30px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        @media (max-width: 480px) {
+            .model-grid {
+                gap: 12px;
+                padding: 15px;
+            }
+        }
+        
+        .model-card {
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .model-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .model-image {
+            width: 100%;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+            background: linear-gradient(135deg, #f0e6df, #e8ddd4);
+        }
+        
+        .model-image.placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 64px;
+            background: linear-gradient(135deg, #ffe4ec, #ffd4e0);
+        }
+        
+        .model-name {
+            padding: 15px;
+            text-align: center;
+            font-weight: 500;
+            font-size: 16px;
+        }
+        
+        /* Modal Overlay */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal {
+            background: #fff;
+            border-radius: 20px;
+            max-width: 380px;
+            width: 100%;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        .modal-content {
+            padding: 25px;
+        }
+        
+        .modal-close {
+            float: right;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+            line-height: 1;
+        }
+        
+        .modal-close:hover {
+            color: #333;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            padding-right: 30px;
+        }
+        
+        .modal-text {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .age-check {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            font-size: 13px;
+        }
+        
+        .age-check input {
+            width: 18px;
+            height: 18px;
+            accent-color: #ff6b9d;
+        }
+        
+        .email-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 15px;
+            margin-bottom: 15px;
+            transition: border-color 0.2s;
+        }
+        
+        .email-input:focus {
+            outline: none;
+            border-color: #ff6b9d;
+        }
+        
+        .continue-btn {
+            width: 100%;
+            padding: 14px;
+            background: #333;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .continue-btn:hover:not(:disabled) {
+            background: #444;
+        }
+        
+        .continue-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .benefits {
+            background: #faf8f6;
+            padding: 20px 25px;
+            list-style: none;
+        }
+        
+        .benefits li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 8px;
+        }
+        
+        .benefits li:last-child {
+            margin-bottom: 0;
+        }
+        
+        .benefits-icon {
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Bookmark Tooltip -->
+    <div class="bookmark-tooltip">
+        Click the <span class="star">⭐</span> ↑ to add to bookmarks
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="badges">
+            <span class="badge popular">Popular</span>
+            <span class="badge trusted"><span class="heart-icon">💛</span> Trusted Creators</span>
+        </div>
+        <h1 class="title">
+            Get to know my<br>
+            <span class="title-accent">college crushes</span> 🤭❤️
+        </h1>
+    </header>
+    
+    <!-- Model Grid -->
+    <div class="model-grid" id="modelGrid">
+        <!-- Models will be inserted here -->
+    </div>
+    
+    <!-- Email Gate Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-content">
+                <button class="modal-close" id="modalClose">×</button>
+                <h2 class="modal-title">Before you continue…</h2>
+                <p class="modal-text">This page links to adult creator profiles (18+). Enter your email to continue.</p>
+                <form id="emailForm">
+                    <label class="age-check">
+                        <input type="checkbox" id="ageCheck" required>
+                        <span>I confirm that I am 18 years or older.</span>
+                    </label>
+                    <input type="email" class="email-input" id="emailInput" placeholder="Enter your email" required>
+                    <button type="submit" class="continue-btn" id="continueBtn" disabled>Continue</button>
+                </form>
+            </div>
+            <ul class="benefits">
+                <li><span class="benefits-icon">🔔</span> Be notified when new creators drop.</li>
+                <li><span class="benefits-icon">⭐</span> Early access to featured profiles.</li>
+                <li><span class="benefits-icon">🔒</span> Secure, unsubscribe anytime.</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Sample models - replace with real Plush models (20 models = 10 rows x 2 cols)
+        const models = [
+            { name: "Sophia", emoji: "👩‍🦰", link: "https://onlyfans.com/example1" },
+            { name: "Emma", emoji: "💃", link: "https://onlyfans.com/example2" },
+            { name: "Ava", emoji: "🎨", link: "https://onlyfans.com/example3" },
+            { name: "Mia", emoji: "🏖️", link: "https://onlyfans.com/example4" },
+            { name: "Luna", emoji: "🌙", link: "https://onlyfans.com/example5" },
+            { name: "Chloe", emoji: "💕", link: "https://onlyfans.com/example6" },
+            { name: "Lily", emoji: "🌸", link: "https://onlyfans.com/example7" },
+            { name: "Zoe", emoji: "✨", link: "https://onlyfans.com/example8" },
+            { name: "Ella", emoji: "🦋", link: "https://onlyfans.com/example9" },
+            { name: "Grace", emoji: "🌺", link: "https://onlyfans.com/example10" },
+            { name: "Riley", emoji: "🔥", link: "https://onlyfans.com/example11" },
+            { name: "Aria", emoji: "💫", link: "https://onlyfans.com/example12" },
+            { name: "Ivy", emoji: "🌿", link: "https://onlyfans.com/example13" },
+            { name: "Hazel", emoji: "🍂", link: "https://onlyfans.com/example14" },
+            { name: "Nora", emoji: "🌹", link: "https://onlyfans.com/example15" },
+            { name: "Stella", emoji: "⭐", link: "https://onlyfans.com/example16" },
+            { name: "Ruby", emoji: "💎", link: "https://onlyfans.com/example17" },
+            { name: "Jade", emoji: "💚", link: "https://onlyfans.com/example18" },
+            { name: "Willow", emoji: "🌳", link: "https://onlyfans.com/example19" },
+            { name: "Aurora", emoji: "🌅", link: "https://onlyfans.com/example20" },
+        ];
+
+        let selectedModel = null;
+        const hasAccess = localStorage.getItem('collegeCrushesAccess');
+
+        // Render models
+        const modelGrid = document.getElementById('modelGrid');
+        models.forEach((model, index) => {
+            const card = document.createElement('div');
+            card.className = 'model-card';
+            card.innerHTML = `
+                <div class="model-image placeholder">${model.emoji}</div>
+                <div class="model-name">${model.name}</div>
+            `;
+            card.addEventListener('click', () => handleModelClick(model));
+            modelGrid.appendChild(card);
+        });
+
+        // Handle model click
+        function handleModelClick(model) {
+            if (hasAccess) {
+                // Already has access, go directly to OF
+                window.open(model.link, '_blank');
+            } else {
+                // Show email gate
+                selectedModel = model;
+                document.getElementById('modalOverlay').classList.add('active');
+            }
+        }
+
+        // Close modal
+        document.getElementById('modalClose').addEventListener('click', () => {
+            document.getElementById('modalOverlay').classList.remove('active');
+        });
+
+        document.getElementById('modalOverlay').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                document.getElementById('modalOverlay').classList.remove('active');
+            }
+        });
+
+        // Form validation
+        const ageCheck = document.getElementById('ageCheck');
+        const emailInput = document.getElementById('emailInput');
+        const continueBtn = document.getElementById('continueBtn');
+
+        function validateForm() {
+            const isValid = ageCheck.checked && emailInput.value.includes('@');
+            continueBtn.disabled = !isValid;
+        }
+
+        ageCheck.addEventListener('change', validateForm);
+        emailInput.addEventListener('input', validateForm);
+
+        // Form submission
+        document.getElementById('emailForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = emailInput.value;
+            continueBtn.textContent = 'Loading...';
+            continueBtn.disabled = true;
+
+            // TODO: Send to Klaviyo API
+            console.log('Email captured:', email);
+            
+            // In production, send to your backend:
+            // await fetch('/api/subscribe', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({ email })
+            // });
+
+            // Store access
+            localStorage.setItem('collegeCrushesAccess', 'true');
+            localStorage.setItem('collegeCrushesEmail', email);
+            
+            // Close modal and redirect
+            document.getElementById('modalOverlay').classList.remove('active');
+            
+            if (selectedModel) {
+                window.open(selectedModel.link, '_blank');
+            }
+        });
+    </script>
+</body>
+</html>

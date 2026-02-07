@@ -50,11 +50,17 @@ Need photo OF the tagged girl + @mention in caption (not just text posts)
 
 ### Live Tracking (2026-02-06)
 Tracking ninacarlson's incoming tags to reverse-engineer competitor rotation:
-- **37+ tags captured** (loop confirmed at 3.5 hours)
-- 3 networks: collegebesties (22), collegeclubb (12), myfriendss (1)
-- Fan growth: 696 → 957+ (~37 fans/hour)
+- **58 tags captured**, 19 mentions, 53 unique models
+- Fan growth: 696 → 1,174 (+478 in ~21.5 hours, ~22/hr)
 - **Vercel dashboard**: https://nina-dashboard.vercel.app
-- Cron job: checking tags/mentions every 10 min (to avoid OF rate limits)
+- Cron job: checking tags/mentions every 4.5 min
+
+### Hidden Network Discovery (2026-02-06)
+Compared captured models vs landing pages:
+- Sites show: collegeclubb (39) + collegebesties (26) + myfriendss (35) = **100 models**
+- But **50% of captured models aren't on ANY landing page** (including Nina!)
+- Actual network = **125+ models**, ~25% hidden from public
+- Strategy: Scale S4S without overwhelming landing pages
 
 ## Lessons Learned
 

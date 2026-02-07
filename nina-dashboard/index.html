@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nina Carlson - Live Tag Tracking</title>
+  <title>Nina Carlson - Live Tag Tracking Dashboard</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { 
@@ -22,10 +22,22 @@
       -webkit-text-fill-color: transparent;
     }
     .subtitle { color: #888; margin-bottom: 30px; }
+    .live-badge { 
+      display: inline-block;
+      background: #22c55e;
+      color: #000;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      animation: pulse 2s infinite;
+      margin-left: 10px;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
     
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
       gap: 15px;
       margin-bottom: 30px;
     }
@@ -37,7 +49,7 @@
       border: 1px solid rgba(255,255,255,0.1);
     }
     .stat-value { 
-      font-size: 2.5rem; 
+      font-size: 2.2rem; 
       font-weight: bold;
       background: linear-gradient(90deg, #4ade80, #22c55e);
       -webkit-background-clip: text;
@@ -48,7 +60,12 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    .stat-label { color: #888; font-size: 0.85rem; margin-top: 5px; }
+    .stat-value.gold {
+      background: linear-gradient(90deg, #fbbf24, #f59e0b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .stat-label { color: #888; font-size: 0.8rem; margin-top: 5px; }
     
     .section { 
       background: rgba(255,255,255,0.03);
@@ -65,37 +82,28 @@
       gap: 10px;
     }
     
-    .tag-list { display: flex; flex-direction: column; gap: 8px; }
+    .tag-list { display: flex; flex-direction: column; gap: 6px; max-height: 600px; overflow-y: auto; }
     .tag-item {
       display: grid;
-      grid-template-columns: 40px 1fr 80px 80px 100px;
+      grid-template-columns: 40px 1fr 80px 100px;
       align-items: center;
-      padding: 12px 15px;
+      padding: 10px 15px;
       background: rgba(255,255,255,0.03);
-      border-radius: 10px;
+      border-radius: 8px;
       border-left: 3px solid #4ade80;
+      font-size: 0.9rem;
     }
     .tag-item.collegebesties { border-left-color: #ff6b9d; }
     .tag-item.myfriendss { border-left-color: #60a5fa; }
     .tag-item.collegeclubb { border-left-color: #a78bfa; }
-    .tag-item.TBD { border-left-color: #fbbf24; }
-    .tag-item.missed { border-left-color: #666; opacity: 0.6; }
-    .tag-item.new { animation: pulse 2s infinite; }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
-    .tag-num { color: #666; font-size: 0.9rem; }
+    .tag-item.loop { background: rgba(34,197,94,0.1); }
+    .tag-item.big { background: rgba(255,107,157,0.1); }
+    .tag-num { color: #666; font-size: 0.85rem; }
     .tag-name { font-weight: 500; }
-    .tag-username { color: #888; font-size: 0.85rem; }
-    .tag-time { color: #4ade80; font-size: 0.9rem; text-align: center; }
-    .tag-interval { 
-      font-size: 0.8rem; 
-      padding: 4px 10px;
-      border-radius: 20px;
-      text-align: center;
-    }
-    .tag-interval.fast { background: rgba(74, 222, 128, 0.2); color: #4ade80; }
-    .tag-interval.gap { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
+    .tag-username { color: #888; font-size: 0.8rem; }
+    .tag-time { color: #4ade80; font-size: 0.85rem; text-align: center; }
     .tag-network {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       padding: 3px 8px;
       border-radius: 12px;
       text-align: center;
@@ -103,28 +111,62 @@
     .tag-network.collegebesties { background: rgba(255,107,157,0.2); color: #ff6b9d; }
     .tag-network.myfriendss { background: rgba(96,165,250,0.2); color: #60a5fa; }
     .tag-network.collegeclubb { background: rgba(167,139,250,0.2); color: #a78bfa; }
-    .tag-network.TBD { background: rgba(251,191,36,0.2); color: #fbbf24; }
+    .tag-note { font-size: 0.75rem; color: #fbbf24; margin-left: 8px; }
+    
+    .findings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 15px;
+    }
+    .finding-card {
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      padding: 18px;
+      border-left: 4px solid #4ade80;
+    }
+    .finding-card.warning { border-left-color: #fbbf24; }
+    .finding-card.info { border-left-color: #60a5fa; }
+    .finding-card.pink { border-left-color: #ff6b9d; }
+    .finding-title { font-weight: 600; margin-bottom: 8px; font-size: 0.95rem; }
+    .finding-text { color: #aaa; font-size: 0.85rem; line-height: 1.5; }
+    
+    .big-accounts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .big-account {
+      background: rgba(255,107,157,0.15);
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 0.8rem;
+    }
+    .big-account-likes { color: #ff6b9d; font-weight: bold; }
     
     .network-breakdown {
       display: flex;
-      gap: 20px;
+      gap: 15px;
       margin-top: 15px;
       flex-wrap: wrap;
     }
     .network-stat {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
+      background: rgba(255,255,255,0.05);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
     }
     .network-dot {
-      width: 12px;
-      height: 12px;
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
     }
     .network-dot.collegebesties { background: #ff6b9d; }
     .network-dot.myfriendss { background: #60a5fa; }
     .network-dot.collegeclubb { background: #a78bfa; }
-    .network-dot.TBD { background: #fbbf24; }
     
     .insight-box {
       background: linear-gradient(135deg, rgba(255,107,157,0.1), rgba(196,69,105,0.1));
@@ -133,18 +175,15 @@
       padding: 20px;
       margin-top: 20px;
     }
-    .insight-title { color: #ff6b9d; font-weight: 600; margin-bottom: 10px; }
-    .insight-text { color: #ccc; line-height: 1.6; }
-    
-    .new-badge {
-      background: #4ade80;
-      color: #000;
-      font-size: 0.65rem;
-      padding: 2px 6px;
-      border-radius: 8px;
-      margin-left: 8px;
-      font-weight: bold;
+    .insight-title { color: #ff6b9d; font-weight: 600; margin-bottom: 12px; }
+    .insight-list { list-style: none; }
+    .insight-list li { 
+      padding: 6px 0; 
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      color: #ccc;
+      font-size: 0.9rem;
     }
+    .insight-list li:last-child { border-bottom: none; }
     
     .updated { 
       text-align: center; 
@@ -155,351 +194,371 @@
     
     @media (max-width: 768px) {
       .tag-item { grid-template-columns: 30px 1fr 60px; }
-      .tag-interval, .tag-network { display: none; }
+      .tag-network { display: none; }
       h1 { font-size: 1.5rem; }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>🔴 Nina Carlson Live Tracking</h1>
-    <p class="subtitle">Competitor tag rotation analysis • Started Feb 6, 2026 12:42 AM AST</p>
+    <h1>🔴 Nina Carlson Tracking<span class="live-badge">LIVE</span></h1>
+    <p class="subtitle">S4S Rotation Analysis • Started Feb 6, 2026 12:42 AM AST</p>
     
     <div class="stats-grid">
       <div class="stat-card">
-        <div class="stat-value pink">35</div>
-        <div class="stat-label">TAGS TRACKED</div>
+        <div class="stat-value pink">57</div>
+        <div class="stat-label">TAGS</div>
       </div>
       <div class="stat-card">
-        <div class="stat-value pink">5</div>
+        <div class="stat-value pink">19</div>
         <div class="stat-label">MENTIONS</div>
       </div>
       <div class="stat-card">
-        <div class="stat-value">825</div>
-        <div class="stat-label">CURRENT FANS</div>
+        <div class="stat-value">1,168</div>
+        <div class="stat-label">FANS</div>
       </div>
       <div class="stat-card">
-        <div class="stat-value">+129</div>
-        <div class="stat-label">FAN GROWTH</div>
+        <div class="stat-value">+458</div>
+        <div class="stat-label">GROWTH</div>
       </div>
       <div class="stat-card">
-        <div class="stat-value">~37/hr</div>
-        <div class="stat-label">GROWTH RATE</div>
+        <div class="stat-value">~23/hr</div>
+        <div class="stat-label">RATE</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value gold">$160+</div>
+        <div class="stat-label">REVENUE</div>
       </div>
     </div>
 
     <div class="section">
-      <div class="section-title">📍 Live Tag Rotation (35 Tags Captured) ✅ LOOP CONFIRMED</div>
-      <div class="tag-list">
-        <div class="tag-item collegebesties">
-          <span class="tag-num">#1</span>
-          <div><span class="tag-name">Nikki 🥰</span><br><span class="tag-username">@nikkihayes</span></div>
-          <span class="tag-time">12:40 AM</span>
-          <span class="tag-interval fast">START</span>
-          <span class="tag-network collegebesties">collegebesties</span>
+      <div class="section-title">🎯 Key Findings</div>
+      <div class="findings-grid">
+        <div class="finding-card">
+          <div class="finding-title">✅ 3.5 Hour Rotation Loop</div>
+          <div class="finding-text">~60 models rotate, each tagging nina every 3.5 hours. Posts auto-delete after 5 min ("ghost promotion").</div>
         </div>
-        <div class="tag-item collegebesties">
-          <span class="tag-num">#2</span>
-          <div><span class="tag-name">Lani 🦋</span><br><span class="tag-username">@lanitaylor</span></div>
-          <span class="tag-time">12:44 AM</span>
-          <span class="tag-interval fast">+4m</span>
-          <span class="tag-network collegebesties">collegebesties</span>
+        <div class="finding-card pink">
+          <div class="finding-title">🔥 Big Accounts in Rotation</div>
+          <div class="big-accounts">
+            <div class="big-account"><span class="big-account-likes">720K</span> ellabbyxo</div>
+            <div class="big-account"><span class="big-account-likes">422K</span> livdavies</div>
+            <div class="big-account"><span class="big-account-likes">380K</span> natalierhoades18</div>
+            <div class="big-account"><span class="big-account-likes">288K</span> melissatate</div>
+            <div class="big-account"><span class="big-account-likes">254K</span> avajean</div>
+            <div class="big-account"><span class="big-account-likes">223K</span> hopewalkerr</div>
+          </div>
         </div>
-        <div class="tag-item collegebesties">
-          <span class="tag-num">#3</span>
-          <div><span class="tag-name">Hannah 🥹🌸</span><br><span class="tag-username">@hannahpriv</span></div>
-          <span class="tag-time">12:49 AM</span>
-          <span class="tag-interval fast">+5m</span>
-          <span class="tag-network collegebesties">collegebesties</span>
+        <div class="finding-card info">
+          <div class="finding-title">🌐 3 Networks</div>
+          <div class="network-breakdown">
+            <div class="network-stat"><div class="network-dot collegebesties"></div> collegebesties: 24</div>
+            <div class="network-stat"><div class="network-dot collegeclubb"></div> collegeclubb: 26</div>
+            <div class="network-stat"><div class="network-dot myfriendss"></div> myfriendss: 1</div>
+          </div>
         </div>
-        <div class="tag-item collegebesties">
-          <span class="tag-num">#4</span>
-          <div><span class="tag-name">Connie</span><br><span class="tag-username">@connierivers</span></div>
-          <span class="tag-time">12:52 AM</span>
-          <span class="tag-interval fast">+3m</span>
-          <span class="tag-network collegebesties">collegebesties</span>
+        <div class="finding-card warning">
+          <div class="finding-title">📝 Tag Format</div>
+          <div class="finding-text">"Everyone's college crush finally launched her OF 🤭 💕 @ninacarlson" + photo of tagged model</div>
         </div>
-        <div class="tag-item collegebesties">
-          <span class="tag-num">#5</span>
-          <div><span class="tag-name">Bailey Lewis💕</span><br><span class="tag-username">@baileylewis1</span></div>
-          <span class="tag-time">12:54 AM</span>
-          <span class="tag-interval fast">+2m</span>
-          <span class="tag-network collegebesties">collegebesties</span>
-        </div>
-        <div class="tag-item collegebesties">
-          <span class="tag-num">#6</span>
-          <div><span class="tag-name">Ivy 🥹💗</span><br><span class="tag-username">@ivyraye</span></div>
-          <span class="tag-time">1:00 AM</span>
-          <span class="tag-interval fast">+6m</span>
-          <span class="tag-network collegebesties">collegebesties</span>
-        </div>
-        <div class="tag-item collegebesties">
-          <span class="tag-num">#7</span>
-          <div><span class="tag-name">Sofia ✌🏼</span><br><span class="tag-username">@sofiaalto</span></div>
-          <span class="tag-time">1:04 AM</span>
-          <span class="tag-interval fast">+4m</span>
-          <span class="tag-network collegebesties">collegebesties</span>
-        </div>
-        <div class="tag-item collegebesties">
-          <span class="tag-num">#8</span>
-          <div><span class="tag-name">Amelia 💞🥹</span><br><span class="tag-username">@ameliaking1</span></div>
-          <span class="tag-time">1:05 AM</span>
-          <span class="tag-interval fast">+1m</span>
-          <span class="tag-network collegebesties">collegebesties</span>
-        </div>
-        <div class="tag-item collegebesties">
-          <span class="tag-num">#9</span>
-          <div><span class="tag-name">Summer 🦋</span><br><span class="tag-username">@summerthorpe</span></div>
-          <span class="tag-time">1:10 AM</span>
-          <span class="tag-interval fast">+5m</span>
-          <span class="tag-network collegebesties">collegebesties</span>
-        </div>
-        <div class="tag-item collegebesties">
-          <span class="tag-num">#10</span>
-          <div><span class="tag-name">Robyn 💘</span><br><span class="tag-username">@robynnparker</span></div>
-          <span class="tag-time">1:12 AM</span>
-          <span class="tag-interval fast">+2m</span>
-          <span class="tag-network collegebesties">collegebesties</span>
-        </div>
-        <div class="tag-item collegebesties">
-          <span class="tag-num">#11</span>
-          <div><span class="tag-name">Jennie 🌼</span><br><span class="tag-username">@jenniedavis</span></div>
-          <span class="tag-time">1:17 AM</span>
-          <span class="tag-interval fast">+5m</span>
-          <span class="tag-network collegebesties">collegebesties</span>
-        </div>
-        <div class="tag-item collegebesties">
-          <span class="tag-num">#12</span>
-          <div><span class="tag-name">Alice 🌸</span><br><span class="tag-username">@alicegreene</span></div>
-          <span class="tag-time">1:18 AM</span>
-          <span class="tag-interval fast">+1m</span>
-          <span class="tag-network collegebesties">collegebesties</span>
-        </div>
-        <div class="tag-item collegebesties">
-          <span class="tag-num">#13</span>
-          <div><span class="tag-name">Kady💕✨🌸</span><br><span class="tag-username">@kadyrivers</span></div>
-          <span class="tag-time">1:19 AM</span>
-          <span class="tag-interval fast">+1m</span>
-          <span class="tag-network collegebesties">collegebesties</span>
-        </div>
-        <div class="tag-item collegebesties">
-          <span class="tag-num">#14</span>
-          <div><span class="tag-name">Charley 🐚 🥰</span><br><span class="tag-username">@charleyrhyder</span></div>
-          <span class="tag-time">1:24 AM</span>
-          <span class="tag-interval fast">+5m</span>
-          <span class="tag-network collegebesties">collegebesties</span>
-        </div>
-        <div class="tag-item collegebesties">
-          <span class="tag-num">#15</span>
-          <div><span class="tag-name">Maisie Stephens 🐷</span><br><span class="tag-username">@maisiestephens</span></div>
-          <span class="tag-time">1:27 AM</span>
-          <span class="tag-interval fast">+3m</span>
-          <span class="tag-network collegebesties">collegebesties</span>
-        </div>
-        <div class="tag-item collegebesties">
-          <span class="tag-num">#16</span>
-          <div><span class="tag-name">Faith💛</span><br><span class="tag-username">@faithdavis</span></div>
-          <span class="tag-time">1:28 AM</span>
-          <span class="tag-interval fast">+1m</span>
-          <span class="tag-network collegebesties">collegebesties</span>
-        </div>
-        <div class="tag-item collegebesties">
-          <span class="tag-num">#17</span>
-          <div><span class="tag-name">Jasmine😽</span><br><span class="tag-username">@juicyjassx</span></div>
-          <span class="tag-time">1:49 AM</span>
-          <span class="tag-interval gap">+21m</span>
-          <span class="tag-network collegebesties">collegebesties</span>
-        </div>
-        <div class="tag-item collegeclubb new">
-          <span class="tag-num">#18</span>
-          <div><span class="tag-name">Millie 😋<span class="new-badge">NEW</span></span><br><span class="tag-username">@milliecook</span></div>
-          <span class="tag-time">2:07 AM</span>
-          <span class="tag-interval gap">+18m</span>
-          <span class="tag-network collegeclubb">collegeclubb</span>
-        </div>
-        <div class="tag-item collegebesties">
-          <span class="tag-num">#19</span>
-          <div><span class="tag-name">Rowan 🌺</span><br><span class="tag-username">@rowanpierce</span></div>
-          <span class="tag-time">2:08 AM</span>
-          <span class="tag-interval fast">+1m</span>
-          <span class="tag-network collegebesties">collegebesties</span>
-        </div>
-        <div class="tag-item collegebesties">
-          <span class="tag-num">#20</span>
-          <div><span class="tag-name">Isla 💗</span><br><span class="tag-username">@islabrooks</span></div>
-          <span class="tag-time">2:22 AM</span>
-          <span class="tag-interval gap">+14m</span>
-          <span class="tag-network collegebesties">collegebesties</span>
-        </div>
-        <div class="tag-item collegeclubb new">
-          <span class="tag-num">#21</span>
-          <div><span class="tag-name">Ashlynn 💕<span class="new-badge">NEW</span></span><br><span class="tag-username">@ashlynnbrooks</span></div>
-          <span class="tag-time">2:26 AM</span>
-          <span class="tag-interval fast">+4m</span>
-          <span class="tag-network collegeclubb">collegeclubb</span>
-        </div>
-        <div class="tag-item collegeclubb">
-          <span class="tag-num">#22</span>
-          <div><span class="tag-name">Anna 🐻</span><br><span class="tag-username">@annawhitmore</span></div>
-          <span class="tag-time">2:26 AM</span>
-          <span class="tag-interval fast">+0m</span>
-          <span class="tag-network collegeclubb">collegeclubb</span>
-        </div>
-        <div class="tag-item collegebesties new">
-          <span class="tag-num">#23</span>
-          <div><span class="tag-name">Callie🦋<span class="new-badge">NEW</span></span><br><span class="tag-username">@calliereece</span></div>
-          <span class="tag-time">2:32 AM</span>
-          <span class="tag-interval fast">+6m</span>
-          <span class="tag-network collegebesties">collegebesties</span>
-        </div>
-        <div class="tag-item collegeclubb">
-          <span class="tag-num">#24</span>
-          <div><span class="tag-name">Mackenzie 🍒</span><br><span class="tag-username">@mackenziehart</span></div>
-          <span class="tag-time">2:34 AM</span>
-          <span class="tag-interval fast">+2m</span>
-          <span class="tag-network collegeclubb">collegeclubb</span>
-        </div>
-        <div class="tag-item collegeclubb">
-          <span class="tag-num">#25</span>
-          <div><span class="tag-name">Carlene ✨</span><br><span class="tag-username">@carlenewalker</span></div>
-          <span class="tag-time">2:56 AM</span>
-          <span class="tag-interval gap">+22m</span>
-          <span class="tag-network collegeclubb">collegeclubb</span>
-        </div>
-        <div class="tag-item collegebesties">
-          <span class="tag-num">#26</span>
-          <div><span class="tag-name">Tilly 🦋</span><br><span class="tag-username">@tillyharper</span></div>
-          <span class="tag-time">3:19 AM</span>
-          <span class="tag-interval gap">+23m</span>
-          <span class="tag-network collegebesties">collegebesties</span>
-        </div>
-        <div class="tag-item collegeclubb">
-          <span class="tag-num">#27</span>
-          <div><span class="tag-name">Shay 💫</span><br><span class="tag-username">@shaybennett</span></div>
-          <span class="tag-time">3:19 AM</span>
-          <span class="tag-interval fast">+0m</span>
-          <span class="tag-network collegeclubb">collegeclubb</span>
-        </div>
-        <div class="tag-item collegeclubb">
-          <span class="tag-num">#28</span>
-          <div><span class="tag-name">Nora 🌹</span><br><span class="tag-username">@norahart</span></div>
-          <span class="tag-time">3:23 AM</span>
-          <span class="tag-interval fast">+4m</span>
-          <span class="tag-network collegeclubb">collegeclubb</span>
-        </div>
-        <div class="tag-item collegeclubb">
-          <span class="tag-num">#29</span>
-          <div><span class="tag-name">Tammy 💖</span><br><span class="tag-username">@tammymoore</span></div>
-          <span class="tag-time">3:50 AM</span>
-          <span class="tag-interval gap">+27m</span>
-          <span class="tag-network collegeclubb">collegeclubb</span>
-        </div>
-        <div class="tag-item collegebesties" style="border-left-color: #22c55e; background: rgba(34,197,94,0.1);">
-          <span class="tag-num">#30</span>
-          <div><span class="tag-name">Nikki 🥰 <span class="new-badge" style="background:#22c55e;">🔄 LOOP!</span></span><br><span class="tag-username">@nikkihayes</span></div>
-          <span class="tag-time">4:10 AM</span>
-          <span class="tag-interval gap">+20m</span>
-          <span class="tag-network collegebesties">collegebesties</span>
-        </div>
-        <div class="tag-item collegeclubb">
-          <span class="tag-num">#31</span>
-          <div><span class="tag-name">Maya 🌻</span><br><span class="tag-username">@mayawilder</span></div>
-          <span class="tag-time">4:18 AM</span>
-          <span class="tag-interval fast">+8m</span>
-          <span class="tag-network collegeclubb">collegeclubb</span>
-        </div>
-        <div class="tag-item collegeclubb">
-          <span class="tag-num">#32</span>
-          <div><span class="tag-name">Hope🎀😊</span><br><span class="tag-username">@hopewalkerr</span></div>
-          <span class="tag-time">4:30 AM</span>
-          <span class="tag-interval fast">+12m</span>
-          <span class="tag-network collegeclubb">collegeclubb</span>
-        </div>
-        <div class="tag-item collegebesties">
-          <span class="tag-num">#33</span>
-          <div><span class="tag-name">Cassidy 🦋</span><br><span class="tag-username">@cassidymellor</span></div>
-          <span class="tag-time">4:30 AM</span>
-          <span class="tag-interval fast">+0m</span>
-          <span class="tag-network collegebesties">collegebesties</span>
-        </div>
-        <div class="tag-item collegeclubb">
-          <span class="tag-num">#34</span>
-          <div><span class="tag-name">Macy Woods</span><br><span class="tag-username">@macyywoods</span></div>
-          <span class="tag-time">4:30 AM</span>
-          <span class="tag-interval fast">+0m</span>
-          <span class="tag-network collegeclubb">collegeclubb</span>
-        </div>
-        <div class="tag-item collegeclubb new">
-          <span class="tag-num">#35</span>
-          <div><span class="tag-name">Kaylen 🌸<span class="new-badge">LATEST</span></span><br><span class="tag-username">@kaylenlane</span></div>
-          <span class="tag-time">4:31 AM</span>
-          <span class="tag-interval fast">+1m</span>
-          <span class="tag-network collegeclubb">collegeclubb</span>
-        </div>
-      </div>
-      
-      <div class="network-breakdown">
-        <div class="network-stat"><div class="network-dot collegebesties"></div> collegebesties: 22</div>
-        <div class="network-stat"><div class="network-dot collegeclubb"></div> collegeclubb: 12</div>
-        <div class="network-stat"><div class="network-dot myfriendss"></div> myfriendss: 1</div>
       </div>
     </div>
 
     <div class="section">
-      <div class="section-title">💬 Mention Tracking (5 Mentions)</div>
+      <div class="section-title">📍 All Tags (57 Captured)</div>
       <div class="tag-list">
-        <div class="tag-item myfriendss">
-          <span class="tag-num">#1</span>
-          <div><span class="tag-name">Naomi 🌸</span><br><span class="tag-username">@naomisteele</span></div>
-          <span class="tag-time">11:59 PM</span>
-          <span class="tag-interval fast">Feb 5</span>
-          <span class="tag-network myfriendss">myfriendss</span>
-        </div>
-        <div class="tag-item collegebesties">
-          <span class="tag-num">#2</span>
-          <div><span class="tag-name">Tilly 🦋</span><br><span class="tag-username">@tillyharper</span></div>
-          <span class="tag-time">3:19 AM</span>
-          <span class="tag-interval fast">Feb 6</span>
-          <span class="tag-network collegebesties">collegebesties</span>
-        </div>
-        <div class="tag-item collegeclubb">
-          <span class="tag-num">#3</span>
-          <div><span class="tag-name">Shay 💫</span><br><span class="tag-username">@shaybennett</span></div>
-          <span class="tag-time">3:19 AM</span>
-          <span class="tag-interval fast">Feb 6</span>
-          <span class="tag-network collegeclubb">collegeclubb</span>
-        </div>
-        <div class="tag-item collegeclubb">
-          <span class="tag-num">#4</span>
-          <div><span class="tag-name">Nora 🌹</span><br><span class="tag-username">@norahart</span></div>
-          <span class="tag-time">3:23 AM</span>
-          <span class="tag-interval fast">Feb 6</span>
-          <span class="tag-network collegeclubb">collegeclubb</span>
-        </div>
-        <div class="tag-item collegeclubb">
-          <span class="tag-num">#5</span>
-          <div><span class="tag-name">Tammy 💖</span><br><span class="tag-username">@tammymoore</span></div>
-          <span class="tag-time">3:50 AM</span>
-          <span class="tag-interval fast">Feb 6</span>
-          <span class="tag-network collegeclubb">collegeclubb</span>
-        </div>
+        <div class="tag-item collegebesties"><span class="tag-num">#1</span><div><span class="tag-name">Nikki 🥰</span><br><span class="tag-username">@nikkihayes</span></div><span class="tag-time">12:40 AM</span><span class="tag-network collegebesties">collegebesties</span></div>
+        <div class="tag-item collegebesties"><span class="tag-num">#2</span><div><span class="tag-name">Lani 🦋</span><br><span class="tag-username">@lanitaylor</span></div><span class="tag-time">12:44 AM</span><span class="tag-network collegebesties">collegebesties</span></div>
+        <div class="tag-item collegebesties"><span class="tag-num">#3</span><div><span class="tag-name">Hannah 🥹🌸</span><br><span class="tag-username">@hannahpriv</span></div><span class="tag-time">12:49 AM</span><span class="tag-network collegebesties">collegebesties</span></div>
+        <div class="tag-item collegebesties"><span class="tag-num">#4</span><div><span class="tag-name">Connie</span><br><span class="tag-username">@connierivers</span></div><span class="tag-time">12:52 AM</span><span class="tag-network collegebesties">collegebesties</span></div>
+        <div class="tag-item collegebesties"><span class="tag-num">#5</span><div><span class="tag-name">Bailey Lewis💕</span><br><span class="tag-username">@baileylewis1</span></div><span class="tag-time">12:54 AM</span><span class="tag-network collegebesties">collegebesties</span></div>
+        <div class="tag-item collegebesties"><span class="tag-num">#6</span><div><span class="tag-name">Ivy 🥹💗</span><br><span class="tag-username">@ivyraye</span></div><span class="tag-time">1:00 AM</span><span class="tag-network collegebesties">collegebesties</span></div>
+        <div class="tag-item collegebesties"><span class="tag-num">#7</span><div><span class="tag-name">Sofia ✌🏼</span><br><span class="tag-username">@sofiaalto</span></div><span class="tag-time">1:04 AM</span><span class="tag-network collegebesties">collegebesties</span></div>
+        <div class="tag-item collegebesties"><span class="tag-num">#8</span><div><span class="tag-name">Amelia 💞🥹</span><br><span class="tag-username">@ameliaking1</span></div><span class="tag-time">1:05 AM</span><span class="tag-network collegebesties">collegebesties</span></div>
+        <div class="tag-item collegebesties"><span class="tag-num">#9</span><div><span class="tag-name">Summer 🦋</span><br><span class="tag-username">@summerthorpe</span></div><span class="tag-time">1:10 AM</span><span class="tag-network collegebesties">collegebesties</span></div>
+        <div class="tag-item collegebesties"><span class="tag-num">#10</span><div><span class="tag-name">Robyn 💘</span><br><span class="tag-username">@robynnparker</span></div><span class="tag-time">1:12 AM</span><span class="tag-network collegebesties">collegebesties</span></div>
+        <div class="tag-item collegebesties"><span class="tag-num">#11</span><div><span class="tag-name">Jennie 🌼</span><br><span class="tag-username">@jenniedavis</span></div><span class="tag-time">1:17 AM</span><span class="tag-network collegebesties">collegebesties</span></div>
+        <div class="tag-item collegebesties"><span class="tag-num">#12</span><div><span class="tag-name">Alice 🌸</span><br><span class="tag-username">@alicegreene</span></div><span class="tag-time">1:18 AM</span><span class="tag-network collegebesties">collegebesties</span></div>
+        <div class="tag-item collegebesties"><span class="tag-num">#13</span><div><span class="tag-name">Kady💕✨🌸</span><br><span class="tag-username">@kadyrivers</span></div><span class="tag-time">1:19 AM</span><span class="tag-network collegebesties">collegebesties</span></div>
+        <div class="tag-item collegebesties"><span class="tag-num">#14</span><div><span class="tag-name">Charley 🐚🥰</span><br><span class="tag-username">@charleyrhyder</span></div><span class="tag-time">1:24 AM</span><span class="tag-network collegebesties">collegebesties</span></div>
+        <div class="tag-item collegebesties"><span class="tag-num">#15</span><div><span class="tag-name">Maisie Stephens 🐷</span><br><span class="tag-username">@maisiestephens</span></div><span class="tag-time">1:27 AM</span><span class="tag-network collegebesties">collegebesties</span></div>
+        <div class="tag-item collegebesties"><span class="tag-num">#16</span><div><span class="tag-name">Faith💛</span><br><span class="tag-username">@faithdavis</span></div><span class="tag-time">1:28 AM</span><span class="tag-network collegebesties">collegebesties</span></div>
+        <div class="tag-item collegebesties"><span class="tag-num">#17</span><div><span class="tag-name">Jasmine😽</span><br><span class="tag-username">@juicyjassx</span></div><span class="tag-time">1:49 AM</span><span class="tag-network collegebesties">collegebesties</span></div>
+        <div class="tag-item collegeclubb"><span class="tag-num">#18</span><div><span class="tag-name">Millie 😋</span><br><span class="tag-username">@milliecook</span></div><span class="tag-time">2:07 AM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegebesties"><span class="tag-num">#19</span><div><span class="tag-name">Rowan 🌺</span><br><span class="tag-username">@rowanpierce</span></div><span class="tag-time">2:08 AM</span><span class="tag-network collegebesties">collegebesties</span></div>
+        <div class="tag-item collegebesties"><span class="tag-num">#20</span><div><span class="tag-name">Isla 💗</span><br><span class="tag-username">@islabrooks</span></div><span class="tag-time">2:22 AM</span><span class="tag-network collegebesties">collegebesties</span></div>
+        <div class="tag-item collegeclubb"><span class="tag-num">#21</span><div><span class="tag-name">Ashlynn 💕</span><br><span class="tag-username">@ashlynnbrooks</span></div><span class="tag-time">2:26 AM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegeclubb"><span class="tag-num">#22</span><div><span class="tag-name">Anna 🐻</span><br><span class="tag-username">@annawhitmore</span></div><span class="tag-time">2:26 AM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegebesties"><span class="tag-num">#23</span><div><span class="tag-name">Callie🦋</span><br><span class="tag-username">@calliereece</span></div><span class="tag-time">2:32 AM</span><span class="tag-network collegebesties">collegebesties</span></div>
+        <div class="tag-item collegeclubb"><span class="tag-num">#24</span><div><span class="tag-name">Mackenzie 🍒</span><br><span class="tag-username">@mackenziehart</span></div><span class="tag-time">2:34 AM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegeclubb"><span class="tag-num">#25</span><div><span class="tag-name">Carlene ✨</span><br><span class="tag-username">@carlenewalker</span></div><span class="tag-time">2:56 AM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegebesties"><span class="tag-num">#26</span><div><span class="tag-name">Tilly 🦋</span><br><span class="tag-username">@tillyharper</span></div><span class="tag-time">3:19 AM</span><span class="tag-network collegebesties">collegebesties</span></div>
+        <div class="tag-item collegeclubb"><span class="tag-num">#27</span><div><span class="tag-name">Shay 💫</span><br><span class="tag-username">@shaybennett</span></div><span class="tag-time">3:19 AM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegeclubb"><span class="tag-num">#28</span><div><span class="tag-name">Nora 🌹</span><br><span class="tag-username">@norahart</span></div><span class="tag-time">3:23 AM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegeclubb"><span class="tag-num">#29</span><div><span class="tag-name">Tammy 💖</span><br><span class="tag-username">@tammymoore</span></div><span class="tag-time">3:50 AM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegebesties loop"><span class="tag-num">#30</span><div><span class="tag-name">Nikki 🥰<span class="tag-note">🔄 LOOP!</span></span><br><span class="tag-username">@nikkihayes</span></div><span class="tag-time">4:10 AM</span><span class="tag-network collegebesties">collegebesties</span></div>
+        <div class="tag-item collegeclubb"><span class="tag-num">#31</span><div><span class="tag-name">Maya 🌻</span><br><span class="tag-username">@mayawilder</span></div><span class="tag-time">4:18 AM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegeclubb big"><span class="tag-num">#32</span><div><span class="tag-name">Hope🎀😊<span class="tag-note">223K</span></span><br><span class="tag-username">@hopewalkerr</span></div><span class="tag-time">4:30 AM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegebesties"><span class="tag-num">#33</span><div><span class="tag-name">Cassidy 🦋</span><br><span class="tag-username">@cassidymellor</span></div><span class="tag-time">4:30 AM</span><span class="tag-network collegebesties">collegebesties</span></div>
+        <div class="tag-item collegeclubb"><span class="tag-num">#34</span><div><span class="tag-name">Macy Woods</span><br><span class="tag-username">@macyywoods</span></div><span class="tag-time">4:30 AM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegeclubb"><span class="tag-num">#35</span><div><span class="tag-name">Kaylen 🌸</span><br><span class="tag-username">@kaylenlane</span></div><span class="tag-time">4:31 AM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegeclubb"><span class="tag-num">#36</span><div><span class="tag-name">Finley 🍓</span><br><span class="tag-username">@finleyrhodes</span></div><span class="tag-time">9:50 AM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegeclubb"><span class="tag-num">#37</span><div><span class="tag-name">Blakely 💖</span><br><span class="tag-username">@blakelycarter</span></div><span class="tag-time">10:00 AM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegeclubb"><span class="tag-num">#38</span><div><span class="tag-name">Kaylee 💋</span><br><span class="tag-username">@kayleebrooks</span></div><span class="tag-time">10:21 AM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegebesties loop"><span class="tag-num">#39</span><div><span class="tag-name">Callie🦋<span class="tag-note">🔄 LOOP</span></span><br><span class="tag-username">@calliereece</span></div><span class="tag-time">10:34 AM</span><span class="tag-network collegebesties">collegebesties</span></div>
+        <div class="tag-item collegeclubb"><span class="tag-num">#40</span><div><span class="tag-name">Kenzie ❤️‍🔥</span><br><span class="tag-username">@kenzieblake</span></div><span class="tag-time">11:48 AM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegeclubb big"><span class="tag-num">#41</span><div><span class="tag-name">livdavies<span class="tag-note">422K</span></span><br><span class="tag-username">@livdavies</span></div><span class="tag-time">12:08 PM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegeclubb"><span class="tag-num">#42</span><div><span class="tag-name">Rylee🍒</span><br><span class="tag-username">@ryleeadams</span></div><span class="tag-time">12:11 PM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegeclubb"><span class="tag-num">#43</span><div><span class="tag-name">Mckinley❤️‍🔥</span><br><span class="tag-username">@mckinleyevans</span></div><span class="tag-time">12:38 PM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegeclubb big"><span class="tag-num">#44</span><div><span class="tag-name">ella rose 😽<span class="tag-note">720K</span></span><br><span class="tag-username">@ellabbyxo</span></div><span class="tag-time">12:48 PM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegeclubb big"><span class="tag-num">#45</span><div><span class="tag-name">Ava 🌼<span class="tag-note">254K</span></span><br><span class="tag-username">@avajean</span></div><span class="tag-time">1:06 PM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegeclubb loop"><span class="tag-num">#46</span><div><span class="tag-name">Finley 🍓<span class="tag-note">🔄 LOOP</span></span><br><span class="tag-username">@finleyrhodes</span></div><span class="tag-time">1:06 PM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegebesties loop"><span class="tag-num">#47</span><div><span class="tag-name">Rowan 🌺<span class="tag-note">🔄 LOOP</span></span><br><span class="tag-username">@rowanpierce</span></div><span class="tag-time">1:36 PM</span><span class="tag-network collegebesties">collegebesties</span></div>
+        <div class="tag-item collegeclubb"><span class="tag-num">#48</span><div><span class="tag-name">Carlene ✨</span><br><span class="tag-username">@carlenewalker</span></div><span class="tag-time">1:41 PM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegeclubb big"><span class="tag-num">#49</span><div><span class="tag-name">Natalie Rhoades💗<span class="tag-note">380K</span></span><br><span class="tag-username">@natalierhoades18</span></div><span class="tag-time">2:09 PM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegeclubb big"><span class="tag-num">#50</span><div><span class="tag-name">Briella 🌸<span class="tag-note">99K</span></span><br><span class="tag-username">@briellatate</span></div><span class="tag-time">2:14 PM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegebesties loop"><span class="tag-num">#51</span><div><span class="tag-name">Rowan 🌺<span class="tag-note">🔄 LOOP</span></span><br><span class="tag-username">@rowanpierce</span></div><span class="tag-time">2:17 PM</span><span class="tag-network collegebesties">collegebesties</span></div>
+        <div class="tag-item collegebesties loop"><span class="tag-num">#52</span><div><span class="tag-name">Callie🦋<span class="tag-note">🔄 LOOP</span></span><br><span class="tag-username">@calliereece</span></div><span class="tag-time">2:39 PM</span><span class="tag-network collegebesties">collegebesties</span></div>
+        <div class="tag-item collegeclubb big"><span class="tag-num">#53</span><div><span class="tag-name">Jenna 🦋🌼<span class="tag-note">243K</span></span><br><span class="tag-username">@jennashaw</span></div><span class="tag-time">6:11 PM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegeclubb big loop"><span class="tag-num">#54</span><div><span class="tag-name">ella rose 😽<span class="tag-note">720K 🔄</span></span><br><span class="tag-username">@ellabbyxo</span></div><span class="tag-time">6:25 PM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegebesties loop"><span class="tag-num">#55</span><div><span class="tag-name">Rowan 🌺<span class="tag-note">🔄 LOOP</span></span><br><span class="tag-username">@rowanpierce</span></div><span class="tag-time">6:28 PM</span><span class="tag-network collegebesties">collegebesties</span></div>
+        <div class="tag-item collegeclubb loop"><span class="tag-num">#56</span><div><span class="tag-name">Carlene ✨<span class="tag-note">🔄 LOOP</span></span><br><span class="tag-username">@carlenewalker</span></div><span class="tag-time">6:38 PM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegeclubb big"><span class="tag-num">#57</span><div><span class="tag-name">Lola😻<span class="tag-note">360K 🔥</span></span><br><span class="tag-username">@babylola18</span></div><span class="tag-time">6:45 PM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">💬 All Mentions (19 Captured)</div>
+      <div class="tag-list">
+        <div class="tag-item myfriendss"><span class="tag-num">#1</span><div><span class="tag-name">Naomi 🌸</span><br><span class="tag-username">@naomisteele</span></div><span class="tag-time">11:59 PM</span><span class="tag-network myfriendss">myfriendss</span></div>
+        <div class="tag-item collegebesties"><span class="tag-num">#2</span><div><span class="tag-name">Tilly 🦋</span><br><span class="tag-username">@tillyharper</span></div><span class="tag-time">3:19 AM</span><span class="tag-network collegebesties">collegebesties</span></div>
+        <div class="tag-item collegeclubb"><span class="tag-num">#3</span><div><span class="tag-name">Shay 💫</span><br><span class="tag-username">@shaybennett</span></div><span class="tag-time">3:19 AM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegeclubb"><span class="tag-num">#4</span><div><span class="tag-name">Nora 🌹</span><br><span class="tag-username">@norahart</span></div><span class="tag-time">3:23 AM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegeclubb"><span class="tag-num">#5</span><div><span class="tag-name">Tammy 💖</span><br><span class="tag-username">@tammymoore</span></div><span class="tag-time">3:50 AM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegebesties"><span class="tag-num">#6</span><div><span class="tag-name">Rowan 🌺</span><br><span class="tag-username">@rowanpierce</span></div><span class="tag-time">1:36 PM</span><span class="tag-network collegebesties">collegebesties</span></div>
+        <div class="tag-item collegeclubb loop"><span class="tag-num">#7</span><div><span class="tag-name">Tammy 💖<span class="tag-note">🔄 LOOP</span></span><br><span class="tag-username">@tammymoore</span></div><span class="tag-time">1:58 PM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegeclubb"><span class="tag-num">#8</span><div><span class="tag-name">Anna 🐻</span><br><span class="tag-username">@annawhitmore</span></div><span class="tag-time">3:12 PM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegebesties loop"><span class="tag-num">#9</span><div><span class="tag-name">Tilly 🦋<span class="tag-note">🔄 LOOP</span></span><br><span class="tag-username">@tillyharper</span></div><span class="tag-time">3:19 PM</span><span class="tag-network collegebesties">collegebesties</span></div>
+        <div class="tag-item collegeclubb loop"><span class="tag-num">#10</span><div><span class="tag-name">Shay 💫<span class="tag-note">🔄 LOOP</span></span><br><span class="tag-username">@shaybennett</span></div><span class="tag-time">3:19 PM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegeclubb big"><span class="tag-num">#11</span><div><span class="tag-name">Melissa 🌸<span class="tag-note">288K</span></span><br><span class="tag-username">@melissatate</span></div><span class="tag-time">3:29 PM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegeclubb big"><span class="tag-num">#12</span><div><span class="tag-name">Elsie🌙<span class="tag-note">67K</span></span><br><span class="tag-username">@elsieporter</span></div><span class="tag-time">3:29 PM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegeclubb"><span class="tag-num">#13</span><div><span class="tag-name">Kenzie ❤️‍🔥<span class="tag-note">23K</span></span><br><span class="tag-username">@kenzieblake</span></div><span class="tag-time">3:45 PM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegeclubb big"><span class="tag-num">#14</span><div><span class="tag-name">livdavies<span class="tag-note">422K 🔥</span></span><br><span class="tag-username">@livdavies</span></div><span class="tag-time">4:04 PM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegeclubb loop"><span class="tag-num">#15</span><div><span class="tag-name">Carlene ✨<span class="tag-note">🔄 LOOP</span></span><br><span class="tag-username">@carlenewalker</span></div><span class="tag-time">4:26 PM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegeclubb"><span class="tag-num">#16</span><div><span class="tag-name">Abby 🌺<span class="tag-note">15K</span></span><br><span class="tag-username">@abbybeaumont</span></div><span class="tag-time">5:00 PM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegeclubb loop"><span class="tag-num">#17</span><div><span class="tag-name">Maya 🌻<span class="tag-note">🔄 LOOP</span></span><br><span class="tag-username">@mayawilder</span></div><span class="tag-time">5:12 PM</span><span class="tag-network collegeclubb">collegeclubb</span></div>
+        <div class="tag-item collegebesties big"><span class="tag-num">#18</span><div><span class="tag-name">Brook 🌸<span class="tag-note">21K</span></span><br><span class="tag-username">@brooklynreed</span></div><span class="tag-time">5:42 PM</span><span class="tag-network collegebesties">collegebesties</span></div>
+        <div class="tag-item collegebesties loop"><span class="tag-num">#19</span><div><span class="tag-name">Rowan 🌺<span class="tag-note">🔄 LOOP</span></span><br><span class="tag-username">@rowanpierce</span></div><span class="tag-time">5:45 PM</span><span class="tag-network collegebesties">collegebesties</span></div>
       </div>
     </div>
 
     <div class="insight-box">
-      <div class="insight-title">🔍 Key Insights</div>
-      <div class="insight-text">
-        • <strong>✅ LOOP CONFIRMED:</strong> nikkihayes reappeared at 4:10am (first seen 12:40am) = <strong>3.5 hour rotation cycle</strong><br>
-        • <strong>Rotation interval:</strong> ~3.5 minutes average between tags<br>
-        • <strong>3 Networks Detected:</strong> collegebesties (22), collegeclubb (12), myfriendss (1)<br>
-        • <strong>Fan velocity:</strong> +129 fans in 3.5 hours = ~37/hour from tagging alone<br>
-        • <strong>Tag format:</strong> Photo OF tagged model + promo caption + @mention<br>
-        • <strong>Network split:</strong> ~60 models rotating across 3 landing pages<br>
-        • <strong>Landing pages:</strong> collegebesties.com, collegeclubb.com, myfriendss.com
+      <div class="insight-title">🧠 Strategic Takeaways for Plush</div>
+      <ul class="insight-list">
+        <li><strong>Automation required:</strong> This runs 24/7 with API-level control. Manual S4S can't compete at this scale.</li>
+        <li><strong>Network effect:</strong> 60 models × many tags/day = massive cross-promotion. Each model benefits from entire network.</li>
+        <li><strong>Big accounts matter:</strong> 720K-like accounts drive disproportionate traffic. Quality over quantity in partnerships.</li>
+        <li><strong>Ghost promotion:</strong> Auto-deleting posts keeps feeds clean while driving traffic. Smart system.</li>
+        <li><strong>Revenue potential:</strong> $160+ in first 20 hours for a new model from this system alone.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-title">📋 Full Model Roster (125 Models: 54 Captured + 71 Website-Only)</div>
+      <p style="color: #888; margin-bottom: 15px; font-size: 0.85rem;">Comparing models we've seen tagging Nina vs. what's listed on landing pages. "Bio Site" = network in their OF bio. "On Website" = appears on that site's roster.</p>
+      
+      <div style="overflow-x: auto;">
+        <table class="model-table">
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Display Name</th>
+              <th>Shoutouts</th>
+              <th>Bio Site</th>
+              <th>On Website?</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="unlisted" style="background: rgba(74,222,128,0.1);"><td>@ninacarlson</td><td>Nina 🫶🏼</td><td>—</td><td class="collegebesties">collegebesties</td><td class="none">❌ NONE</td><td>⭐ TRACKING TARGET</td></tr>
+            <tr><td>@abbybeaumont</td><td>Abby 🌺</td><td>1</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td>15K likes</td></tr>
+            <tr><td>@babylola18</td><td>Lola😻</td><td class="high">2</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td>🔥 360K likes</td></tr>
+            <tr class="unlisted"><td>@alicegreene</td><td>Alice 🌸</td><td>1</td><td class="collegebesties">collegebesties</td><td class="none">❌ NONE</td><td></td></tr>
+            <tr class="unlisted"><td>@ameliaking1</td><td>Amelia 💞🥹</td><td>1</td><td class="collegebesties">collegebesties</td><td class="none">❌ NONE</td><td></td></tr>
+            <tr><td>@annawhitmore</td><td>Anna 🐻</td><td class="high">3</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td>10K likes</td></tr>
+            <tr><td>@ashlynnbrooks</td><td>Ashlynn 💕</td><td>1</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td></td></tr>
+            <tr><td>@avajean</td><td>Ava 🌼</td><td>1</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td>254K likes</td></tr>
+            <tr class="unlisted"><td>@baileylewis1</td><td>Bailey Lewis💕</td><td>1</td><td class="collegebesties">collegebesties</td><td class="none">❌ NONE</td><td></td></tr>
+            <tr><td>@blakelycarter</td><td>Blakely 💖</td><td>1</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td></td></tr>
+            <tr><td>@briellatate</td><td>Briella 🌸</td><td>1</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td>99K likes</td></tr>
+            <tr class="unlisted"><td>@brooklynreed</td><td>Brook 🌸</td><td>1</td><td class="collegebesties">collegebesties</td><td class="none">❌ NONE</td><td>21K likes</td></tr>
+            <tr class="unlisted"><td>@calliereece</td><td>Callie🦋</td><td class="high">4</td><td class="collegebesties">collegebesties</td><td class="none">❌ NONE</td><td>High activity</td></tr>
+            <tr><td>@carlenewalker</td><td>Carlene ✨</td><td class="high">4</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td>High activity</td></tr>
+            <tr class="unlisted"><td>@cassidymellor</td><td>Cassidy 🦋</td><td>1</td><td class="collegebesties">collegebesties</td><td class="none">❌ NONE</td><td></td></tr>
+            <tr class="unlisted"><td>@charleyrhyder</td><td>Charley 🐚🥰</td><td>1</td><td class="collegebesties">collegebesties</td><td class="none">❌ NONE</td><td></td></tr>
+            <tr class="unlisted"><td>@connierivers</td><td>Connie</td><td>1</td><td class="collegebesties">collegebesties</td><td class="none">❌ NONE</td><td></td></tr>
+            <tr><td>@ellabbyxo</td><td>ella rose 😽</td><td class="high">2</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td>🔥 720K likes</td></tr>
+            <tr><td>@elsieporter</td><td>Elsie🌙</td><td class="high">2</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td>67K likes</td></tr>
+            <tr class="unlisted"><td>@faithdavis</td><td>Faith💛</td><td>1</td><td class="collegebesties">collegebesties</td><td class="none">❌ NONE</td><td></td></tr>
+            <tr><td>@finleyrhodes</td><td>Finley 🍓</td><td class="high">2</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td></td></tr>
+            <tr class="unlisted"><td>@hannahpriv</td><td>Hannah 🥹🌸</td><td>1</td><td class="collegebesties">collegebesties</td><td class="none">❌ NONE</td><td></td></tr>
+            <tr><td>@hopewalkerr</td><td>Hope🎀😊</td><td>1</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td>223K likes</td></tr>
+            <tr class="unlisted"><td>@islabrooks</td><td>Isla 💗</td><td>1</td><td class="collegebesties">collegebesties</td><td class="none">❌ NONE</td><td></td></tr>
+            <tr class="unlisted"><td>@ivyraye</td><td>Ivy 🥹💗</td><td>1</td><td class="collegebesties">collegebesties</td><td class="none">❌ NONE</td><td></td></tr>
+            <tr><td>@jennashaw</td><td>Jenna 🦋🌼</td><td>1</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td>243K likes</td></tr>
+            <tr class="unlisted"><td>@jenniedavis</td><td>Jennie 🌼</td><td>1</td><td class="collegebesties">collegebesties</td><td class="none">❌ NONE</td><td></td></tr>
+            <tr class="unlisted"><td>@juicyjassx</td><td>Jasmine😽</td><td>1</td><td class="collegebesties">collegebesties</td><td class="none">❌ NONE</td><td></td></tr>
+            <tr class="unlisted"><td>@kadyrivers</td><td>Kady💕✨🌸</td><td>1</td><td class="collegebesties">collegebesties</td><td class="none">❌ NONE</td><td></td></tr>
+            <tr><td>@kayleebrooks</td><td>Kaylee 💋</td><td>1</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td></td></tr>
+            <tr><td>@kaylenlane</td><td>Kaylen 🌸</td><td>1</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td></td></tr>
+            <tr><td>@kenzieblake</td><td>Kenzie ❤️‍🔥</td><td class="high">2</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td>23K likes</td></tr>
+            <tr class="unlisted"><td>@lanitaylor</td><td>Lani 🦋</td><td>1</td><td class="collegebesties">collegebesties</td><td class="none">❌ NONE</td><td>Not Lanie</td></tr>
+            <tr><td>@livdavies</td><td>livdavies</td><td class="high">2</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td>🔥 422K likes</td></tr>
+            <tr><td>@mackenziehart</td><td>Mackenzie 🍒</td><td>1</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td></td></tr>
+            <tr><td>@macyywoods</td><td>Macy Woods</td><td>1</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td></td></tr>
+            <tr class="unlisted"><td>@maisiestephens</td><td>Maisie Stephens 🐷</td><td>1</td><td class="collegebesties">collegebesties</td><td class="none">❌ NONE</td><td></td></tr>
+            <tr><td>@mayawilder</td><td>Maya 🌻</td><td class="high">2</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td></td></tr>
+            <tr><td>@mckinleyevans</td><td>Mckinley❤️‍🔥</td><td>1</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td></td></tr>
+            <tr><td>@melissatate</td><td>Melissa 🌸</td><td>1</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td>288K likes</td></tr>
+            <tr><td>@milliecook</td><td>Millie 😋</td><td>1</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td></td></tr>
+            <tr><td>@naomisteele</td><td>Naomi 🌸</td><td>1</td><td class="myfriendss">myfriendss</td><td class="match">✅ myfriendss</td><td>Only myfriendss</td></tr>
+            <tr><td>@natalierhoades18</td><td>Natalie Rhoades💗</td><td class="high">2</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td>🔥 380K likes</td></tr>
+            <tr class="unlisted"><td>@nikkihayes</td><td>Nikki 🥰</td><td class="high">2</td><td class="collegebesties">collegebesties</td><td class="none">❌ NONE</td><td>First tag</td></tr>
+            <tr><td>@norahart</td><td>Nora 🌹</td><td class="high">2</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td></td></tr>
+            <tr class="unlisted"><td>@robynnparker</td><td>Robyn 💘</td><td>1</td><td class="collegebesties">collegebesties</td><td class="none">❌ NONE</td><td></td></tr>
+            <tr class="unlisted"><td>@rowanpierce</td><td>Rowan 🌺</td><td class="high">6</td><td class="collegebesties">collegebesties</td><td class="none">❌ NONE</td><td>🔥 Most active!</td></tr>
+            <tr><td>@ryleeadams</td><td>Rylee🍒</td><td>1</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td></td></tr>
+            <tr class="unlisted"><td>@shaybennett</td><td>Shay 💫</td><td class="high">3</td><td class="collegeclubb">collegeclubb</td><td class="none">❌ NONE</td><td>High activity</td></tr>
+            <tr class="unlisted"><td>@sofiaalto</td><td>Sofia ✌🏼</td><td>1</td><td class="collegebesties">collegebesties</td><td class="none">❌ NONE</td><td></td></tr>
+            <tr class="unlisted"><td>@summerthorpe</td><td>Summer 🦋</td><td>1</td><td class="collegebesties">collegebesties</td><td class="none">❌ NONE</td><td></td></tr>
+            <tr class="unlisted"><td>@tammymoore</td><td>Tammy 💖</td><td class="high">3</td><td class="collegeclubb">collegeclubb</td><td class="none">❌ NONE</td><td>High activity</td></tr>
+            <tr class="unlisted"><td>@tillyharper</td><td>Tilly 🦋</td><td class="high">3</td><td class="collegebesties">collegebesties</td><td class="none">❌ NONE</td><td>High activity</td></tr>
+            <tr class="unlisted"><td>@amyjacksonn</td><td>Amy 🌻</td><td class="high">2</td><td class="collegebesties">collegebesties</td><td class="none">❌ NONE</td><td>36K likes - NEW</td></tr>
+            <!-- COLLEGECLUBB MODELS WITH 0 SHOUTOUTS -->
+            <tr class="zero"><td>—</td><td>Kinley</td><td class="zero-count">0</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Dainty</td><td class="zero-count">0</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Alix</td><td class="zero-count">0</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Jazmin</td><td class="zero-count">0</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Tia</td><td class="zero-count">0</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Isabell</td><td class="zero-count">0</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Lily</td><td class="zero-count">0</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Madison</td><td class="zero-count">0</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Gia</td><td class="zero-count">0</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Elle</td><td class="zero-count">0</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Sage</td><td class="zero-count">0</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Kiya</td><td class="zero-count">0</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Saskia</td><td class="zero-count">0</td><td class="collegeclubb">collegeclubb</td><td class="match">✅ collegeclubb</td><td>Website only</td></tr>
+            <!-- COLLEGEBESTIES MODELS WITH 0 SHOUTOUTS -->
+            <tr class="zero"><td>—</td><td>Margot</td><td class="zero-count">0</td><td class="collegebesties">collegebesties</td><td class="match">✅ collegebesties</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Presley</td><td class="zero-count">0</td><td class="collegebesties">collegebesties</td><td class="match">✅ collegebesties</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Maia</td><td class="zero-count">0</td><td class="collegebesties">collegebesties</td><td class="match">✅ collegebesties</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Brittany</td><td class="zero-count">0</td><td class="collegebesties">collegebesties</td><td class="match">✅ collegebesties</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Hattie</td><td class="zero-count">0</td><td class="collegebesties">collegebesties</td><td class="match">✅ collegebesties</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Lanie</td><td class="zero-count">0</td><td class="collegebesties">collegebesties</td><td class="match">✅ collegebesties</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Miley</td><td class="zero-count">0</td><td class="collegebesties">collegebesties</td><td class="match">✅ collegebesties</td><td>380K likes</td></tr>
+            <tr class="zero"><td>—</td><td>Hazel</td><td class="zero-count">0</td><td class="collegebesties">collegebesties</td><td class="match">✅ collegebesties</td><td>102K likes</td></tr>
+            <tr class="zero"><td>—</td><td>Cora</td><td class="zero-count">0</td><td class="collegebesties">collegebesties</td><td class="match">✅ collegebesties</td><td>13K likes</td></tr>
+            <tr class="zero"><td>—</td><td>Dakota</td><td class="zero-count">0</td><td class="collegebesties">collegebesties</td><td class="match">✅ collegebesties</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Evie</td><td class="zero-count">0</td><td class="collegebesties">collegebesties</td><td class="match">✅ collegebesties</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Brynlee</td><td class="zero-count">0</td><td class="collegebesties">collegebesties</td><td class="match">✅ collegebesties</td><td>93K likes</td></tr>
+            <tr class="zero"><td>—</td><td>Autumn</td><td class="zero-count">0</td><td class="collegebesties">collegebesties</td><td class="match">✅ collegebesties</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Khloe</td><td class="zero-count">0</td><td class="collegebesties">collegebesties</td><td class="match">✅ collegebesties</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Quinn</td><td class="zero-count">0</td><td class="collegebesties">collegebesties</td><td class="match">✅ collegebesties</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Kamryn</td><td class="zero-count">0</td><td class="collegebesties">collegebesties</td><td class="match">✅ collegebesties</td><td>111K likes</td></tr>
+            <tr class="zero"><td>—</td><td>Ellison</td><td class="zero-count">0</td><td class="collegebesties">collegebesties</td><td class="match">✅ collegebesties</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Stephanie</td><td class="zero-count">0</td><td class="collegebesties">collegebesties</td><td class="match">✅ collegebesties</td><td>90K likes</td></tr>
+            <tr class="zero"><td>—</td><td>Hartley</td><td class="zero-count">0</td><td class="collegebesties">collegebesties</td><td class="match">✅ collegebesties</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Cleo Thompson</td><td class="zero-count">0</td><td class="collegebesties">collegebesties</td><td class="match">✅ collegebesties</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Amber</td><td class="zero-count">0</td><td class="collegebesties">collegebesties</td><td class="match">✅ collegebesties</td><td>80K likes</td></tr>
+            <tr class="zero"><td>—</td><td>Jovie</td><td class="zero-count">0</td><td class="collegebesties">collegebesties</td><td class="match">✅ collegebesties</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Jordin</td><td class="zero-count">0</td><td class="collegebesties">collegebesties</td><td class="match">✅ collegebesties</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Piper</td><td class="zero-count">0</td><td class="collegebesties">collegebesties</td><td class="match">✅ collegebesties</td><td>184K likes</td></tr>
+            <tr class="zero"><td>—</td><td>Blair</td><td class="zero-count">0</td><td class="collegebesties">collegebesties</td><td class="match">✅ collegebesties</td><td>117K likes</td></tr>
+            <tr class="zero"><td>—</td><td>Lexi</td><td class="zero-count">0</td><td class="collegebesties">collegebesties</td><td class="match">✅ collegebesties</td><td>Website only</td></tr>
+            <!-- MYFRIENDSS MODELS WITH 0 SHOUTOUTS -->
+            <tr class="zero"><td>—</td><td>Madi</td><td class="zero-count">0</td><td class="myfriendss">myfriendss</td><td class="match">✅ myfriendss</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Ellie</td><td class="zero-count">0</td><td class="myfriendss">myfriendss</td><td class="match">✅ myfriendss</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Lara</td><td class="zero-count">0</td><td class="myfriendss">myfriendss</td><td class="match">✅ myfriendss</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Sara</td><td class="zero-count">0</td><td class="myfriendss">myfriendss</td><td class="match">✅ myfriendss</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Allison</td><td class="zero-count">0</td><td class="myfriendss">myfriendss</td><td class="match">✅ myfriendss</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Becky</td><td class="zero-count">0</td><td class="myfriendss">myfriendss</td><td class="match">✅ myfriendss</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Hailey J</td><td class="zero-count">0</td><td class="myfriendss">myfriendss</td><td class="match">✅ myfriendss</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Nicole</td><td class="zero-count">0</td><td class="myfriendss">myfriendss</td><td class="match">✅ myfriendss</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Kiara</td><td class="zero-count">0</td><td class="myfriendss">myfriendss</td><td class="match">✅ myfriendss</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Marnie</td><td class="zero-count">0</td><td class="myfriendss">myfriendss</td><td class="match">✅ myfriendss</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Livvy</td><td class="zero-count">0</td><td class="myfriendss">myfriendss</td><td class="match">✅ myfriendss</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Kitty</td><td class="zero-count">0</td><td class="myfriendss">myfriendss</td><td class="match">✅ myfriendss</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Jessica</td><td class="zero-count">0</td><td class="myfriendss">myfriendss</td><td class="match">✅ myfriendss</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Bree</td><td class="zero-count">0</td><td class="myfriendss">myfriendss</td><td class="match">✅ myfriendss</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Mae</td><td class="zero-count">0</td><td class="myfriendss">myfriendss</td><td class="match">✅ myfriendss</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Poppy</td><td class="zero-count">0</td><td class="myfriendss">myfriendss</td><td class="match">✅ myfriendss</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Mila</td><td class="zero-count">0</td><td class="myfriendss">myfriendss</td><td class="match">✅ myfriendss</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Zoe</td><td class="zero-count">0</td><td class="myfriendss">myfriendss</td><td class="match">✅ myfriendss</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Indie</td><td class="zero-count">0</td><td class="myfriendss">myfriendss</td><td class="match">✅ myfriendss</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Leni</td><td class="zero-count">0</td><td class="myfriendss">myfriendss</td><td class="match">✅ myfriendss</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Kahlie</td><td class="zero-count">0</td><td class="myfriendss">myfriendss</td><td class="match">✅ myfriendss</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Mckenna</td><td class="zero-count">0</td><td class="myfriendss">myfriendss</td><td class="match">✅ myfriendss</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Gracie</td><td class="zero-count">0</td><td class="myfriendss">myfriendss</td><td class="match">✅ myfriendss</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Alissa</td><td class="zero-count">0</td><td class="myfriendss">myfriendss</td><td class="match">✅ myfriendss</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Lillie</td><td class="zero-count">0</td><td class="myfriendss">myfriendss</td><td class="match">✅ myfriendss</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Addison B</td><td class="zero-count">0</td><td class="myfriendss">myfriendss</td><td class="match">✅ myfriendss</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Kaitlin</td><td class="zero-count">0</td><td class="myfriendss">myfriendss</td><td class="match">✅ myfriendss</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Estelle</td><td class="zero-count">0</td><td class="myfriendss">myfriendss</td><td class="match">✅ myfriendss</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Chloe</td><td class="zero-count">0</td><td class="myfriendss">myfriendss</td><td class="match">✅ myfriendss</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Peyton C</td><td class="zero-count">0</td><td class="myfriendss">myfriendss</td><td class="match">✅ myfriendss</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Lila R</td><td class="zero-count">0</td><td class="myfriendss">myfriendss</td><td class="match">✅ myfriendss</td><td>Website only</td></tr>
+            <tr class="zero"><td>—</td><td>Ashley</td><td class="zero-count">0</td><td class="myfriendss">myfriendss</td><td class="match">✅ myfriendss</td><td>Website only</td></tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div style="margin-top: 20px; padding: 15px; background: rgba(255,107,157,0.1); border-radius: 8px; border-left: 3px solid #ff6b9d;">
+        <strong style="color: #ff6b9d;">🚨 Key Finding:</strong>
+        <span style="color: #ccc;"> 27 of 54 captured models (50%) including Nina herself are NOT on any landing page. <strong>Total roster: 125 models</strong> (54 captured via shoutouts + 71 website-only with 0 shoutouts).</span>
       </div>
     </div>
 
-    <p class="updated">Last updated: Feb 6, 2026 4:50 AM AST • Tracking complete ✅ by Jack 🔧</p>
+    <p class="updated">Last updated: Feb 6, 2026 6:27 PM AST • Live tracking continues • Dashboard by Jack 🔧</p>
   </div>
+  
+  <style>
+    .model-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    .model-table th {
+      text-align: left;
+      padding: 12px 10px;
+      background: rgba(255,255,255,0.08);
+      border-bottom: 2px solid rgba(255,255,255,0.1);
+      color: #888;
+      font-weight: 600;
+    }
+    .model-table td {
+      padding: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .model-table tr:hover {
+      background: rgba(255,255,255,0.03);
+    }
+    .model-table tr.unlisted {
+      background: rgba(255,107,157,0.05);
+    }
+    .model-table td.collegebesties { color: #ff6b9d; }
+    .model-table td.collegeclubb { color: #a78bfa; }
+    .model-table td.myfriendss { color: #60a5fa; }
+    .model-table td.match { color: #4ade80; }
+    .model-table td.none { color: #ef4444; }
+    .model-table td.maybe { color: #fbbf24; }
+    .model-table td.high { color: #fbbf24; font-weight: bold; }
+    .model-table tr.zero { opacity: 0.6; }
+    .model-table td.zero-count { color: #666; }
+  </style>
+  
+  <script>
+    // Auto-refresh every 5 minutes
+    setTimeout(() => location.reload(), 300000);
+  </script>
 </body>
 </html>
