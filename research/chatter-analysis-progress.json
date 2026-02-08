@@ -1,0 +1,75 @@
+{
+  "analyzedUsers": [
+    "mdjets26", "u221393383", "goodgoodx", "urmomsuppertoe", "u59568486", 
+    "cptkrazyeyez", "danc91", "u444827848", "u549653627", "u433625181", 
+    "johng5", "u543759367", "u25601228", "u142650769", "u530065924",
+    "u185779888", "rare_find4u"
+  ],
+  "totalAnalyzed": 17,
+  "lastUpdated": "2026-02-07T09:50:00-04:00",
+  "conversationsData": [
+    {"username": "mdjets26", "displayName": "MDNYJetsFan", "totalSpent": 50, "ppvPrices": [18, 32], "keyTactics": ["escalation", "scarcity", "arousal_check"], "outcome": "converted"},
+    {"username": "u221393383", "displayName": "Daddy", "totalSpent": 19, "ppvPrices": [19], "keyTactics": ["personalization", "arousal_check"], "outcome": "converted"},
+    {"username": "goodgoodx", "displayName": "Joe", "totalSpent": 21, "ppvPrices": [21], "keyTactics": ["shy_persona", "deflection"], "outcome": "converted_complained"},
+    {"username": "urmomsuppertoe", "displayName": "u155752770", "totalSpent": 28, "ppvPrices": [28], "keyTactics": ["arousal_check", "upsell_chain"], "outcome": "converted"},
+    {"username": "u59568486", "displayName": "CXR", "totalSpent": 96, "ppvPrices": [19, 25, 52], "keyTactics": ["upsell_chain", "shy_persona", "guilt"], "outcome": "converted_complained_recovered", "highValue": true},
+    {"username": "cptkrazyeyez", "displayName": "CptKrazyEyez", "totalSpent": 18, "ppvPrices": [18], "keyTactics": ["arousal_check", "personalization"], "outcome": "converted"},
+    {"username": "danc91", "displayName": "Dan", "totalSpent": 14, "ppvPrices": [14], "keyTactics": ["shy_persona", "deflection"], "outcome": "converted_upsell_declined"},
+    {"username": "u444827848", "displayName": "Mark Lewis", "totalSpent": 16, "ppvPrices": [16], "keyTactics": ["arousal_check", "upsell_chain"], "outcome": "converted"},
+    {"username": "u549653627", "displayName": "Zach", "totalSpent": 14, "ppvPrices": [14], "keyTactics": ["arousal_check", "personalization"], "outcome": "converted"},
+    {"username": "u433625181", "displayName": "Dan Hernandez", "totalSpent": 63, "ppvPrices": [28, 35], "keyTactics": ["upsell_chain", "guilt"], "outcome": "converted_complained_recovered"},
+    {"username": "johng5", "displayName": "John Gerrick", "totalSpent": 74, "ppvPrices": [25, 49], "keyTactics": ["upsell_chain", "scarcity"], "highValue": true, "outcome": "converted"},
+    {"username": "u543759367", "displayName": "D", "totalSpent": 90, "ppvPrices": [25, 28, 37], "keyTactics": ["arousal_check", "submissive_matching"], "highValue": true, "outcome": "converted"},
+    {"username": "u25601228", "displayName": "Don", "totalSpent": 102, "ppvPrices": [35, 67], "keyTactics": ["upsell_chain", "scarcity"], "highValue": true, "vipList": true, "outcome": "converted"},
+    {"username": "u142650769", "displayName": "Chimmy", "totalSpent": 50, "ppvPrices": [18, 32], "keyTactics": ["upsell_chain"], "outcome": "converted"},
+    {"username": "u530065924", "displayName": "Steve", "totalSpent": 23, "ppvPrices": [23], "keyTactics": ["guilt", "shy_persona"], "outcome": "converted_upsell_ghosted"},
+    {"username": "u185779888", "displayName": "Hayden Stuckwisch", "totalSpent": 23, "ppvPrices": [23], "keyTactics": ["arousal_check"], "outcome": "converted"},
+    {"username": "rare_find4u", "displayName": "Bryce pounder", "totalSpent": 25, "ppvPrices": [25], "keyTactics": ["arousal_check"], "outcome": "converted"}
+  ],
+  "patternsIdentified": {
+    "ppvPricingRange": "$14-$67",
+    "averageFirstPPV": "$18-25",
+    "avgSecondPPV": "$25-35",
+    "avgThirdPPV": "$49-67",
+    "upsellAttemptRate": "100%",
+    "upsellSuccessRate": "~60%",
+    "complaintRate": "~15%",
+    "complaintRecoveryRate": "100%",
+    "topTactics": [
+      {"tactic": "arousal_check", "frequency": "85%", "examples": ["how hard are u rn", "wanna see how my body moves"]},
+      {"tactic": "upsell_chain", "frequency": "70%", "examples": ["can u handle more of me?", "im about to open my gallery for u"]},
+      {"tactic": "shy_persona", "frequency": "50%", "examples": ["im new here and shy", "i dont usually share this"]},
+      {"tactic": "guilt", "frequency": "35%", "examples": ["why are u ignoring me", "🥺🥺 i thought u will love it"]},
+      {"tactic": "scarcity", "frequency": "30%", "examples": ["ive never shown this much before", "the one youll be stroking to forever"]},
+      {"tactic": "personalization", "frequency": "60%", "examples": ["using name repeatedly", "matching their energy/kinks"]}
+    ],
+    "personaTypes": ["confident_tease", "shy_girl_defensive", "submissive_matching"],
+    "keyEmojis": ["😏", "🥺", "😈", "🙈", "💗", "👀", "😚", "😳"],
+    "ppvDescriptionPatterns": [
+      "barely covers/hides",
+      "every curve/angle",
+      "youll lose it watching",
+      "ive never shown this before",
+      "just for you/thinking of you"
+    ]
+  },
+  "sessionStats": {
+    "totalRevenue": 726,
+    "avgPerUser": 42.7,
+    "highValueUsers": ["Don ($102)", "CXR ($96)", "D ($90)", "John Gerrick ($74)", "Dan Hernandez ($63)"],
+    "conversionRate": "100%",
+    "multiPurchaseRate": "~50%"
+  },
+  "trainingInsights": {
+    "openerToSale": "Name discovery → preference question → arousal check → PPV pitch",
+    "upsellSequence": "$14-18 starter → $25-35 escalation → $49-67 premium",
+    "complaintHandling": "Apologize with 🥺 → guilt slightly → promise more later → recover relationship",
+    "keyPhrases": {
+      "arousal_check": ["how hard are u rn", "are u stroking rn", "bet youre getting hard"],
+      "ppv_pitch": ["wanna see how", "bet youll lose it", "just for you"],
+      "upsell": ["can u handle more", "im about to open my gallery", "ready for the real thing"],
+      "shy_deflection": ["im new here and shy", "i dont usually share this", "kinda crazy i even sent that"],
+      "guilt_recovery": ["i thought u will love it", "am i not good enough", "i dont want u to be upset"]
+    }
+  }
+}

@@ -1,51 +1,49 @@
-# HEARTBEAT.md - Overnight Tasks
+# HEARTBEAT.md - Nina Tracking
 
-## 🔴 ACTIVE: ninacarlson Tag/Mention Tracking (Every 10 min)
-**Tracking RESUMED as of 10:00am 2026-02-06**
-- Cron job re-enabled (10 min intervals to avoid rate limits)
-- Fan growth: 696 → 957 (+261 fans overnight!)
-- Continue capturing ALL new tags/mentions
+## 🔴 ACTIVE: Bidirectional S4S Monitoring (Every 4.5 min)
+**Tracking ACTIVE as of 2026-02-07**
+
+### CHECK 1: Inbound Tags
+- Go to /my/notifications/tags
+- Capture any NEW tags (username, display_name, timestamp)
+- Skip if already in tracking JSON
+- Update ninacarlson-tracking.json
+
+### CHECK 2: Inbound Mentions  
+- Go to /my/notifications/mentioned
+- Capture any NEW mentions (including story mentions)
+- Update tracking JSON
+
+### CHECK 3: Outbound - Nina's Profile Posts
+- Go to /ninacarlson
+- Check recent posts for @mentions of other models
+- Log who Nina is tagging (bidirectional tracking)
+- Update nina_outbound_tags in tracking JSON
+
+### CHECK 4: Outbound - Mass Messages
+- Go to /my/statistics/engagement/messages (30-day view)
+- Check for S4S shoutout messages (sent to lists, tagging other models)
+- Log model tagged, time sent, list targeted
+- Update nina_outbound_mass in tracking JSON
+
+### Current Stats (2026-02-08 2:31pm)
+- **Fan growth:** 696 → 2,492 (+1,796 fans)
+- **Inbound tags captured:** 131
+- **Inbound mentions:** 31
+- **Unique models in rotation:** 55+
+- **24hr rotation tracking:** research/24hr-rotation-tracking.md
+
+### Rules
 - DO NOT STOP until Kiefer says so
+- If rate limited, note it and retry next heartbeat
+- Focus on NEW data only - skip already-tracked items
 
-## ⚡ Priority: Plush Portal Polish (Tonight)
-- [ ] Test dashboard and onboarding pages
-- [ ] Add mobile responsive tweaks
-- [x] Start Daisio site dev server (running on 3003)
-- [x] Start Plush Portal dev server (running on 3002)
-- [x] Screenshot new pages for Kiefer (sent 3 screenshots: homepage, welcome, agreement)
-
-## Active Tasks (Check Each Heartbeat)
-
-### 1. Check OF Research Inbox
-- Go to https://onlyfans.com/my/chats/
-- Log any new mass messages (time, price, model, content type)
-- Update research/competitor-tracking.md
-
-### 2. Monitor Tagging Patterns
-- Check 2-3 subscribed model profiles for new tagged posts
-- Note any cross-promo patterns
-- Log to research/competitor-tracking.md
-
-### 3. Check Gig Social Dashboard
-- Login: moltplush@gmail.com / Jerrying2020$
-- Explore the marketplace
-- Document shoutout pricing if visible
-- Save findings to research/gigsocial-notes.md
-
-## Completed Tasks
-- [x] Counted competitor network: 60 models total
-- [x] Mapped collegebesties.com (24 models)
-- [x] Mapped myfriendss.com (36 models)
-- [x] Created research/competitor-network-map.md
-- [x] Registered Gig Social account (verified)
-- [x] Completed Gig Social profile (2026-02-05)
-- [x] Found shoutout pricing: $50-$500 range
-- [x] Created research/gigsocial-notes.md with full pricing
-- [x] **Registered OnlyFansAPI.com account** (2026-02-05 12:30am)
-- [x] **Generated API key** - saved to plush-app/.env
-- [x] Saved 14 model handles to plush-app/models.json
+## Tracking Files
+- Main: `research/ninacarlson-tracking.json`
+- Dashboard: https://nina-dashboard.vercel.app
 
 ## Notes
-- Browser profile "openclaw" is logged into OF and Gmail
-- Research account: moltplush@gmail.com
-- OF username: @u549745273
+- Browser profile "openclaw" logged in AS @ninacarlson
+- Ghost tags deleted within ~5 min
+- Pinned 24hr posts from collegeclubb/collegebesties networks
+- myfriendss uses ghost promos only (not pinned)

@@ -5,7 +5,27 @@ Skills define _how_ tools work. This file is for _your_ specifics — the stuff 
 ## Credentials
 
 ### OnlyFans (Plush Models)
-- **Password:** ChanelSky42!
+| Email | Password |
+|-------|----------|
+| taviemue@iluvplush.com | QN76!q'4 |
+| brydiehop@iluvplush.com | aQL5zM3J |
+| jessikajam@iluvplush.com | z7tqL9ay |
+| paulaurb@iluvplush.com | U2bV32ha |
+| avaseb@iluvplush.com | 2GLZ2bQ8i |
+| paisleylop@iluvplush.com | 2HJpkbCK |
+| michelledun@iluvplush.com | 8esDE9xBR |
+| haydenken@iluvplush.com | 7jajrjPF |
+| mollykoz@iluvplush.com | W5ATNqPOP |
+| annakav@plush.la | 6C778xGF |
+| iyador@iluvplush.com | r44TwosI |
+| samanthapom@iluvplush.com | nmNfx442 |
+| jaydenkel@plush.la | ChanelSky42! |
+| hadleywen@iluvplush.com | JoTpA7KHa |
+| kirbydav@iluvplush.com | PinkOcean72! |
+| iyador@iluvplush.com | r44TwosI |
+| samanthapom@iluvplush.com | nmNfx442 |
+| jaydenkel@plush.la | ChanelSky42! |
+| hadleywen@iluvplush.com | JoTpA7KHa |
 
 ## What Goes Here
 

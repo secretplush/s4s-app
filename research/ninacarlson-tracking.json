@@ -1,90 +1,1568 @@
 {
   "account": "ninacarlson",
   "tracking_started": "2026-02-06T00:42:00-04:00",
-  "last_check": "2026-02-06T02:21:00-04:00",
+  "last_check": "2026-02-08T14:35:00-04:00",
+  "last_check_status": "Rate limited by OF - delilahhill mention visible (already tracked)",
   "tags": [
-    {"username": "nikkihayes", "display_name": "Nikki 🥰", "timestamp": "2026-02-06T00:40:00-04:00", "sequence": 1, "network": "collegebesties"},
-    {"username": "lanitaylor", "display_name": "Lani 🦋", "timestamp": "2026-02-06T00:44:00-04:00", "sequence": 2, "network": "collegebesties"},
-    {"username": "hannahpriv", "display_name": "Hannah 🥹🌸", "timestamp": "2026-02-06T00:49:00-04:00", "sequence": 3, "network": "collegebesties"},
-    {"username": "connierivers", "display_name": "Connie", "timestamp": "2026-02-06T00:52:00-04:00", "sequence": 4, "network": "collegebesties"},
-    {"username": "baileylewis1", "display_name": "Bailey Lewis💕", "timestamp": "2026-02-06T00:54:00-04:00", "sequence": 5, "network": "collegebesties"},
-    {"username": "ivyraye", "display_name": "Ivy 🥹💗", "timestamp": "2026-02-06T01:00:00-04:00", "sequence": 6, "network": "collegebesties"},
-    {"username": "sofiaalto", "display_name": "Sofia ✌🏼", "timestamp": "2026-02-06T01:04:00-04:00", "sequence": 7, "network": "collegebesties"},
-    {"username": "ameliaking1", "display_name": "Amelia 💞🥹", "timestamp": "2026-02-06T01:05:00-04:00", "sequence": 8, "network": "collegebesties"},
-    {"username": "summerthorpe", "display_name": "Summer 🦋", "timestamp": "2026-02-06T01:10:00-04:00", "sequence": 9, "network": "collegebesties"},
-    {"username": "robynnparker", "display_name": "Robyn 💘", "timestamp": "2026-02-06T01:12:00-04:00", "sequence": 10, "network": "collegebesties"},
-    {"username": "jenniedavis", "display_name": "Jennie 🌼", "timestamp": "2026-02-06T01:17:00-04:00", "sequence": 11, "network": "collegebesties"},
-    {"username": "alicegreene", "display_name": "Alice 🌸", "timestamp": "2026-02-06T01:18:00-04:00", "sequence": 12, "network": "collegebesties"},
-    {"username": "kadyrivers", "display_name": "Kady💕✨🌸", "timestamp": "2026-02-06T01:19:00-04:00", "sequence": 13, "network": "collegebesties"},
-    {"username": "charleyrhyder", "display_name": "Charley 🐚 🥰", "timestamp": "2026-02-06T01:24:00-04:00", "sequence": 14, "network": "collegebesties"},
-    {"username": "maisiestephens", "display_name": "Maisie Stephens 🐷", "timestamp": "2026-02-06T01:27:00-04:00", "sequence": 15, "network": "collegebesties"},
-    {"username": "faithdavis", "display_name": "Faith💛", "timestamp": "2026-02-06T01:28:00-04:00", "sequence": 16, "network": "collegebesties"},
-    {"username": "juicyjassx", "display_name": "Jasmine😽", "timestamp": "2026-02-06T01:49:00-04:00", "sequence": 17, "network": "collegebesties"},
-    {"username": "milliecook", "display_name": "Millie 😋", "timestamp": "2026-02-06T02:07:00-04:00", "sequence": 18, "network": "collegeclubb", "note": "Third landing page discovered: collegeclubb.com"},
-    {"username": "rowanpierce", "display_name": "Rowan 🌺", "timestamp": "2026-02-06T02:08:00-04:00", "sequence": 19, "network": "collegebesties", "caption": "Everyone's college crush finally launched her OF 🤭 💕"},
-    {"username": "islabrooks", "display_name": "Isla 💗", "timestamp": "2026-02-06T02:22:00-04:00", "sequence": 20, "network": "collegebesties"},
-    {"username": "ashlynnbrooks", "display_name": "Ashlynn 💕", "timestamp": "2026-02-06T02:26:00-04:00", "sequence": 21, "network": "collegeclubb"},
-    {"username": "annawhitmore", "display_name": "Anna 🐻", "timestamp": "2026-02-06T02:26:00-04:00", "sequence": 22, "network": "collegeclubb"},
-    {"username": "calliereece", "display_name": "Callie🦋", "timestamp": "2026-02-06T02:32:00-04:00", "sequence": 23, "network": "collegebesties"},
-    {"username": "mackenziehart", "display_name": "Mackenzie 🍒", "timestamp": "2026-02-06T02:34:00-04:00", "sequence": 24, "network": "collegeclubb"},
-    {"username": "carlenewalker", "display_name": "Carlene ✨", "timestamp": "2026-02-06T02:56:00-04:00", "sequence": 25, "network": "collegeclubb"},
-    {"username": "tillyharper", "display_name": "Tilly 🦋", "timestamp": "2026-02-06T03:19:00-04:00", "sequence": 26, "network": "collegebesties"},
-    {"username": "shaybennett", "display_name": "Shay 💫", "timestamp": "2026-02-06T03:19:00-04:00", "sequence": 27, "network": "collegeclubb"},
-    {"username": "norahart", "display_name": "Nora 🌹", "timestamp": "2026-02-06T03:23:00-04:00", "sequence": 28, "network": "collegeclubb"},
-    {"username": "tammymoore", "display_name": "Tammy 💖", "timestamp": "2026-02-06T03:50:00-04:00", "sequence": 29, "network": "collegeclubb"},
-    {"username": "nikkihayes", "display_name": "Nikki 🥰", "timestamp": "2026-02-06T04:10:00-04:00", "sequence": 30, "network": "collegebesties", "note": "🔄 LOOP CONFIRMED - same as sequence #1"},
-    {"username": "mayawilder", "display_name": "Maya 🌻", "timestamp": "2026-02-06T04:18:00-04:00", "sequence": 31, "network": "collegeclubb", "note": "NEW model not in first cycle - gap fill"},
-    {"username": "hopewalkerr", "display_name": "Hope🎀😊", "timestamp": "2026-02-06T04:30:00-04:00", "sequence": 32, "network": "collegeclubb", "note": "223K likes - big account"},
-    {"username": "cassidymellor", "display_name": "Cassidy 🦋", "timestamp": "2026-02-06T04:30:00-04:00", "sequence": 33, "network": "collegebesties"},
-    {"username": "macyywoods", "display_name": "Macy Woods", "timestamp": "2026-02-06T04:30:00-04:00", "sequence": 34, "network": "collegeclubb"},
-    {"username": "kaylenlane", "display_name": "Kaylen 🌸", "timestamp": "2026-02-06T04:31:00-04:00", "sequence": 35, "network": "collegeclubb"},
-    {"username": "finleyrhodes", "display_name": "Finley 🍓", "timestamp": "2026-02-06T09:50:00-04:00", "sequence": 36, "network": "collegeclubb", "note": "Tracking resumed"},
-    {"username": "blakelycarter", "display_name": "Blakely 💖", "timestamp": "2026-02-06T10:00:00-04:00", "sequence": 37, "network": "TBD"},
-    {"username": "kayleebrooks", "display_name": "Kaylee 💋", "timestamp": "2026-02-06T10:21:00-04:00", "sequence": 38, "network": "collegeclubb", "caption": "Everyone's college crush finally launched her OF 🤭 💕"},
-    {"username": "calliereece", "display_name": "Callie🦋", "timestamp": "2026-02-06T10:34:00-04:00", "sequence": 39, "network": "collegebesties", "note": "🔄 LOOP 3 - same as #23"},
-    {"username": "kenzieblake", "display_name": "Kenzie ❤️‍🔥", "timestamp": "2026-02-06T11:48:00-04:00", "sequence": 40, "network": "collegeclubb", "caption": "Everyone's college crush finally launched her OF 🤭 💕"},
-    {"username": "livdavies", "display_name": "livdavies", "timestamp": "2026-02-06T12:08:00-04:00", "sequence": 41, "network": "collegeclubb", "note": "422K likes - big account"},
-    {"username": "ryleeadams", "display_name": "Rylee🍒", "timestamp": "2026-02-06T12:11:00-04:00", "sequence": 42, "network": "collegeclubb", "caption": "Everyone's college crush finally launched her OF 🤭 💕"},
-    {"username": "mckinleyevans", "display_name": "Mckinley❤️‍🔥", "timestamp": "2026-02-06T12:38:00-04:00", "sequence": 43, "network": "collegeclubb"},
-    {"username": "ellabbyxo", "display_name": "ella rose 😽", "timestamp": "2026-02-06T12:48:00-04:00", "sequence": 44, "network": "collegeclubb", "note": "720K likes - big account"},
-    {"username": "avajean", "display_name": "Ava 🌼", "timestamp": "2026-02-06T13:06:00-04:00", "sequence": 45, "network": "collegeclubb", "note": "254K likes"},
-    {"username": "finleyrhodes", "display_name": "Finley 🍓", "timestamp": "2026-02-06T13:06:00-04:00", "sequence": 46, "network": "collegeclubb", "note": "🔄 LOOP 4 - same as #36"},
-    {"username": "rowanpierce", "display_name": "Rowan 🌺", "timestamp": "2026-02-06T13:36:00-04:00", "sequence": 47, "network": "collegebesties", "note": "🔄 LOOP - same as #19"},
-    {"username": "carlenewalker", "display_name": "Carlene ✨", "timestamp": "2026-02-06T13:41:00-04:00", "sequence": 48, "network": "collegeclubb"},
-    {"username": "natalierhoades18", "display_name": "Natalie Rhoades💗", "timestamp": "2026-02-06T14:09:00-04:00", "sequence": 49, "network": "collegeclubb", "note": "380.9K likes - big account!"},
-    {"username": "briellatate", "display_name": "Briella 🌸", "timestamp": "2026-02-06T14:14:00-04:00", "sequence": 50, "network": "collegeclubb", "note": "99.5K likes"},
-    {"username": "rowanpierce", "display_name": "Rowan 🌺", "timestamp": "2026-02-06T14:17:00-04:00", "sequence": 51, "network": "collegebesties", "note": "🔄 LOOP - same as #19, #47"},
-    {"username": "calliereece", "display_name": "Callie🦋", "timestamp": "2026-02-06T14:39:00-04:00", "sequence": 52, "network": "collegebesties", "note": "🔄 LOOP - same as #23, #39"}
+    {
+      "username": "nikkihayes",
+      "display_name": "Nikki 🥰",
+      "timestamp": "2026-02-06T00:40:00-04:00",
+      "sequence": 1,
+      "network": "collegebesties"
+    },
+    {
+      "username": "lanitaylor",
+      "display_name": "Lani 🦋",
+      "timestamp": "2026-02-06T00:44:00-04:00",
+      "sequence": 2,
+      "network": "collegebesties"
+    },
+    {
+      "username": "hannahpriv",
+      "display_name": "Hannah 🥹🌸",
+      "timestamp": "2026-02-06T00:49:00-04:00",
+      "sequence": 3,
+      "network": "collegebesties"
+    },
+    {
+      "username": "connierivers",
+      "display_name": "Connie",
+      "timestamp": "2026-02-06T00:52:00-04:00",
+      "sequence": 4,
+      "network": "collegebesties"
+    },
+    {
+      "username": "baileylewis1",
+      "display_name": "Bailey Lewis💕",
+      "timestamp": "2026-02-06T00:54:00-04:00",
+      "sequence": 5,
+      "network": "collegebesties"
+    },
+    {
+      "username": "ivyraye",
+      "display_name": "Ivy 🥹💗",
+      "timestamp": "2026-02-06T01:00:00-04:00",
+      "sequence": 6,
+      "network": "collegebesties"
+    },
+    {
+      "username": "sofiaalto",
+      "display_name": "Sofia ✌🏼",
+      "timestamp": "2026-02-06T01:04:00-04:00",
+      "sequence": 7,
+      "network": "collegebesties"
+    },
+    {
+      "username": "ameliaking1",
+      "display_name": "Amelia 💞🥹",
+      "timestamp": "2026-02-06T01:05:00-04:00",
+      "sequence": 8,
+      "network": "collegebesties"
+    },
+    {
+      "username": "summerthorpe",
+      "display_name": "Summer 🦋",
+      "timestamp": "2026-02-06T01:10:00-04:00",
+      "sequence": 9,
+      "network": "collegebesties"
+    },
+    {
+      "username": "robynnparker",
+      "display_name": "Robyn 💘",
+      "timestamp": "2026-02-06T01:12:00-04:00",
+      "sequence": 10,
+      "network": "collegebesties"
+    },
+    {
+      "username": "jenniedavis",
+      "display_name": "Jennie 🌼",
+      "timestamp": "2026-02-06T01:17:00-04:00",
+      "sequence": 11,
+      "network": "collegebesties"
+    },
+    {
+      "username": "alicegreene",
+      "display_name": "Alice 🌸",
+      "timestamp": "2026-02-06T01:18:00-04:00",
+      "sequence": 12,
+      "network": "collegebesties"
+    },
+    {
+      "username": "kadyrivers",
+      "display_name": "Kady💕✨🌸",
+      "timestamp": "2026-02-06T01:19:00-04:00",
+      "sequence": 13,
+      "network": "collegebesties"
+    },
+    {
+      "username": "charleyrhyder",
+      "display_name": "Charley 🐚 🥰",
+      "timestamp": "2026-02-06T01:24:00-04:00",
+      "sequence": 14,
+      "network": "collegebesties"
+    },
+    {
+      "username": "maisiestephens",
+      "display_name": "Maisie Stephens 🐷",
+      "timestamp": "2026-02-06T01:27:00-04:00",
+      "sequence": 15,
+      "network": "collegebesties"
+    },
+    {
+      "username": "faithdavis",
+      "display_name": "Faith💛",
+      "timestamp": "2026-02-06T01:28:00-04:00",
+      "sequence": 16,
+      "network": "collegebesties"
+    },
+    {
+      "username": "juicyjassx",
+      "display_name": "Jasmine😽",
+      "timestamp": "2026-02-06T01:49:00-04:00",
+      "sequence": 17,
+      "network": "collegebesties"
+    },
+    {
+      "username": "milliecook",
+      "display_name": "Millie 😋",
+      "timestamp": "2026-02-06T02:07:00-04:00",
+      "sequence": 18,
+      "network": "collegeclubb",
+      "note": "Third landing page discovered: collegeclubb.com"
+    },
+    {
+      "username": "rowanpierce",
+      "display_name": "Rowan 🌺",
+      "timestamp": "2026-02-06T02:08:00-04:00",
+      "sequence": 19,
+      "network": "collegebesties",
+      "caption": "Everyone's college crush finally launched her OF 🤭 💕"
+    },
+    {
+      "username": "islabrooks",
+      "display_name": "Isla 💗",
+      "timestamp": "2026-02-06T02:22:00-04:00",
+      "sequence": 20,
+      "network": "collegebesties"
+    },
+    {
+      "username": "ashlynnbrooks",
+      "display_name": "Ashlynn 💕",
+      "timestamp": "2026-02-06T02:26:00-04:00",
+      "sequence": 21,
+      "network": "collegeclubb",
+      "likes": "40.1K"
+    },
+    {
+      "username": "annawhitmore",
+      "display_name": "Anna 🐻",
+      "timestamp": "2026-02-06T02:26:00-04:00",
+      "sequence": 22,
+      "network": "collegeclubb"
+    },
+    {
+      "username": "calliereece",
+      "display_name": "Callie🦋",
+      "timestamp": "2026-02-06T02:32:00-04:00",
+      "sequence": 23,
+      "network": "collegebesties"
+    },
+    {
+      "username": "mackenziehart",
+      "display_name": "Mackenzie 🍒",
+      "timestamp": "2026-02-06T02:34:00-04:00",
+      "sequence": 24,
+      "network": "collegeclubb"
+    },
+    {
+      "username": "carlenewalker",
+      "display_name": "Carlene ✨",
+      "timestamp": "2026-02-06T02:56:00-04:00",
+      "sequence": 25,
+      "network": "collegeclubb"
+    },
+    {
+      "username": "tillyharper",
+      "display_name": "Tilly 🦋",
+      "timestamp": "2026-02-06T03:19:00-04:00",
+      "sequence": 26,
+      "network": "collegebesties"
+    },
+    {
+      "username": "shaybennett",
+      "display_name": "Shay 💫",
+      "timestamp": "2026-02-06T03:19:00-04:00",
+      "sequence": 27,
+      "network": "collegeclubb"
+    },
+    {
+      "username": "norahart",
+      "display_name": "Nora 🌹",
+      "timestamp": "2026-02-06T03:23:00-04:00",
+      "sequence": 28,
+      "network": "collegeclubb"
+    },
+    {
+      "username": "tammymoore",
+      "display_name": "Tammy 💖",
+      "timestamp": "2026-02-06T03:50:00-04:00",
+      "sequence": 29,
+      "network": "collegeclubb"
+    },
+    {
+      "username": "nikkihayes",
+      "display_name": "Nikki 🥰",
+      "timestamp": "2026-02-06T04:10:00-04:00",
+      "sequence": 30,
+      "network": "collegebesties",
+      "note": "🔄 LOOP CONFIRMED - same as sequence #1"
+    },
+    {
+      "username": "mayawilder",
+      "display_name": "Maya 🌻",
+      "timestamp": "2026-02-06T04:18:00-04:00",
+      "sequence": 31,
+      "network": "collegeclubb",
+      "note": "NEW model not in first cycle - gap fill"
+    },
+    {
+      "username": "hopewalkerr",
+      "display_name": "Hope🎀😊",
+      "timestamp": "2026-02-06T04:30:00-04:00",
+      "sequence": 32,
+      "network": "collegeclubb",
+      "note": "223K likes - big account"
+    },
+    {
+      "username": "cassidymellor",
+      "display_name": "Cassidy 🦋",
+      "timestamp": "2026-02-06T04:30:00-04:00",
+      "sequence": 33,
+      "network": "collegebesties"
+    },
+    {
+      "username": "macyywoods",
+      "display_name": "Macy Woods",
+      "timestamp": "2026-02-06T04:30:00-04:00",
+      "sequence": 34,
+      "network": "collegeclubb"
+    },
+    {
+      "username": "kaylenlane",
+      "display_name": "Kaylen 🌸",
+      "timestamp": "2026-02-06T04:31:00-04:00",
+      "sequence": 35,
+      "network": "collegeclubb"
+    },
+    {
+      "username": "finleyrhodes",
+      "display_name": "Finley 🍓",
+      "timestamp": "2026-02-06T09:50:00-04:00",
+      "sequence": 36,
+      "network": "collegeclubb",
+      "note": "Tracking resumed"
+    },
+    {
+      "username": "blakelycarter",
+      "display_name": "Blakely 💖",
+      "timestamp": "2026-02-06T10:00:00-04:00",
+      "sequence": 37,
+      "network": "collegeclubb",
+      "likes": "87.9K"
+    },
+    {
+      "username": "kayleebrooks",
+      "display_name": "Kaylee 💋",
+      "timestamp": "2026-02-06T10:21:00-04:00",
+      "sequence": 38,
+      "network": "collegeclubb",
+      "caption": "Everyone's college crush finally launched her OF 🤭 💕",
+      "likes": "28.6K"
+    },
+    {
+      "username": "calliereece",
+      "display_name": "Callie🦋",
+      "timestamp": "2026-02-06T10:34:00-04:00",
+      "sequence": 39,
+      "network": "collegebesties",
+      "note": "🔄 LOOP 3 - same as #23"
+    },
+    {
+      "username": "kenzieblake",
+      "display_name": "Kenzie ❤️‍🔥",
+      "timestamp": "2026-02-06T11:48:00-04:00",
+      "sequence": 40,
+      "network": "collegeclubb",
+      "caption": "Everyone's college crush finally launched her OF 🤭 💕"
+    },
+    {
+      "username": "livdavies",
+      "display_name": "livdavies",
+      "timestamp": "2026-02-06T12:08:00-04:00",
+      "sequence": 41,
+      "network": "collegeclubb",
+      "note": "422K likes - big account"
+    },
+    {
+      "username": "ryleeadams",
+      "display_name": "Rylee🍒",
+      "timestamp": "2026-02-06T12:11:00-04:00",
+      "sequence": 42,
+      "network": "collegeclubb",
+      "caption": "Everyone's college crush finally launched her OF 🤭 💕"
+    },
+    {
+      "username": "mckinleyevans",
+      "display_name": "Mckinley❤️‍🔥",
+      "timestamp": "2026-02-06T12:38:00-04:00",
+      "sequence": 43,
+      "network": "collegeclubb"
+    },
+    {
+      "username": "ellabbyxo",
+      "display_name": "ella rose 😽",
+      "timestamp": "2026-02-06T12:48:00-04:00",
+      "sequence": 44,
+      "network": "collegeclubb",
+      "note": "720K likes - big account"
+    },
+    {
+      "username": "avajean",
+      "display_name": "Ava 🌼",
+      "timestamp": "2026-02-06T13:06:00-04:00",
+      "sequence": 45,
+      "network": "collegeclubb",
+      "note": "254K likes",
+      "likes": "254.6K"
+    },
+    {
+      "username": "finleyrhodes",
+      "display_name": "Finley 🍓",
+      "timestamp": "2026-02-06T13:06:00-04:00",
+      "sequence": 46,
+      "network": "collegeclubb",
+      "note": "🔄 LOOP 4 - same as #36"
+    },
+    {
+      "username": "rowanpierce",
+      "display_name": "Rowan 🌺",
+      "timestamp": "2026-02-06T13:36:00-04:00",
+      "sequence": 47,
+      "network": "collegebesties",
+      "note": "🔄 LOOP - same as #19"
+    },
+    {
+      "username": "carlenewalker",
+      "display_name": "Carlene ✨",
+      "timestamp": "2026-02-06T13:41:00-04:00",
+      "sequence": 48,
+      "network": "collegeclubb"
+    },
+    {
+      "username": "natalierhoades18",
+      "display_name": "Natalie Rhoades💗",
+      "timestamp": "2026-02-06T14:09:00-04:00",
+      "sequence": 49,
+      "network": "collegeclubb",
+      "note": "380.9K likes - big account!"
+    },
+    {
+      "username": "briellatate",
+      "display_name": "Briella 🌸",
+      "timestamp": "2026-02-06T14:14:00-04:00",
+      "sequence": 50,
+      "network": "collegeclubb",
+      "note": "99.5K likes"
+    },
+    {
+      "username": "rowanpierce",
+      "display_name": "Rowan 🌺",
+      "timestamp": "2026-02-06T14:17:00-04:00",
+      "sequence": 51,
+      "network": "collegebesties",
+      "note": "🔄 LOOP - same as #19, #47"
+    },
+    {
+      "username": "calliereece",
+      "display_name": "Callie🦋",
+      "timestamp": "2026-02-06T14:39:00-04:00",
+      "sequence": 52,
+      "network": "collegebesties",
+      "note": "🔄 LOOP - same as #23, #39"
+    },
+    {
+      "username": "hopewalkerr",
+      "display_name": "Hope🎀🥹",
+      "timestamp": "2026-02-07T07:06:00-04:00",
+      "sequence": 53,
+      "network": "collegeclubb",
+      "note": "🔄 LOOP - same as #32",
+      "post_link": "https://onlyfans.com/2262899397/hopewalkerr"
+    },
+    {
+      "username": "finleyrhodes",
+      "display_name": "Finley 🍓",
+      "timestamp": "2026-02-07T07:06:00-04:00",
+      "sequence": 54,
+      "network": "collegeclubb",
+      "note": "🔄 LOOP - same as #36, #46",
+      "post_link": "https://onlyfans.com/2262899506/finleyrhodes"
+    },
+    {
+      "username": "annawhitmore",
+      "display_name": "Anna 🐻",
+      "timestamp": "2026-02-07T08:08:00-04:00",
+      "sequence": 55,
+      "network": "collegeclubb",
+      "note": "🔄 LOOP - same as #22",
+      "post_link": "https://onlyfans.com/2263063794/annawhitmore"
+    },
+    {
+      "username": "kinleyreese",
+      "display_name": "Kinley 🧚🏻‍♀️",
+      "timestamp": "2026-02-07T08:10:00-04:00",
+      "sequence": 56,
+      "network": "collegeclubb",
+      "note": "NEW - 26.3K likes",
+      "post_link": "https://onlyfans.com/2263072515/kinleyreese"
+    },
+    {
+      "username": "tammymoore",
+      "display_name": "Tammy 💖",
+      "timestamp": "2026-02-07T08:31:00-04:00",
+      "sequence": 57,
+      "network": "collegeclubb",
+      "note": "🔄 LOOP - same as #29",
+      "post_link": "https://onlyfans.com/2263131693/tammymoore"
+    },
+    {
+      "username": "melissatate",
+      "display_name": "Melissa 🌸",
+      "timestamp": "2026-02-07T10:26:00-04:00",
+      "sequence": 58,
+      "network": "collegeclubb",
+      "note": "NEW - 288.6K likes - big account!",
+      "post_link": "https://onlyfans.com/2263446025/melissatate"
+    },
+    {
+      "username": "ellabbyxo",
+      "display_name": "ella rose 😽",
+      "timestamp": "2026-02-07T10:26:00-04:00",
+      "sequence": 59,
+      "network": "collegeclubb",
+      "note": "🔄 LOOP - same as #44, 720K likes",
+      "post_link": "https://onlyfans.com/2263445245/ellabbyxo"
+    },
+    {
+      "username": "macyywoods",
+      "display_name": "Macy Woods",
+      "timestamp": "2026-02-07T10:36:00-04:00",
+      "sequence": 60,
+      "network": "collegeclubb",
+      "note": "🔄 LOOP - same as #34",
+      "post_link": "https://onlyfans.com/2263469025/macyywoods"
+    },
+    {
+      "username": "abbybeaumont",
+      "display_name": "Abby 🌺",
+      "timestamp": "2026-02-07T10:44:00-04:00",
+      "sequence": 61,
+      "network": "collegeclubb",
+      "note": "NEW - 14.8K likes",
+      "post_link": "https://onlyfans.com/2263488714/abbybeaumont"
+    },
+    {
+      "username": "jennashaw",
+      "display_name": "Jenna 🦋🌼",
+      "timestamp": "2026-02-07T10:47:00-04:00",
+      "sequence": 62,
+      "network": "collegeclubb",
+      "note": "NEW - 243.9K likes - big account!",
+      "post_link": "https://onlyfans.com/2263497628/jennashaw"
+    },
+    {
+      "username": "daintymaee",
+      "display_name": "Dainty 🌸",
+      "timestamp": "2026-02-07T10:52:00-04:00",
+      "sequence": 63,
+      "network": "collegeclubb",
+      "note": "NEW - 105.3K likes",
+      "post_link": "https://onlyfans.com/2263511053/daintymaee"
+    },
+    {
+      "username": "calliereece",
+      "display_name": "Callie🦋",
+      "timestamp": "2026-02-07T10:59:00-04:00",
+      "sequence": 64,
+      "network": "collegebesties",
+      "note": "🔄 LOOP - same as #23, #39, #52",
+      "post_link": "https://onlyfans.com/2263526529/calliereece"
+    },
+    {
+      "username": "norahart",
+      "display_name": "Nora 🌹",
+      "timestamp": "2026-02-07T11:26:00-04:00",
+      "sequence": 65,
+      "network": "collegeclubb",
+      "note": "🔄 LOOP - same as #28",
+      "post_link": "https://onlyfans.com/2263581573/norahart"
+    },
+    {
+      "username": "calliereece",
+      "display_name": "Callie🦋",
+      "timestamp": "2026-02-07T11:49:00-04:00",
+      "sequence": 66,
+      "network": "collegebesties",
+      "note": "🔄 LOOP - same as #23, #39, #52, #64",
+      "post_link": "https://onlyfans.com/2263638357/calliereece"
+    },
+    {
+      "username": "briellatate",
+      "display_name": "Briella 🌸",
+      "timestamp": "2026-02-07T11:53:00-04:00",
+      "sequence": 67,
+      "network": "collegeclubb",
+      "note": "🔄 LOOP - same as #50, 99K likes",
+      "post_link": "https://onlyfans.com/2263647007/briellatate"
+    },
+    {
+      "username": "ryleeadams",
+      "display_name": "Rylee🍒",
+      "timestamp": "2026-02-07T11:55:00-04:00",
+      "sequence": 68,
+      "network": "collegeclubb",
+      "note": "🔄 LOOP - same as #42",
+      "post_link": "https://onlyfans.com/2263651264/ryleeadams"
+    },
+    {
+      "username": "livdavies",
+      "display_name": "livdavies",
+      "timestamp": "2026-02-07T12:21:00-04:00",
+      "sequence": 69,
+      "network": "collegeclubb",
+      "note": "🔄 LOOP - same as #41, 422K likes",
+      "post_link": "https://onlyfans.com/2263709586/livdavies"
+    },
+    {
+      "username": "abbybeaumont",
+      "display_name": "Abby 🌺",
+      "timestamp": "2026-02-07T12:27:00-04:00",
+      "sequence": 70,
+      "network": "collegeclubb",
+      "note": "🔄 LOOP - same as #61, 14.8K likes",
+      "post_link": "https://onlyfans.com/2263722428/abbybeaumont"
+    },
+    {
+      "username": "sageparkerr",
+      "display_name": "Sage 🎀",
+      "timestamp": "2026-02-07T18:16:00-04:00",
+      "sequence": 71,
+      "network": "collegeclubb",
+      "type": "ghost_tag"
+    },
+    {
+      "username": "jazmin-beau",
+      "display_name": "Jazmin🌷",
+      "timestamp": "2026-02-07T19:26:00-04:00",
+      "network": "collegeclubb",
+      "post_link": "https://onlyfans.com/2264330815/jazmin-beau",
+      "sequence": 72
+    },
+    {
+      "username": "tammymoore",
+      "display_name": "Tammy 💖",
+      "timestamp": "2026-02-07T19:25:00-04:00",
+      "network": "collegeclubb",
+      "post_link": "https://onlyfans.com/2264330359/tammymoore",
+      "sequence": 73,
+      "note": "new round"
+    },
+    {
+      "username": "saskiamiller",
+      "display_name": "Saskia🩷",
+      "timestamp": "2026-02-07T19:38:00-04:00",
+      "network": "collegeclubb",
+      "post_link": "https://onlyfans.com/2264340558/saskiamiller",
+      "sequence": 74
+    },
+    {
+      "username": "kinleyreese",
+      "display_name": "Kinley 🧚🏻‍♀️",
+      "timestamp": "2026-02-07T19:48:00-04:00",
+      "network": "collegeclubb",
+      "post_link": "https://onlyfans.com/2264350304/kinleyreese",
+      "sequence": 75,
+      "note": "new round"
+    },
+    {
+      "username": "finleyrhodes",
+      "display_name": "Finley 🍓",
+      "timestamp": "2026-02-07T19:53:00-04:00",
+      "network": "collegeclubb",
+      "post_link": "https://onlyfans.com/2264355435/finleyrhodes",
+      "sequence": 76,
+      "note": "new round"
+    },
+    {
+      "username": "tiabennett",
+      "display_name": "Tia 👋",
+      "timestamp": "2026-02-07T21:05:00-04:00",
+      "sequence": 77,
+      "network": "collegebesties"
+    },
+    {
+      "username": "mayawilder",
+      "display_name": "Maya 🌻",
+      "timestamp": "2026-02-07T21:21:00-04:00",
+      "sequence": 78,
+      "network": "collegeclubb"
+    },
+    {
+      "username": "annawhitmore",
+      "display_name": "Anna 🎀",
+      "timestamp": "2026-02-07T21:27:00-04:00",
+      "sequence": 79,
+      "network": "collegebesties"
+    },
+    {
+      "username": "ellabbyxo",
+      "display_name": "ella rose 🥳",
+      "timestamp": "2026-02-07T21:45:00-04:00",
+      "sequence": 80,
+      "network": "collegebesties"
+    },
+    {
+      "username": "kaylenlane",
+      "display_name": "Kaylen 🌺",
+      "timestamp": "2026-02-07T21:59:00-04:00",
+      "sequence": 81,
+      "network": "collegeclubb"
+    },
+    {
+      "username": "mackenziehart",
+      "display_name": "Mackenzie 💋",
+      "timestamp": "2026-02-07T22:23:00-04:00",
+      "sequence": 82,
+      "network": "collegeclubb"
+    },
+    {
+      "username": "norahart",
+      "display_name": "Nora 🌹",
+      "timestamp": "2026-02-07T22:24:00-04:00",
+      "sequence": 83,
+      "network": "myfriendss"
+    },
+    {
+      "username": "kiyalane",
+      "display_name": "Kiya ✨",
+      "timestamp": "2026-02-07T22:28:00-04:00",
+      "sequence": 84,
+      "network": "collegebesties"
+    },
+    {
+      "username": "naomisteele",
+      "display_name": "Naomi 🌸",
+      "timestamp": "2026-02-07T21:41:00-04:00",
+      "sequence": 85,
+      "network": "myfriendss",
+      "note": "Second tag from naomisteele (first was Feb 5)"
+    },
+    {
+      "username": "madisonshaw",
+      "display_name": "Madison 🍒",
+      "timestamp": "2026-02-07T23:26:00-04:00",
+      "sequence": 86,
+      "network": "collegeclubb",
+      "note": "NEW model - profile links to collegeclubb.com"
+    },
+    {
+      "username": "elleprivate",
+      "display_name": "Elle Jean🥹🌸",
+      "timestamp": "2026-02-07T23:26:00-04:00",
+      "sequence": 87,
+      "network": "collegebesties",
+      "note": "Third tag from elleprivate"
+    },
+    {
+      "username": "islabrooks",
+      "display_name": "Isla 💗",
+      "timestamp": "2026-02-07T23:39:00-04:00",
+      "sequence": 88,
+      "network": "collegebesties",
+      "note": "Second tag from islabrooks (first was Feb 6)"
+    },
+    {
+      "username": "giarileyy",
+      "display_name": "Gia 🌸",
+      "timestamp": "2026-02-08T00:44:00-04:00",
+      "post_url": "https://onlyfans.com/2264524010/giarileyy",
+      "network": "pending"
+    },
+    {
+      "username": "victoriacox",
+      "display_name": "Victoria ✨",
+      "timestamp": "2026-02-08T01:01:00-04:00",
+      "post_url": "https://onlyfans.com/2264532494/victoriacox",
+      "network": "pending"
+    },
+    {
+      "username": "livdavies",
+      "display_name": "livdavies",
+      "timestamp": "2026-02-08T04:01:00-04:00",
+      "post_url": "https://onlyfans.com/2264668880/livdavies",
+      "network": "collegeclubb",
+      "note": "🔄 LOOP - same as #41, #69"
+    },
+    {
+      "username": "madisonshaw",
+      "display_name": "Madison 🍒",
+      "timestamp": "2026-02-08T04:14:00-04:00",
+      "post_url": "https://onlyfans.com/2264684546/madisonshaw",
+      "network": "collegeclubb",
+      "note": "🔄 LOOP - same as #86"
+    },
+    {
+      "username": "mckinleyevans",
+      "display_name": "Mckinley❤️‍🔥",
+      "timestamp": "2026-02-08T04:29:00-04:00",
+      "post_url": "https://onlyfans.com/2264702371/mckinleyevans",
+      "network": "collegeclubb",
+      "note": "🔄 LOOP - same as #43"
+    },
+    {
+      "username": "hadleywillow",
+      "display_name": "Hadley ✨",
+      "timestamp": "2026-02-08T04:32:00-04:00",
+      "post_url": "https://onlyfans.com/2264705218/hadleywillow",
+      "network": "pending",
+      "note": "NEW model - not seen before, PINNED (still visible 28min+)"
+    },
+    {
+      "username": "ryleeadams",
+      "display_name": "Rylee🍒",
+      "timestamp": "2026-02-08T04:56:00-04:00",
+      "post_url": "https://onlyfans.com/2264740209/ryleeadams",
+      "network": "collegeclubb",
+      "note": "🔄 LOOP - same as #42, #68"
+    },
+    {
+      "username": "blakelycarter",
+      "display_name": "Blakely ❤️‍🔥",
+      "timestamp": "2026-02-08T05:24:00-04:00",
+      "post_url": "https://onlyfans.com/2264784139/blakelycarter",
+      "network": "collegeclubb",
+      "note": "🔄 LOOP - same as #37",
+      "likes": "87.9K"
+    },
+    {
+      "username": "daintymaee",
+      "display_name": "Dainty 🌸",
+      "timestamp": "2026-02-08T05:24:00-04:00",
+      "post_url": "https://onlyfans.com/2264784404/daintymaee",
+      "network": "collegeclubb",
+      "note": "🔄 LOOP - same as #63"
+    },
+    {
+      "username": "aylareed",
+      "display_name": "Ayla 🌼",
+      "timestamp": "2026-02-08T05:32:00-04:00",
+      "post_url": "https://onlyfans.com/2264802042/aylareed",
+      "network": "pending",
+      "note": "NEW model - first time seen"
+    },
+    {
+      "username": "jennashaw",
+      "display_name": "Jenna 🦋🌼",
+      "timestamp": "2026-02-08T05:33:00-04:00",
+      "post_url": "https://onlyfans.com/2264803324/jennashaw",
+      "network": "collegeclubb",
+      "note": "🔄 LOOP - same as #62"
+    },
+    {
+      "username": "carlenewalker",
+      "display_name": "Carlene ✨",
+      "timestamp": "2026-02-08T05:56:00-04:00",
+      "post_url": "https://onlyfans.com/2264849284/carlenewalker",
+      "network": "collegeclubb",
+      "note": "🔄 LOOP - same as #25, #48"
+    },
+    {
+      "username": "tiabennett",
+      "display_name": "Tia 💫",
+      "timestamp": "2026-02-08T06:14:00-04:00",
+      "post_url": "https://onlyfans.com/2264888114/tiabennett",
+      "network": "collegebesties",
+      "note": "🔄 LOOP - same as #77"
+    },
+    {
+      "username": "hopewalkerr",
+      "display_name": "Hope🎀🥹",
+      "timestamp": "2026-02-08T06:15:00-04:00",
+      "post_url": "https://onlyfans.com/2264889252/hopewalkerr",
+      "network": "collegeclubb",
+      "note": "🔄 LOOP - same as #32, #53"
+    },
+    {
+      "username": "tammymoore",
+      "display_name": "Tammy 💖",
+      "timestamp": "2026-02-08T06:15:00-04:00",
+      "post_url": "https://onlyfans.com/2264890213/tammymoore",
+      "network": "collegeclubb",
+      "note": "🔄 LOOP - same as #29, #57, #73"
+    },
+    {
+      "username": "kenzieblake",
+      "display_name": "Kenzie ❤️‍🔥",
+      "timestamp": "2026-02-08T06:23:00-04:00",
+      "post_url": "https://onlyfans.com/2264907719/kenzieblake",
+      "network": "collegeclubb",
+      "note": "🔄 LOOP - same as #40"
+    },
+    {
+      "username": "mckinleyevans",
+      "display_name": "Mckinley❤️‍🔥",
+      "timestamp": "2026-02-08T06:29:00-04:00",
+      "post_url": "https://onlyfans.com/2264923877/mckinleyevans",
+      "network": "collegeclubb",
+      "note": "🔄 LOOP - same as #43, #93"
+    },
+    {
+      "username": "isabellhill",
+      "display_name": "Isabell Hill😇",
+      "timestamp": "2026-02-08T07:27:00-04:00",
+      "post_url": "https://onlyfans.com/2265068289/isabellhill",
+      "network": "pending",
+      "note": "NEW model - first time seen"
+    },
+    {
+      "username": "saskiamiller",
+      "display_name": "Saskia🩷",
+      "timestamp": "2026-02-08T07:35:00-04:00",
+      "post_url": "https://onlyfans.com/2265090182/saskiamiller",
+      "network": "collegeclubb",
+      "note": "🔄 LOOP - same as #74"
+    },
+    {
+      "username": "briellatate",
+      "display_name": "Briella 🌸",
+      "timestamp": "2026-02-08T07:39:00-04:00",
+      "post_url": "https://onlyfans.com/2265098821/briellatate",
+      "network": "collegeclubb",
+      "note": "🔄 LOOP - same as #50, #67"
+    },
+    {
+      "username": "haileyyjoness",
+      "display_name": "Hailey 🌷",
+      "timestamp": "2026-02-08T07:40:00-04:00",
+      "post_url": "https://onlyfans.com/2265101644/haileyyjoness",
+      "network": "friends_list",
+      "note": "NEW - Friends list member"
+    },
+    {
+      "username": "mayawilder",
+      "display_name": "Maya 🌻",
+      "timestamp": "2026-02-08T07:43:00-04:00",
+      "post_url": "https://onlyfans.com/2265109687/mayawilder",
+      "network": "collegeclubb",
+      "note": "🔄 LOOP - same as #31, #78"
+    },
+    {
+      "username": "ashlynnbrooks",
+      "display_name": "Ashlynn 💕",
+      "timestamp": "2026-02-08T07:47:00-04:00",
+      "post_url": "https://onlyfans.com/2265119495/ashlynnbrooks",
+      "network": "collegeclubb",
+      "note": "🔄 LOOP - same as #21",
+      "likes": "40.1K"
+    },
+    {
+      "username": "kiyalane",
+      "display_name": "Kiya ✨",
+      "timestamp": "2026-02-08T07:56:00-04:00",
+      "post_url": "https://onlyfans.com/2265144782/kiyalane",
+      "network": "collegeclubb",
+      "note": "🔄 LOOP - same as #84"
+    },
+    {
+      "username": "sageparkerr",
+      "display_name": "Sage 🎀",
+      "timestamp": "2026-02-08T07:59:00-04:00",
+      "post_url": "https://onlyfans.com/2265151239/sageparkerr",
+      "network": "collegeclubb",
+      "note": "🔄 LOOP - same as #71"
+    },
+    {
+      "username": "norahart",
+      "display_name": "Nora 🌹",
+      "timestamp": "2026-02-08T08:36:00-04:00",
+      "post_url": "https://onlyfans.com/2265249872/norahart",
+      "network": "collegeclubb",
+      "note": "🔄 LOOP - same as #28, #65, #83"
+    },
+    {
+      "username": "kinleyreese",
+      "display_name": "Kinley 🧚🏻‍♀️",
+      "timestamp": "2026-02-08T09:39:00-04:00",
+      "post_url": "https://onlyfans.com/2265426566/kinleyreese",
+      "note": "🔄 LOOP"
+    },
+    {
+      "username": "kayleebrooks",
+      "display_name": "Kaylee 💋",
+      "timestamp": "2026-02-08T09:52:00-04:00",
+      "post_url": "https://onlyfans.com/2265462157/kayleebrooks",
+      "note": "🔄 LOOP",
+      "network": "collegeclubb",
+      "likes": "28.6K"
+    },
+    {
+      "username": "natalierhoades18",
+      "display_name": "Natalie Rhoades💗",
+      "timestamp": "2026-02-08T09:54:00-04:00",
+      "post_url": "https://onlyfans.com/2265469270/natalierhoades18",
+      "note": "🔄 LOOP"
+    },
+    {
+      "username": "madisonshaw",
+      "display_name": "Madison 🍒",
+      "timestamp": "2026-02-08T10:22:00-04:00",
+      "post_url": "https://onlyfans.com/2265544387/madisonshaw",
+      "note": "🔄 LOOP"
+    },
+    {
+      "username": "mackenziehart",
+      "display_name": "Mackenzie 🍒",
+      "timestamp": "2026-02-08T10:55:00-04:00",
+      "sequence": 120,
+      "post_url": "https://onlyfans.com/2265627196/mackenziehart",
+      "loop_of": "previous"
+    },
+    {
+      "username": "carlenewalker",
+      "display_name": "Carlene ✨",
+      "timestamp": "2026-02-08T11:14:00-04:00",
+      "sequence": 121,
+      "post_url": "https://onlyfans.com/2265671878/carlenewalker",
+      "loop_of": "previous"
+    },
+    {
+      "username": "ryleeadams",
+      "display_name": "Rylee🍒",
+      "timestamp": "2026-02-08T11:38:00-04:00",
+      "sequence": 122,
+      "post_url": "https://onlyfans.com/2265725804/ryleeadams",
+      "loop_of": "previous"
+    },
+    {
+      "number": 123,
+      "username": "elsieporter",
+      "display_name": "Elsie🌙",
+      "timestamp": "2026-02-08T12:42:00-04:00",
+      "type": "mention",
+      "network": "TBD",
+      "is_loop": false
+    },
+    {
+      "number": 124,
+      "username": "kiraamara",
+      "display_name": "Kira 🍑",
+      "timestamp": "2026-02-08T13:37:00-04:00",
+      "post_url": "https://onlyfans.com/2265951798/kiraamara",
+      "network": "myfriendss",
+      "note": "FRESH - captured seconds after posting",
+      "likes": "37.8K"
+    },
+    {
+      "number": 125,
+      "username": "ashlynnbrooks",
+      "display_name": "Ashlynn 💕",
+      "timestamp": "2026-02-08T13:41:00-04:00",
+      "post_url": "https://onlyfans.com/2265959941/ashlynnbrooks",
+      "network": "collegeclubb",
+      "likes": "40.1K"
+    },
+    {
+      "number": 126,
+      "username": "blakelycarter",
+      "display_name": "Blakely ❤️‍🔥",
+      "timestamp": "2026-02-08T13:41:00-04:00",
+      "post_url": "https://onlyfans.com/2265959864/blakelycarter",
+      "network": "collegeclubb",
+      "likes": "87.9K"
+    },
+    {
+      "number": 127,
+      "username": "avajean",
+      "display_name": "Ava 🌼",
+      "timestamp": "2026-02-08T13:50:00-04:00",
+      "post_url": "https://onlyfans.com/2265973693/avajean",
+      "network": "collegeclubb",
+      "likes": "254.6K"
+    },
+    {
+      "number": 128,
+      "username": "miamckenzie1",
+      "display_name": "Mia 🥹💞",
+      "timestamp": "2026-02-08T14:03:00-04:00",
+      "post_url": "https://onlyfans.com/2265994530/miamckenzie1",
+      "network": "myfriendss",
+      "likes": "109.6K"
+    },
+    {
+      "number": 129,
+      "username": "kiraamara",
+      "display_name": "Kira 🍑",
+      "timestamp": "2026-02-08T14:17:00-04:00",
+      "post_url": "https://onlyfans.com/2266021747/kiraamara",
+      "network": "myfriendss",
+      "likes": "37.8K",
+      "note": "2nd tag from this model"
+    },
+    {
+      "number": 130,
+      "username": "kayleebrooks",
+      "display_name": "Kaylee 💋",
+      "timestamp": "2026-02-08T14:25:00-04:00",
+      "post_url": "https://onlyfans.com/2266034393/kayleebrooks",
+      "network": "collegeclubb",
+      "likes": "28.6K"
+    },
+    {
+      "number": 131,
+      "username": "eleanorhughes",
+      "display_name": "Eleanor 🍒",
+      "timestamp": "2026-02-08T14:29:00-04:00",
+      "post_url": "https://onlyfans.com/2266039218/eleanorhughes",
+      "network": "myfriendss",
+      "likes": "35.3K"
+    }
   ],
   "mentions": [
-    {"username": "naomisteele", "display_name": "Naomi 🌸", "timestamp": "2026-02-05T23:59:00-04:00", "sequence": 1, "network": "myfriendss"},
-    {"username": "tillyharper", "display_name": "Tilly 🦋", "timestamp": "2026-02-06T03:19:00-04:00", "sequence": 2, "network": "collegebesties"},
-    {"username": "shaybennett", "display_name": "Shay 💫", "timestamp": "2026-02-06T03:19:00-04:00", "sequence": 3, "network": "collegeclubb"},
-    {"username": "norahart", "display_name": "Nora 🌹", "timestamp": "2026-02-06T03:23:00-04:00", "sequence": 4, "network": "collegeclubb"},
-    {"username": "tammymoore", "display_name": "Tammy 💖", "timestamp": "2026-02-06T03:50:00-04:00", "sequence": 5, "network": "collegeclubb"},
-    {"username": "rowanpierce", "display_name": "Rowan 🌺", "timestamp": "2026-02-06T13:36:00-04:00", "sequence": 6, "network": "collegebesties"},
-    {"username": "tammymoore", "display_name": "Tammy 💖", "timestamp": "2026-02-06T13:58:00-04:00", "sequence": 7, "network": "collegeclubb", "note": "🔄 LOOP - same as mention #5 from 3:50am"}
+    {
+      "username": "naomisteele",
+      "display_name": "Naomi 🌸",
+      "timestamp": "2026-02-05T23:59:00-04:00",
+      "sequence": 1,
+      "network": "myfriendss"
+    },
+    {
+      "username": "tillyharper",
+      "display_name": "Tilly 🦋",
+      "timestamp": "2026-02-06T03:19:00-04:00",
+      "sequence": 2,
+      "network": "collegebesties"
+    },
+    {
+      "username": "shaybennett",
+      "display_name": "Shay 💫",
+      "timestamp": "2026-02-06T03:19:00-04:00",
+      "sequence": 3,
+      "network": "collegeclubb"
+    },
+    {
+      "username": "norahart",
+      "display_name": "Nora 🌹",
+      "timestamp": "2026-02-06T03:23:00-04:00",
+      "sequence": 4,
+      "network": "collegeclubb"
+    },
+    {
+      "username": "tammymoore",
+      "display_name": "Tammy 💖",
+      "timestamp": "2026-02-06T03:50:00-04:00",
+      "sequence": 5,
+      "network": "collegeclubb"
+    },
+    {
+      "username": "rowanpierce",
+      "display_name": "Rowan 🌺",
+      "timestamp": "2026-02-06T13:36:00-04:00",
+      "sequence": 6,
+      "network": "collegebesties"
+    },
+    {
+      "username": "tammymoore",
+      "display_name": "Tammy 💖",
+      "timestamp": "2026-02-06T13:58:00-04:00",
+      "sequence": 7,
+      "network": "collegeclubb",
+      "note": "🔄 LOOP - same as mention #5 from 3:50am"
+    },
+    {
+      "username": "addisonbrady",
+      "display_name": "Addison 👑",
+      "timestamp": "2026-02-07T01:00:00-04:00",
+      "sequence": 8,
+      "network": "TBD",
+      "note": "NEW - overnight"
+    },
+    {
+      "username": "milareed",
+      "display_name": "Mila, 18🌸",
+      "timestamp": "2026-02-07T01:00:00-04:00",
+      "sequence": 9,
+      "network": "TBD",
+      "note": "NEW - overnight, in Friends list"
+    },
+    {
+      "username": "amyjacksonn",
+      "display_name": "Amy 🌻",
+      "timestamp": "2026-02-07T03:00:00-04:00",
+      "sequence": 10,
+      "network": "TBD",
+      "note": "NEW - overnight"
+    },
+    {
+      "username": "jessyriley",
+      "display_name": "Jessy 🌸",
+      "timestamp": "2026-02-07T03:26:00-04:00",
+      "sequence": 11,
+      "network": "TBD",
+      "note": "NEW - overnight"
+    },
+    {
+      "username": "delilahhill",
+      "display_name": "Delilah 🌻",
+      "timestamp": "2026-02-07T03:47:00-04:00",
+      "sequence": 12,
+      "network": "collegebesties",
+      "note": "NEW - overnight, bio has collegebesties.com"
+    },
+    {
+      "username": "stellariccii",
+      "display_name": "Stella ✨",
+      "timestamp": "2026-02-07T04:23:00-04:00",
+      "sequence": 13,
+      "network": "TBD",
+      "note": "NEW - captured at 4:27am check"
+    },
+    {
+      "username": "kaylablakely",
+      "display_name": "Kayla ✌🏼",
+      "timestamp": "2026-02-07T04:43:00-04:00",
+      "sequence": 14,
+      "network": "TBD",
+      "note": "NEW - captured at 4:45am check"
+    },
+    {
+      "username": "babylola18",
+      "display_name": "Lola😻",
+      "timestamp": "2026-02-07T04:49:00-04:00",
+      "sequence": 15,
+      "network": "TBD",
+      "note": "NEW - captured at 4:54am check"
+    },
+    {
+      "username": "carlycox",
+      "display_name": "Carly🌻",
+      "timestamp": "2026-02-07T05:16:00-04:00",
+      "sequence": 16,
+      "network": "collegebesties",
+      "note": "NEW - 74.3K likes, aussie",
+      "post_link": "https://onlyfans.com/2262678886/carlycox"
+    },
+    {
+      "username": "norahart",
+      "display_name": "Nora 🌹",
+      "timestamp": "2026-02-07T06:00:00-04:00",
+      "sequence": 17,
+      "network": "collegeclubb",
+      "post_link": "https://onlyfans.com/2262757840/norahart"
+    },
+    {
+      "username": "kaylenlane",
+      "display_name": "Kaylen 🌸",
+      "timestamp": "2026-02-07T06:01:00-04:00",
+      "sequence": 18,
+      "network": "collegeclubb",
+      "post_link": "https://onlyfans.com/2262758932/kaylenlane"
+    },
+    {
+      "username": "alixsterling",
+      "display_name": "Alix",
+      "timestamp": "2026-02-07T06:25:00-04:00",
+      "sequence": 19,
+      "network": "myfriendss",
+      "note": "NEW - 12.6K likes, bio has myfriendss.com",
+      "post_link": "https://onlyfans.com/2262115191/alixsterling"
+    },
+    {
+      "username": "tammymoore",
+      "display_name": "Tammy 💖",
+      "timestamp": "2026-02-07T08:31:00-04:00",
+      "sequence": 20,
+      "network": "collegeclubb",
+      "note": "🔄 LOOP - same as mention #5, #7",
+      "post_link": "https://onlyfans.com/2263131693/tammymoore"
+    },
+    {
+      "username": "elleprivate",
+      "display_name": "Elle Jean🥹🌸",
+      "timestamp": "2026-02-06T23:00:00-04:00",
+      "sequence": 21,
+      "network": "collegebesties",
+      "note": "NEW - 480.3K likes - BIG account!",
+      "post_link": "https://onlyfans.com/2262265389/elleprivate"
+    },
+    {
+      "username": "carlenewalker",
+      "display_name": "Carlene ✨",
+      "timestamp": "2026-02-07T09:43:00-04:00",
+      "sequence": 22,
+      "network": "collegeclubb",
+      "note": "🔄 LOOP - same as tag #25, #48",
+      "post_link": "https://onlyfans.com/2263331712/carlenewalker"
+    },
+    {
+      "username": "rowanpierce",
+      "display_name": "Rowan 🌺",
+      "timestamp": "2026-02-07T10:00:00-04:00",
+      "sequence": 23,
+      "network": "collegebesties",
+      "note": "🔄 LOOP - same as mention #6, tag #19, #47, #51",
+      "post_link": "https://onlyfans.com/2263377758/rowanpierce"
+    },
+    {
+      "username": "tammymoore",
+      "display_name": "Tammy 💖",
+      "timestamp": "2026-02-07T10:01:00-04:00",
+      "sequence": 24,
+      "network": "collegeclubb",
+      "note": "🔄 LOOP - same as mention #5, #7, #20",
+      "post_link": "https://onlyfans.com/2263380760/tammymoore"
+    },
+    {
+      "username": "kiyalane",
+      "display_name": "Kiya ✨",
+      "timestamp": "2026-02-07T10:02:00-04:00",
+      "sequence": 25,
+      "network": "collegeclubb",
+      "note": "NEW - 5.6K likes",
+      "post_link": "https://onlyfans.com/2263381479/kiyalane"
+    },
+    {
+      "username": "natalierhoades18",
+      "display_name": "Natalie Rhoades💗",
+      "timestamp": "2026-02-07T10:06:00-04:00",
+      "sequence": 26,
+      "network": "collegeclubb",
+      "note": "🔄 LOOP - same as tag #49, 380K likes",
+      "post_link": "https://onlyfans.com/2263395419/natalierhoades18"
+    },
+    {
+      "username": "zoedalby",
+      "display_name": "Zoe",
+      "timestamp": "2026-02-06T18:00:00-04:00",
+      "sequence": 27,
+      "network": "myfriendss",
+      "note": "NEW - 231.2K likes - 3rd myfriendss model!",
+      "post_link": "https://onlyfans.com/2261821504/zoedalby"
+    },
+    {
+      "username": "lilywright",
+      "display_name": "lily ♡",
+      "timestamp": "2026-02-07T13:29:00-04:00",
+      "network": "collegebesties",
+      "type": "mention"
+    },
+    {
+      "username": "indieellis",
+      "display_name": "Indie💕",
+      "timestamp": "2026-02-07T13:00:00-04:00",
+      "network": "friends_list",
+      "type": "story_mention",
+      "note": "NEW - Mentioned in STORY (not post) - Friends list member"
+    },
+    {
+      "username": "nicolemiller",
+      "display_name": "Nicole 🎀",
+      "timestamp": "2026-02-08T04:03:00-04:00",
+      "network": "friends_list",
+      "type": "mention",
+      "post_link": "https://onlyfans.com/2264008320/nicolemiller",
+      "note": "NEW - Friends list member"
+    },
+    {
+      "username": "ryleeadams",
+      "display_name": "Rylee🍒",
+      "timestamp": "2026-02-08T04:56:00-04:00",
+      "network": "collegeclubb",
+      "type": "mention",
+      "post_link": "https://onlyfans.com/2264740209/ryleeadams",
+      "note": "NEW mention - also appears as tag #96"
+    }
   ],
   "rotation_analysis": {
-    "total_tags": 52,
-    "total_mentions": 7,
+    "total_tags": 70,
+    "total_mentions": 27,
     "estimated_interval_minutes": 3.5,
     "loop_detected": true,
     "loop_confirmed_at": "2026-02-06T04:10:00-04:00",
     "full_cycle_minutes": 210,
     "full_cycle_hours": 3.5,
     "unique_models_in_rotation": "~60 (estimated)",
-    "fan_count_current": 1077,
-    "fan_growth": "696 → 1,077 (+381 fans in ~17 hours)",
-    "growth_rate": "~22 fans/hour",
-    "last_check": "2026-02-06T14:39:00-04:00",
-    "last_check_status": "ACTIVE - 52 tags, 7 mentions, WHALE: Daniel $230 PPV today!",
-    "mention_window": "Active - 5 mentions captured (3:19-3:50am)",
-    "first_purchase": "Detected at 3:51am!",
+    "fan_count_current": 1917,
+    "fan_growth": "696 → 1,750 (+1,054 fans in ~36 hours)",
+    "growth_rate": "~29 fans/hour",
+    "last_check": "2026-02-07T12:34:00-04:00",
+    "last_check_status": "No new tags - abbybeaumont still visible (7 min)",
+    "mention_window": "Active - 27 mentions captured total",
+    "first_purchase": "Detected at 3:51am on 2026-02-06!",
     "network_breakdown": {
-      "collegebesties": 23,
-      "myfriendss": 1,
-      "collegeclubb": 25
+      "collegebesties": 24,
+      "myfriendss": 3,
+      "collegeclubb": 36
+    },
+    "fan_count_start": 696
+  },
+  "promo_tactics": {
+    "ghost_promos": {
+      "description": "Tags deleted within ~5 minutes (ephemeral rotation, 24/7)",
+      "interval": "every 3.5 minutes",
+      "deletion_window": "~5 minutes"
+    },
+    "pinned_24hr_posts": {
+      "description": "Pinned to top of model profile page, expires after 24 hours",
+      "discovered": "2026-02-07T11:37:00-04:00",
+      "current_models": [
+        "elleprivate",
+        "addisonbrady",
+        "milareed",
+        "amyjacksonn",
+        "jessyriley",
+        "delilahhill",
+        "stellariccii",
+        "kaylablakely",
+        "carlycox",
+        "zoedalby",
+        "alixsterling"
+      ],
+      "total_active": 11,
+      "note": "elleprivate showed in tags but NOT actually pinned - need to verify others",
+      "network_rules": {
+        "collegeclubb": "PINNED - 24hr expiry on profile",
+        "collegebesties": "PINNED - 24hr expiry on profile",
+        "myfriendss": "NOT PINNED - regular ghost promo only",
+        "note": "myfriendss less integrated - only 2% of total tags, no pinned posts"
+      },
+      "verified_pinned": [
+        "carlycox",
+        "kaylablakely",
+        "stellariccii",
+        "delilahhill",
+        "jessyriley",
+        "milareed",
+        "addisonbrady",
+        "amyjacksonn"
+      ],
+      "not_pinned": [
+        "elleprivate"
+      ]
     }
+  },
+  "automation_layers": {
+    "layer_8_stories": {
+      "description": "Stories promo - 3 types discovered",
+      "story_types": [
+        "Photos of other models with @ tag",
+        "Self photos/videos",
+        "Links to PPV posts on main feed"
+      ],
+      "monitoring_needed": "Check stories periodically for cross-promo patterns",
+      "discovered": "2026-02-07T11:53:00-04:00"
+    }
+  },
+  "nina_outbound_promos": [
+    {
+      "model": "allisonlane",
+      "display_name": "Allison 🦋",
+      "timestamp": "2026-02-07T00:00:00-04:00",
+      "caption": "Just casually the prettiest thing on your feed today 😍"
+    },
+    {
+      "model": "poppyford",
+      "display_name": "Poppy Ford",
+      "timestamp": "2026-02-07T07:00:00-04:00",
+      "caption": "Petite cutie @poppyford wants to know if she can be your new favourite girl? 🥹 her VIP is FREE for the next 24 hours!! 🌸"
+    }
+  ],
+  "friends_list": [
+    "estelleharper",
+    "kittypalmer",
+    "marniecarter",
+    "lilliemaee",
+    "indieellis",
+    "chlotamii",
+    "elliewolfe",
+    "lilareynolds",
+    "sarahughes",
+    "kaitlingrace"
+  ],
+  "stats": {
+    "fan_count_current": 1808,
+    "last_check": "2026-02-07T14:35:00-04:00",
+    "last_check_status": "No tags visible, 1 new story mention (indieellis)",
+    "notable_tips": [
+      {
+        "fan": "Soccerguy0990",
+        "amount": "$50",
+        "timestamp": "2026-02-07T13:59:00-04:00",
+        "note": "Same fan who did sarcastic $1 tip earlier - came back with $50!"
+      }
+    ],
+    "fan_count": 1933,
+    "last_fan_check": "2026-02-07T18:56:00-04:00"
+  },
+  "last_check_status": "Session recovered after brief logout. Possible missed tag (ghost-deleted). Fan count: 2016 (+4)",
+  "fan_count": 2491,
+  "nina_outbound_posts": [
+    {
+      "model_tagged": "allisonlane",
+      "display_name": "Allison 🦋",
+      "post_text": "Just casually the prettiest thing on your feed today 😍",
+      "timestamp": "2026-02-07T00:58:00-04:00",
+      "pinned": true,
+      "expires_hours": 10
+    }
+  ],
+  "nina_outbound_mass": [
+    {
+      "time": "05:53am",
+      "model": "marniecarter",
+      "views": 340
+    },
+    {
+      "time": "07:53am",
+      "model": "estelleharper",
+      "views": 315
+    },
+    {
+      "time": "09:53am",
+      "model": "blairjoness",
+      "views": 262
+    },
+    {
+      "time": "10:53am",
+      "model": "lenirivers",
+      "views": 233
+    },
+    {
+      "time": "12:15pm",
+      "model": "maiamoore",
+      "views": 182
+    },
+    {
+      "time": "01:54pm",
+      "model": "kamryngrace",
+      "views": 117
+    }
+  ],
+  "fan_growth": "696 → 2,429 (+1,733 fans)",
+  "growth_rate": "~28 fans/hour",
+  "fan_growth_history": [
+    {
+      "timestamp": "2026-02-08T02:45:00-04:00",
+      "count": 2139
+    },
+    {
+      "timestamp": "2026-02-08T04:02:00-04:00",
+      "count": 2199
+    },
+    {
+      "timestamp": "2026-02-08T05:14:00-04:00",
+      "count": 2238
+    },
+    {
+      "timestamp": "2026-02-08T05:22:00-04:00",
+      "count": 2240
+    },
+    {
+      "timestamp": "2026-02-08T06:16:00-04:00",
+      "count": 2278
+    },
+    {
+      "timestamp": "2026-02-08T06:20:00-04:00",
+      "count": 2281
+    },
+    {
+      "timestamp": "2026-02-08T07:59:00-04:00",
+      "count": 2320
+    },
+    {
+      "timestamp": "2026-02-08T08:40:00-04:00",
+      "count": 2341
+    },
+    {
+      "timestamp": "2026-02-08T09:17:00-04:00",
+      "count": 2355
+    },
+    {
+      "timestamp": "2026-02-08T09:25:00-04:00",
+      "count": 2359
+    },
+    {
+      "timestamp": "2026-02-08T09:43:00-04:00",
+      "count": 2370
+    },
+    {
+      "timestamp": "2026-02-08T09:56:00-04:00",
+      "count": 2380
+    },
+    {
+      "timestamp": "2026-02-08T10:23:00-04:00",
+      "count": 2393
+    },
+    {
+      "timestamp": "2026-02-08T10:46:00-04:00",
+      "count": 2400
+    },
+    {
+      "timestamp": "2026-02-08T10:59:00-04:00",
+      "count": 2410
+    },
+    {
+      "timestamp": "2026-02-08T11:17:00-04:00",
+      "count": 2417
+    },
+    {
+      "timestamp": "2026-02-08T11:40:00-04:00",
+      "count": 2429
+    },
+    {
+      "timestamp": "2026-02-08T11:58:00-04:00",
+      "count": 2442
+    },
+    {
+      "timestamp": "2026-02-08T12:02:00-04:00",
+      "count": 2445
+    },
+    {
+      "timestamp": "2026-02-08T12:11:00-04:00",
+      "count": 2447
+    },
+    {
+      "timestamp": "2026-02-08T12:25:00-04:00",
+      "count": 2450
+    },
+    {
+      "timestamp": "2026-02-08T13:25:00-04:00",
+      "count": 2463
+    },
+    {
+      "timestamp": "2026-02-08T13:30:00-04:00",
+      "count": 2469
+    },
+    {
+      "timestamp": "2026-02-08T13:37:00-04:00",
+      "count": 2472
+    },
+    {
+      "timestamp": "2026-02-08T14:30:00-04:00",
+      "count": 2492
+    }
+  ],
+  "summary": {
+    "total_tags": 131
   }
 }
