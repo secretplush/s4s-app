@@ -1,8 +1,8 @@
 {
   "account": "ninacarlson",
   "tracking_started": "2026-02-06T00:42:00-04:00",
-  "last_check": "2026-02-08T15:24:00-04:00",
-  "last_check_status": "3 new subscriptions, no new tags/mentions",
+  "last_check": "2026-02-08T16:32:00-04:00",
+  "last_check_status": "No new tags/mentions. Lots of subs + 2 purchases ($14, $18). Tags page still rate-limited.",
   "tags": [
     {
       "username": "nikkihayes",
@@ -1036,6 +1036,34 @@
       "post_url": "https://onlyfans.com/2266039218/eleanorhughes",
       "network": "myfriendss",
       "likes": "35.3K"
+    },
+    {
+      "username": "kennedyblair",
+      "display_name": "Kennedy 🦋",
+      "timestamp": "2026-02-08T15:50:00-04:00",
+      "post_url": "https://onlyfans.com/2266156028/kennedyblair",
+      "network": "unknown"
+    },
+    {
+      "username": "cararosex",
+      "display_name": "Cara Rose⋆˙⟡",
+      "timestamp": "2026-02-08T15:55:00-04:00",
+      "post_url": "https://onlyfans.com/2266162240/cararosex",
+      "network": "unknown"
+    },
+    {
+      "username": "skylerwoods1",
+      "display_name": "Skyler 💞",
+      "timestamp": "2026-02-08T16:08:00-04:00",
+      "post_url": "https://onlyfans.com/2266179339/skylerwoods1",
+      "network": "unknown"
+    },
+    {
+      "username": "heyylena",
+      "display_name": "Lena 🌸",
+      "timestamp": "2026-02-08T16:07:00-04:00",
+      "post_url": "https://onlyfans.com/2266178482/heyylena",
+      "network": "unknown"
     }
   ],
   "mentions": [
@@ -1291,6 +1319,51 @@
       "type": "mention",
       "post_link": "https://onlyfans.com/2264740209/ryleeadams",
       "note": "NEW mention - also appears as tag #96"
+    },
+    {
+      "username": "haileyyjoness",
+      "display_name": "Hailey 🌷",
+      "timestamp": "2026-02-08T07:24:00-04:00",
+      "network": "unknown",
+      "type": "mention",
+      "post_link": "https://onlyfans.com/2265101644/haileyyjoness",
+      "note": "NEW - 9 hours ago"
+    },
+    {
+      "username": "connierivers",
+      "display_name": "Connie",
+      "timestamp": "2026-02-08T16:08:00-04:00",
+      "network": "collegebesties",
+      "type": "mention",
+      "post_link": "https://onlyfans.com/2266182374/connierivers",
+      "note": "NEW - 12 min ago"
+    },
+    {
+      "username": "cassidymellor",
+      "display_name": "Cassidy 🧸",
+      "timestamp": "2026-02-08T16:06:00-04:00",
+      "network": "unknown",
+      "type": "mention",
+      "post_link": "https://onlyfans.com/2266179755/cassidymellor",
+      "note": "NEW - 14 min ago"
+    },
+    {
+      "username": "skylerwoods1",
+      "display_name": "Skyler 💞",
+      "timestamp": "2026-02-08T16:06:00-04:00",
+      "network": "unknown",
+      "type": "mention",
+      "post_link": "https://onlyfans.com/2266179339/skylerwoods1",
+      "note": "NEW - 14 min ago"
+    },
+    {
+      "username": "heyylena",
+      "display_name": "Lena 🌸",
+      "timestamp": "2026-02-08T16:05:00-04:00",
+      "network": "unknown",
+      "type": "mention",
+      "post_link": "https://onlyfans.com/2266178482/heyylena",
+      "note": "NEW - 15 min ago"
     }
   ],
   "rotation_analysis": {
@@ -1414,7 +1487,7 @@
     "fan_count": 1933,
     "last_fan_check": "2026-02-07T18:56:00-04:00"
   },
-  "fan_count": 2507,
+  "fan_count": 2540,
   "nina_outbound_posts": [
     {
       "model_tagged": "allisonlane",
@@ -1562,6 +1635,17 @@
     }
   ],
   "summary": {
-    "total_tags": 131
-  }
+    "total_tags": 131,
+    "total_mentions": 36
+  },
+  "fan_count_history": [
+    {
+      "timestamp": "2026-02-08T16:24:00-04:00",
+      "count": 2539
+    },
+    {
+      "timestamp": "2026-02-08T16:32:00-04:00",
+      "count": 2540
+    }
+  ]
 }

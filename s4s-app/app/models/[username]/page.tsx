@@ -22,6 +22,7 @@ export default function ModelPage() {
   const [saveMessage, setSaveMessage] = useState('')
   const [initialLoadDone, setInitialLoadDone] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [vaultDetailsImage, setVaultDetailsImage] = useState<string | null>(null) // imageId to show vault details for
 
   // Load from IndexedDB on mount (with localStorage migration)
   useEffect(() => {
@@ -135,9 +136,16 @@ export default function ModelPage() {
     const image = promoImages.find(img => img.id === imageId)
     if (!image || !image.base64) return
 
+    // Only distribute to models that DON'T have this image yet
     const targetUsernames = CONNECTED_MODELS
-      .filter(m => m.username !== username)
+      .filter(m => m.username !== username && !image.vaultIds[m.username])
       .map(m => m.username)
+    
+    if (targetUsernames.length === 0) {
+      setDistributeProgress('✓ All vaults already have this image')
+      setTimeout(() => setDistributeProgress(''), 3000)
+      return
+    }
 
     setDistributing(true)
     setDistributeProgress(`Distributing to ${targetUsernames.length} vaults...`)
@@ -165,13 +173,19 @@ export default function ModelPage() {
           }
         }
 
-        setPromoImages(prev => prev.map(img =>
+        const updatedImages = promoImages.map(img =>
           img.id === imageId
             ? { ...img, vaultIds: { ...img.vaultIds, ...newVaultIds } }
             : img
-        ))
-
-        setDistributeProgress(`✓ Distributed to ${data.distributed}/${targetUsernames.length} vaults`)
+        )
+        setPromoImages(updatedImages)
+        
+        // Auto-save to IndexedDB immediately after distribution
+        await saveImages(username, updatedImages)
+        setSaved(true)
+        
+        const successCount = Object.keys(newVaultIds).length
+        setDistributeProgress(`✓ Distributed to ${successCount}/${targetUsernames.length} vaults`)
         setTimeout(() => setDistributeProgress(''), 3000)
       } else {
         setDistributeProgress(`Error: ${data.error}`)
@@ -355,25 +369,35 @@ export default function ModelPage() {
                     )}
                   </div>
 
-                  {/* Vault Status */}
+                  {/* Vault Status - Clickable */}
                   <div className="absolute top-3 right-3">
-                    <span className="px-2 py-1 bg-black/50 text-gray-300 text-xs rounded">
+                    <button
+                      onClick={() => setVaultDetailsImage(img.id)}
+                      className="px-2 py-1 bg-black/50 hover:bg-black/70 text-gray-300 text-xs rounded cursor-pointer transition"
+                    >
                       {Object.keys(img.vaultIds).length}/{CONNECTED_MODELS.length - 1} vaults
-                    </span>
+                    </button>
                   </div>
 
                   {/* Actions */}
                   <div className="absolute bottom-0 left-0 right-0 p-3 space-y-2">
-                    {/* Distribute Button */}
-                    {Object.keys(img.vaultIds).length < CONNECTED_MODELS.length - 1 && (
-                      <button
-                        onClick={() => handleDistribute(img.id)}
-                        disabled={distributing}
-                        className="w-full py-2 rounded-lg text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        {distributing ? '⏳ Distributing...' : `📤 Distribute to ${CONNECTED_MODELS.length - 1} Vaults`}
-                      </button>
-                    )}
+                    {/* Distribute Button - only shows if missing vaults */}
+                    {(() => {
+                      const missingCount = CONNECTED_MODELS.filter(m => m.username !== username && !img.vaultIds[m.username]).length
+                      return missingCount > 0 ? (
+                        <button
+                          onClick={() => handleDistribute(img.id)}
+                          disabled={distributing}
+                          className="w-full py-2 rounded-lg text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {distributing ? '⏳ Distributing...' : `📤 Distribute to ${missingCount} Vaults`}
+                        </button>
+                      ) : (
+                        <div className="w-full py-2 rounded-lg text-sm font-medium bg-green-600/50 text-green-200 text-center">
+                          ✓ In all vaults
+                        </div>
+                      )
+                    })()}
                     <div className="flex gap-2">
                       <button
                         onClick={() => toggleActive(img.id)}
@@ -463,6 +487,66 @@ export default function ModelPage() {
           </div>
         </div>
       </div>
+
+      {/* Vault Details Modal */}
+      {vaultDetailsImage && (() => {
+        const image = promoImages.find(img => img.id === vaultDetailsImage)
+        if (!image) return null
+        const otherModels = CONNECTED_MODELS.filter(m => m.username !== username)
+        
+        return (
+          <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+            <div className="bg-gray-900 rounded-xl max-w-lg w-full max-h-[80vh] overflow-hidden">
+              <div className="p-4 border-b border-gray-800 flex justify-between items-center">
+                <h3 className="text-lg font-semibold text-white">Vault Distribution</h3>
+                <button
+                  onClick={() => setVaultDetailsImage(null)}
+                  className="text-gray-400 hover:text-white text-xl"
+                >
+                  ×
+                </button>
+              </div>
+              <div className="p-4 overflow-y-auto max-h-[60vh]">
+                <div className="space-y-2">
+                  {otherModels.map(m => {
+                    const vaultId = image.vaultIds[m.username]
+                    return (
+                      <div
+                        key={m.username}
+                        className={`flex items-center justify-between p-3 rounded-lg ${
+                          vaultId ? 'bg-green-900/30 border border-green-800' : 'bg-gray-800 border border-gray-700'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className={`text-lg ${vaultId ? 'text-green-400' : 'text-gray-500'}`}>
+                            {vaultId ? '✓' : '○'}
+                          </span>
+                          <div>
+                            <div className="text-white font-medium">@{m.username}</div>
+                            <div className="text-gray-400 text-xs">{m.displayName}</div>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          {vaultId ? (
+                            <code className="text-xs text-green-400 bg-green-900/50 px-2 py-1 rounded">
+                              {vaultId}
+                            </code>
+                          ) : (
+                            <span className="text-xs text-gray-500">Not distributed</span>
+                          )}
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+                <div className="mt-4 pt-4 border-t border-gray-800 text-center text-sm text-gray-400">
+                  {Object.keys(image.vaultIds).length}/{otherModels.length} vaults have this image
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+      })()}
     </div>
   )
 }

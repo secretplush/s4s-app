@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+// Increase timeout for long-running distribution
+export const maxDuration = 300 // 5 minutes
+
 const OF_API_BASE = 'https://app.onlyfansapi.com/api'
 const OF_API_KEY = process.env.OF_API_KEY || 'ofapi_bT4J1Er2YBow46EihDfjlSFf5HRmiM15M4DCOoHn7889d8b4'
 
@@ -48,7 +51,7 @@ function base64ToBuffer(dataUrl: string): { buffer: Buffer; mimeType: string } {
 }
 
 // Upload image and get vault_id via post-then-delete trick
-async function uploadToVault(username: string, imageBase64: string, filename: string): Promise<{ vaultId: string | null; error?: string }> {
+async function uploadToVault(username: string, imageBase64: string, filename: string, sourceUsername: string): Promise<{ vaultId: string | null; error?: string }> {
   const accountId = ACCOUNT_IDS[username]
   if (!accountId) {
     return { vaultId: null, error: `No account ID for ${username}` }
@@ -78,11 +81,14 @@ async function uploadToVault(username: string, imageBase64: string, filename: st
     }
 
     const uploadData = await uploadRes.json()
-    const mediaId = uploadData.id || uploadData.media_id
+    const mediaId = uploadData.prefixed_id || uploadData.id || uploadData.media_id
 
     if (!mediaId) {
-      return { vaultId: null, error: 'No media ID returned from upload' }
+      return { vaultId: null, error: `No media ID returned from upload: ${JSON.stringify(uploadData)}` }
     }
+
+    // Wait for OF rate limit (10 seconds between upload and post)
+    await new Promise(r => setTimeout(r, 11000))
 
     // Step 2: Create a post with the media (this generates vault_id)
     const postRes = await fetch(`${OF_API_BASE}/${accountId}/posts`, {
@@ -92,7 +98,7 @@ async function uploadToVault(username: string, imageBase64: string, filename: st
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        text: 'temp',
+        text: `@${sourceUsername}`,
         mediaFiles: [mediaId]
       })
     })
@@ -102,7 +108,9 @@ async function uploadToVault(username: string, imageBase64: string, filename: st
       return { vaultId: null, error: `Post creation failed: ${err}` }
     }
 
-    const postData = await postRes.json()
+    const postResponse = await postRes.json()
+    // API wraps response in .data
+    const postData = postResponse.data || postResponse
     const postId = postData.id || postData.post_id
 
     // Extract vault_id from the post's media
@@ -113,12 +121,19 @@ async function uploadToVault(username: string, imageBase64: string, filename: st
 
     // Step 3: Delete the post immediately (vault copy remains)
     if (postId) {
-      await fetch(`${OF_API_BASE}/${accountId}/posts/${postId}`, {
+      // Small delay before delete to ensure post is registered
+      await new Promise(r => setTimeout(r, 2000))
+      
+      const deleteRes = await fetch(`${OF_API_BASE}/${accountId}/posts/${postId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${OF_API_KEY}`
         }
       })
+      
+      if (!deleteRes.ok) {
+        console.error(`Failed to delete post ${postId}: ${await deleteRes.text()}`)
+      }
     }
 
     if (!vaultId) {
@@ -141,23 +156,22 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    const results: VaultResult[] = []
-
-    // Distribute to each target model's vault
-    for (const username of targetUsernames) {
+    // Process all models in parallel (each has its own account, so rate limits are per-account)
+    const promises = targetUsernames.map(async (username, index) => {
+      // Stagger starts by 1 second to avoid overwhelming the API
+      await new Promise(r => setTimeout(r, index * 1000))
+      
       console.log(`Distributing to ${username}...`)
+      const { vaultId, error } = await uploadToVault(username, imageBase64, filename, sourceUsername)
       
-      const { vaultId, error } = await uploadToVault(username, imageBase64, filename)
-      
-      results.push({
+      return {
         username,
         vaultId,
         error
-      })
+      } as VaultResult
+    })
 
-      // Small delay to avoid rate limiting
-      await new Promise(r => setTimeout(r, 500))
-    }
+    const results = await Promise.all(promises)
 
     const successful = results.filter(r => r.vaultId !== null)
     const failed = results.filter(r => r.vaultId === null)

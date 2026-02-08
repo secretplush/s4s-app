@@ -53,6 +53,7 @@ function DashboardContent() {
               { id: 'dashboard', icon: '📊', label: 'Dashboard', href: '/?tab=dashboard' },
               { id: 'models', icon: '👩', label: 'Models', href: '/?tab=models' },
               { id: 'rotation', icon: '🔄', label: 'Rotation', href: '/rotation' },
+              { id: 'network', icon: '🔌', label: 'Network', href: '/network' },
               { id: 'analytics', icon: '📈', label: 'Analytics', href: '/?tab=analytics' },
               { id: 'settings', icon: '⚙️', label: 'Settings', href: '/?tab=settings' },
             ].map(item => (
