@@ -128,6 +128,61 @@ export default function ModelPage() {
     setDragOver(false)
   }, [])
 
+  const [distributing, setDistributing] = useState(false)
+  const [distributeProgress, setDistributeProgress] = useState('')
+
+  const handleDistribute = async (imageId: string) => {
+    const image = promoImages.find(img => img.id === imageId)
+    if (!image || !image.base64) return
+
+    const targetUsernames = CONNECTED_MODELS
+      .filter(m => m.username !== username)
+      .map(m => m.username)
+
+    setDistributing(true)
+    setDistributeProgress(`Distributing to ${targetUsernames.length} vaults...`)
+
+    try {
+      const res = await fetch('/api/distribute', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          imageBase64: image.base64,
+          filename: image.filename,
+          sourceUsername: username,
+          targetUsernames
+        })
+      })
+
+      const data = await res.json()
+
+      if (data.success) {
+        // Update vaultIds in the image
+        const newVaultIds: { [key: string]: string } = {}
+        for (const result of data.results) {
+          if (result.vaultId) {
+            newVaultIds[result.username] = result.vaultId
+          }
+        }
+
+        setPromoImages(prev => prev.map(img =>
+          img.id === imageId
+            ? { ...img, vaultIds: { ...img.vaultIds, ...newVaultIds } }
+            : img
+        ))
+
+        setDistributeProgress(`✓ Distributed to ${data.distributed}/${targetUsernames.length} vaults`)
+        setTimeout(() => setDistributeProgress(''), 3000)
+      } else {
+        setDistributeProgress(`Error: ${data.error}`)
+      }
+    } catch (e) {
+      setDistributeProgress(`Error: ${e}`)
+    } finally {
+      setDistributing(false)
+    }
+  }
+
   const toggleActive = (imageId: string) => {
     setPromoImages(prev => prev.map(img =>
       img.id === imageId ? { ...img, isActive: !img.isActive } : img
@@ -163,6 +218,9 @@ export default function ModelPage() {
             ← Back to Models
           </Link>
           <div className="flex items-center gap-3">
+            {distributeProgress && (
+              <span className="text-blue-400 text-sm">{distributeProgress}</span>
+            )}
             {saveMessage && (
               <span className="text-green-400 text-sm">{saveMessage}</span>
             )}
@@ -305,23 +363,35 @@ export default function ModelPage() {
                   </div>
 
                   {/* Actions */}
-                  <div className="absolute bottom-0 left-0 right-0 p-3 flex gap-2">
-                    <button
-                      onClick={() => toggleActive(img.id)}
-                      className={`flex-1 py-2 rounded-lg text-sm font-medium transition ${
-                        img.isActive
-                          ? 'bg-gray-700 hover:bg-gray-600 text-white'
-                          : 'bg-green-600 hover:bg-green-700 text-white'
-                      }`}
-                    >
-                      {img.isActive ? 'Deactivate' : 'Activate'}
-                    </button>
-                    <button
-                      onClick={() => deleteImage(img.id)}
-                      className="px-3 py-2 bg-red-600/80 hover:bg-red-600 rounded-lg text-white text-sm"
-                    >
-                      🗑
-                    </button>
+                  <div className="absolute bottom-0 left-0 right-0 p-3 space-y-2">
+                    {/* Distribute Button */}
+                    {Object.keys(img.vaultIds).length < CONNECTED_MODELS.length - 1 && (
+                      <button
+                        onClick={() => handleDistribute(img.id)}
+                        disabled={distributing}
+                        className="w-full py-2 rounded-lg text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {distributing ? '⏳ Distributing...' : `📤 Distribute to ${CONNECTED_MODELS.length - 1} Vaults`}
+                      </button>
+                    )}
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => toggleActive(img.id)}
+                        className={`flex-1 py-2 rounded-lg text-sm font-medium transition ${
+                          img.isActive
+                            ? 'bg-gray-700 hover:bg-gray-600 text-white'
+                            : 'bg-green-600 hover:bg-green-700 text-white'
+                        }`}
+                      >
+                        {img.isActive ? 'Deactivate' : 'Activate'}
+                      </button>
+                      <button
+                        onClick={() => deleteImage(img.id)}
+                        className="px-3 py-2 bg-red-600/80 hover:bg-red-600 rounded-lg text-white text-sm"
+                      >
+                        🗑
+                      </button>
+                    </div>
                   </div>
 
                   {/* Performance (if available) */}

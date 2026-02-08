@@ -1,8 +1,8 @@
 {
   "account": "ninacarlson",
   "tracking_started": "2026-02-06T00:42:00-04:00",
-  "last_check": "2026-02-08T14:35:00-04:00",
-  "last_check_status": "Rate limited by OF - delilahhill mention visible (already tracked)",
+  "last_check": "2026-02-08T15:24:00-04:00",
+  "last_check_status": "3 new subscriptions, no new tags/mentions",
   "tags": [
     {
       "username": "nikkihayes",
@@ -1414,8 +1414,7 @@
     "fan_count": 1933,
     "last_fan_check": "2026-02-07T18:56:00-04:00"
   },
-  "last_check_status": "Session recovered after brief logout. Possible missed tag (ghost-deleted). Fan count: 2016 (+4)",
-  "fan_count": 2491,
+  "fan_count": 2507,
   "nina_outbound_posts": [
     {
       "model_tagged": "allisonlane",
