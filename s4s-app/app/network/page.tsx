@@ -9,6 +9,7 @@ import {
   initializeDefaultModels,
   type NetworkModel 
 } from '@/lib/network-db'
+import { syncToKV } from '@/lib/indexed-db'
 
 export default function NetworkPage() {
   const [models, setModels] = useState<NetworkModel[]>([])
@@ -24,6 +25,18 @@ export default function NetworkPage() {
   const [saving, setSaving] = useState(false)
   const [connectStatus, setConnectStatus] = useState<string | null>(null)
   const [connectError, setConnectError] = useState<string | null>(null)
+  const [syncStatus, setSyncStatus] = useState<{ type: 'success' | 'error' | 'loading'; message: string } | null>(null)
+
+  const handleSyncToKV = async () => {
+    setSyncStatus({ type: 'loading', message: 'Syncing to KV...' })
+    const result = await syncToKV()
+    setSyncStatus({ 
+      type: result.success ? 'success' : 'error', 
+      message: result.message 
+    })
+    // Clear status after 5 seconds
+    setTimeout(() => setSyncStatus(null), 5000)
+  }
 
   // Load models and credits on mount
   useEffect(() => {
@@ -223,16 +236,41 @@ export default function NetworkPage() {
             </Link>
             <h1 className="text-xl font-bold">🔌 Network Management</h1>
           </div>
-          {credits && (
-            <div className="text-sm">
-              <span className="text-gray-400">API Credits:</span>{' '}
-              <span className="text-green-400 font-mono">
-                {typeof credits.balance === 'number' 
-                  ? credits.balance.toLocaleString() 
-                  : credits.balance}
+          <div className="flex items-center gap-4">
+            <button
+              onClick={handleSyncToKV}
+              disabled={syncStatus?.type === 'loading'}
+              className={`px-3 py-1.5 rounded text-sm font-medium transition ${
+                syncStatus?.type === 'loading'
+                  ? 'bg-gray-700 text-gray-400'
+                  : syncStatus?.type === 'success'
+                  ? 'bg-green-600 text-white'
+                  : syncStatus?.type === 'error'
+                  ? 'bg-red-600 text-white'
+                  : 'bg-blue-600 hover:bg-blue-500 text-white'
+              }`}
+            >
+              {syncStatus?.type === 'loading' ? '⏳ Syncing...' : 
+               syncStatus?.type === 'success' ? '✓ Synced!' :
+               syncStatus?.type === 'error' ? '✗ Error' :
+               '☁️ Sync to KV'}
+            </button>
+            {syncStatus && syncStatus.type !== 'loading' && (
+              <span className={`text-xs ${syncStatus.type === 'success' ? 'text-green-400' : 'text-red-400'}`}>
+                {syncStatus.message}
               </span>
-            </div>
-          )}
+            )}
+            {credits && (
+              <div className="text-sm">
+                <span className="text-gray-400">API Credits:</span>{' '}
+                <span className="text-green-400 font-mono">
+                  {typeof credits.balance === 'number' 
+                    ? credits.balance.toLocaleString() 
+                    : credits.balance}
+                </span>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

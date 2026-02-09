@@ -53,6 +53,7 @@ function DashboardContent() {
               { id: 'dashboard', icon: '📊', label: 'Dashboard', href: '/?tab=dashboard' },
               { id: 'models', icon: '👩', label: 'Models', href: '/?tab=models' },
               { id: 'rotation', icon: '🔄', label: 'Rotation', href: '/rotation' },
+              { id: 'captions', icon: '💬', label: 'Captions', href: '/captions' },
               { id: 'network', icon: '🔌', label: 'Network', href: '/network' },
               { id: 'analytics', icon: '📈', label: 'Analytics', href: '/?tab=analytics' },
               { id: 'settings', icon: '⚙️', label: 'Settings', href: '/?tab=settings' },
@@ -243,19 +244,19 @@ function DashboardView({ rotationStatus }: { rotationStatus: string }) {
 
 function ModelsView({ models }: { models: Model[] }) {
   const sortedModels = [...models].sort((a, b) => b.fans - a.fans)
-  const [imageCounts, setImageCounts] = useState<{[key: string]: { total: number; active: number }}>({})
+  const [imageCounts, setImageCounts] = useState<{[key: string]: { total: number; active: number; needsDistribution?: boolean; vaultStatus?: string }}>({})
   
   // Load image counts from IndexedDB
   useEffect(() => {
     const loadCounts = async () => {
       // First migrate any old localStorage data
       await migrateFromLocalStorage()
-      // Then load counts from IndexedDB
-      const counts = await getImageCounts()
+      // Then load counts from IndexedDB (pass total model count)
+      const counts = await getImageCounts(models.length)
       setImageCounts(counts)
     }
     loadCounts()
-  }, [])
+  }, [models.length])
   
   return (
     <div className="space-y-6">
@@ -310,12 +311,24 @@ function ModelsView({ models }: { models: Model[] }) {
                     </span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className={`text-sm ${imageCounts[model.username]?.total ? 'text-green-400' : 'text-gray-400'}`}>
-                      {imageCounts[model.username]?.total || 0} images
-                      {imageCounts[model.username]?.active ? (
-                        <span className="text-xs text-gray-500 ml-1">({imageCounts[model.username].active} active)</span>
-                      ) : null}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className={`text-sm ${imageCounts[model.username]?.total ? 'text-green-400' : 'text-gray-400'}`}>
+                        {imageCounts[model.username]?.total || 0} images
+                        {imageCounts[model.username]?.active ? (
+                          <span className="text-xs text-gray-500 ml-1">({imageCounts[model.username].active} active)</span>
+                        ) : null}
+                      </span>
+                      {imageCounts[model.username]?.needsDistribution && (
+                        <span className="px-2 py-0.5 bg-yellow-500/20 text-yellow-400 text-xs rounded-full" title={imageCounts[model.username]?.vaultStatus}>
+                          ⚠️ {imageCounts[model.username]?.vaultStatus}
+                        </span>
+                      )}
+                      {!imageCounts[model.username]?.total && (
+                        <span className="px-2 py-0.5 bg-red-500/20 text-red-400 text-xs rounded-full">
+                          ⚠️ No images
+                        </span>
+                      )}
+                    </div>
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">

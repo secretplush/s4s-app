@@ -118,7 +118,7 @@ export async function getAllUsernames(): Promise<string[]> {
   }
 }
 
-export async function getImageCounts(): Promise<{ [username: string]: { total: number; active: number } }> {
+export async function getImageCounts(totalModels: number = 15): Promise<{ [username: string]: { total: number; active: number; needsDistribution: boolean; vaultStatus: string } }> {
   if (typeof window === 'undefined') return {}
   
   try {
@@ -130,11 +130,41 @@ export async function getImageCounts(): Promise<{ [username: string]: { total: n
       
       request.onerror = () => reject(request.error)
       request.onsuccess = () => {
-        const results: { [username: string]: { total: number; active: number } } = {}
+        const results: { [username: string]: { total: number; active: number; needsDistribution: boolean; vaultStatus: string } } = {}
+        const expectedVaults = totalModels - 1 // Each model's image goes to all OTHER models
+        
         for (const data of request.result as StoredData[]) {
+          const activeImages = data.images.filter(img => img.isActive)
+          // Check if any active image is missing vaults
+          let needsDistribution = false
+          let minVaults = expectedVaults
+          let maxVaults = 0
+          
+          for (const img of activeImages) {
+            const vaultCount = Object.keys(img.vaultIds || {}).length
+            if (vaultCount < expectedVaults) {
+              needsDistribution = true
+            }
+            minVaults = Math.min(minVaults, vaultCount)
+            maxVaults = Math.max(maxVaults, vaultCount)
+          }
+          
+          // Generate status string
+          let vaultStatus = ''
+          if (activeImages.length === 0) {
+            vaultStatus = 'No active images'
+            needsDistribution = true
+          } else if (needsDistribution) {
+            vaultStatus = `${minVaults}/${expectedVaults} vaults`
+          } else {
+            vaultStatus = `✓ All ${expectedVaults} vaults`
+          }
+          
           results[data.username] = {
             total: data.images.length,
-            active: data.images.filter(img => img.isActive).length
+            active: activeImages.length,
+            needsDistribution,
+            vaultStatus
           }
         }
         resolve(results)
@@ -186,6 +216,79 @@ export async function migrateFromLocalStorage(): Promise<number> {
   } catch (e) {
     console.error('Migration failed:', e)
     return 0
+  }
+}
+
+// Export all vault mappings for KV sync
+export async function exportVaultMappings(): Promise<{
+  mappings: { [promoter: string]: { [target: string]: string } }
+  models: string[]
+}> {
+  if (typeof window === 'undefined') return { mappings: {}, models: [] }
+  
+  try {
+    const db = await openDB()
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE_NAME, 'readonly')
+      const store = tx.objectStore(STORE_NAME)
+      const request = store.getAll()
+      
+      request.onerror = () => reject(request.error)
+      request.onsuccess = () => {
+        const mappings: { [promoter: string]: { [target: string]: string } } = {}
+        const models: string[] = []
+        
+        for (const data of request.result as StoredData[]) {
+          models.push(data.username)
+          
+          // For each image owned by this target model
+          for (const img of data.images) {
+            if (!img.isActive) continue
+            
+            // vaultIds maps promoter -> vaultId
+            // So when promoter posts, they use this vaultId
+            for (const [promoter, vaultId] of Object.entries(img.vaultIds || {})) {
+              if (!mappings[promoter]) {
+                mappings[promoter] = {}
+              }
+              // promoter -> target -> vaultId
+              mappings[promoter][data.username] = vaultId
+            }
+          }
+        }
+        
+        resolve({ mappings, models })
+      }
+    })
+  } catch (e) {
+    console.error('Failed to export vault mappings:', e)
+    return { mappings: {}, models: [] }
+  }
+}
+
+// Sync vault mappings to KV
+export async function syncToKV(): Promise<{ success: boolean; message: string }> {
+  try {
+    const { mappings, models } = await exportVaultMappings()
+    
+    const response = await fetch('/api/sync/vault-mappings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mappings, models })
+    })
+    
+    const result = await response.json()
+    
+    if (result.success) {
+      return { 
+        success: true, 
+        message: `Synced ${models.length} models with ${result.totalVaultIds} vault mappings` 
+      }
+    } else {
+      return { success: false, message: result.error || 'Sync failed' }
+    }
+  } catch (e) {
+    return { success: false, message: String(e) }
   }
 }
 
