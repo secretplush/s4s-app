@@ -26,11 +26,11 @@
 - Log model tagged, time sent, list targeted
 - Update nina_outbound_mass in tracking JSON
 
-### Current Stats (2026-02-08 2:31pm)
-- **Fan growth:** 696 → 2,492 (+1,796 fans)
-- **Inbound tags captured:** 131
-- **Inbound mentions:** 31
-- **Unique models in rotation:** 55+
+### Current Stats (2026-02-08 11:08pm)
+- **Fan growth:** 696 → 2,692 (+1,996 fans)
+- **Inbound tags captured:** 178
+- **Inbound mentions:** 35+
+- **Unique models in rotation:** 90+
 - **24hr rotation tracking:** research/24hr-rotation-tracking.md
 
 ### Rules

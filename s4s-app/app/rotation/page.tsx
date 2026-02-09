@@ -14,6 +14,9 @@ import {
 import { loadImages, type PromoImage } from '@/lib/indexed-db'
 import { getRandomCaption } from '@/lib/ghost-captions'
 
+// Railway backend proxy (avoids CORS)
+const RAILWAY_PROXY = '/api/railway'
+
 interface ExecutedTag {
   promoter: string
   target: string
@@ -21,6 +24,17 @@ interface ExecutedTag {
   createdAt: number
   deleteAt: number
   status: 'active' | 'deleted' | 'error'
+}
+
+interface RailwayStats {
+  isRunning: boolean
+  stats: {
+    totalTags: number
+    totalDeletes: number
+    startedAt: string | null
+  }
+  modelsActive: number
+  pendingDeletes: number
 }
 
 export default function RotationPage() {
@@ -31,13 +45,15 @@ export default function RotationPage() {
   const [currentTimeAST, setCurrentTimeAST] = useState('')
   const [pinnedAssignments, setPinnedAssignments] = useState<{ promoter: any; target: any }[]>([])
   
-  // Rotation runner state
-  const [isRunning, setIsRunning] = useState(false)
-  const [executedTags, setExecutedTags] = useState<ExecutedTag[]>([])
-  const [lastCheck, setLastCheck] = useState<string>('')
+  // Railway backend state (24/7 cloud runner)
+  const [railwayStats, setRailwayStats] = useState<RailwayStats | null>(null)
+  const [railwayError, setRailwayError] = useState<string | null>(null)
+  const [railwayLoading, setRailwayLoading] = useState(false)
   const [runnerLog, setRunnerLog] = useState<string[]>([])
-  const runnerInterval = useRef<NodeJS.Timeout | null>(null)
-  const executedMinutes = useRef<Set<string>>(new Set()) // Track which minute-slots we've executed
+  const [realActiveTags, setRealActiveTags] = useState<{promoter: string, target: string, postId: string, createdAt: string, deletesIn: number}[]>([])
+  
+  // Legacy local state (for test tags only now)
+  const [executedTags, setExecutedTags] = useState<ExecutedTag[]>([])
   
   // Test tag state
   const [testPromoter, setTestPromoter] = useState('')
@@ -237,51 +253,96 @@ export default function RotationPage() {
     }
   }, [addLog])
   
-  // Check schedule and execute due tags
-  const checkAndExecute = useCallback(async () => {
-    const ast = getCurrentTimeAST()
-    const nowMinutes = ast.hours * 60 + ast.minutes
-    setLastCheck(ast.formatted)
-    
-    // Find slots due NOW (within this minute)
-    const dueSlots = schedule.filter(s => {
-      const slotMinutes = (s.hourOffset || 0) * 60 + s.minuteOffset
-      return slotMinutes === nowMinutes
-    })
-    
-    for (const slot of dueSlots) {
-      const slotKey = `${slot.hourOffset}:${slot.minuteOffset}:${slot.promoterUsername}`
-      if (!executedMinutes.current.has(slotKey)) {
-        executedMinutes.current.add(slotKey)
-        await executeTag(slot)
+  // Fetch Railway backend stats (via proxy)
+  const fetchRailwayStats = useCallback(async () => {
+    try {
+      const [statsRes, activeRes] = await Promise.all([
+        fetch(`${RAILWAY_PROXY}?endpoint=stats`),
+        fetch(`${RAILWAY_PROXY}?endpoint=active`)
+      ])
+      const statsData = await statsRes.json()
+      const activeData = await activeRes.json()
+      
+      if (statsData.error) {
+        setRailwayError(statsData.error)
+      } else {
+        setRailwayStats(statsData)
+        setRailwayError(null)
       }
-    }
-  }, [schedule, executeTag])
-  
-  // Start/stop rotation
-  const startRotation = useCallback(() => {
-    addLog('▶️ Rotation STARTED - checking every 30 seconds')
-    setIsRunning(true)
-    executedMinutes.current.clear()
-    checkAndExecute() // Run immediately
-    runnerInterval.current = setInterval(checkAndExecute, 30000) // Check every 30s
-  }, [addLog, checkAndExecute])
-  
-  const stopRotation = useCallback(() => {
-    addLog('⏹️ Rotation STOPPED')
-    setIsRunning(false)
-    if (runnerInterval.current) {
-      clearInterval(runnerInterval.current)
-      runnerInterval.current = null
-    }
-  }, [addLog])
-  
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      if (runnerInterval.current) clearInterval(runnerInterval.current)
+      
+      if (activeData.tags) {
+        setRealActiveTags(activeData.tags)
+      }
+    } catch (error) {
+      setRailwayError('Cannot reach Railway backend')
+      console.error('Railway stats error:', error)
     }
   }, [])
+  
+  // Start rotation on Railway (24/7 cloud) via proxy
+  // 1. Generate fresh 24h schedule
+  // 2. Push schedule to Railway
+  // 3. Start Railway runner
+  const startRotation = useCallback(async () => {
+    setRailwayLoading(true)
+    addLog('📅 Generating 24h schedule...')
+    try {
+      // Step 1: Generate and push schedule
+      const scheduleRes = await fetch('/api/rotation/generate-schedule', { method: 'POST' })
+      const scheduleData = await scheduleRes.json()
+      
+      if (!scheduleData.success) {
+        addLog(`❌ Failed to generate schedule: ${scheduleData.error}`)
+        setRailwayLoading(false)
+        return
+      }
+      
+      addLog(`✅ Schedule pushed: ${scheduleData.models} models, ${scheduleData.totalTags} tags`)
+      
+      // Step 2: Start Railway runner
+      addLog('▶️ Starting Railway rotation service...')
+      const response = await fetch(`${RAILWAY_PROXY}?endpoint=start`, { method: 'POST' })
+      const data = await response.json()
+      if (data.success || data.message?.includes('started') || data.status === 'already running') {
+        addLog('✅ Railway rotation STARTED - running 24/7 in cloud')
+        addLog('🔄 Schedule auto-refreshes at midnight AST')
+        await fetchRailwayStats()
+      } else {
+        addLog(`❌ Failed to start: ${data.error || data.message}`)
+      }
+    } catch (error) {
+      addLog(`❌ Error starting Railway: ${error}`)
+    } finally {
+      setRailwayLoading(false)
+    }
+  }, [addLog, fetchRailwayStats])
+  
+  // Stop rotation on Railway via proxy
+  const stopRotation = useCallback(async () => {
+    setRailwayLoading(true)
+    addLog('⏹️ Stopping Railway rotation service...')
+    try {
+      const response = await fetch(`${RAILWAY_PROXY}?endpoint=stop`, { method: 'POST' })
+      const data = await response.json()
+      if (data.success || data.message?.includes('stopped')) {
+        addLog('⏹️ Railway rotation STOPPED')
+        await fetchRailwayStats()
+      } else {
+        addLog(`❌ Failed to stop: ${data.error || data.message}`)
+      }
+    } catch (error) {
+      addLog(`❌ Error stopping Railway: ${error}`)
+    } finally {
+      setRailwayLoading(false)
+    }
+  }, [addLog, fetchRailwayStats])
+  
+  // Poll Railway stats every 10 seconds
+  useEffect(() => {
+    fetchRailwayStats() // Initial fetch
+    const interval = setInterval(fetchRailwayStats, 10000)
+    return () => clearInterval(interval)
+  }, [fetchRailwayStats])
   
   // Ghost tags only live ~5 minutes, so "active" = posted in last 5 min
   const currentTimeMinutes = currentHour * 60 + currentMinute
@@ -309,14 +370,17 @@ export default function RotationPage() {
           </div>
           <div className="text-right flex items-center gap-4">
             <button
-              onClick={isRunning ? stopRotation : startRotation}
+              onClick={railwayStats?.isRunning ? stopRotation : startRotation}
+              disabled={railwayLoading}
               className={`px-6 py-3 rounded-lg font-bold text-lg transition-all ${
-                isRunning 
-                  ? 'bg-red-600 hover:bg-red-700 text-white animate-pulse' 
-                  : 'bg-green-600 hover:bg-green-700 text-white'
+                railwayLoading 
+                  ? 'bg-gray-600 text-gray-400 cursor-wait'
+                  : railwayStats?.isRunning 
+                    ? 'bg-red-600 hover:bg-red-700 text-white animate-pulse' 
+                    : 'bg-green-600 hover:bg-green-700 text-white'
               }`}
             >
-              {isRunning ? '⏹️ Stop Rotation' : '▶️ Start Rotation'}
+              {railwayLoading ? '⏳ Working...' : railwayStats?.isRunning ? '⏹️ Stop Rotation' : '▶️ Start Rotation'}
             </button>
             <div>
               <div className="text-3xl font-mono text-green-400">
@@ -327,37 +391,56 @@ export default function RotationPage() {
           </div>
         </div>
         
-        {/* Runner Status Panel */}
-        {(isRunning || runnerLog.length > 0) && (
-          <div className="mb-6 bg-gray-800/70 rounded-xl p-4 border border-gray-700">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                {isRunning && <span className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />}
-                Runner Status
-              </h3>
-              <div className="text-sm text-gray-400">
-                Last check: {lastCheck || 'N/A'} • 
-                Active tags: {executedTags.filter(t => t.status === 'active').length} • 
-                Total executed: {executedTags.length}
-              </div>
-            </div>
-            <div className="bg-black/50 rounded-lg p-3 max-h-32 overflow-y-auto font-mono text-xs">
-              {runnerLog.length === 0 ? (
-                <div className="text-gray-500">No activity yet...</div>
+        {/* Railway Backend Status Panel */}
+        <div className="mb-6 bg-gray-800/70 rounded-xl p-4 border border-gray-700">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-lg font-bold text-white flex items-center gap-2">
+              {railwayStats?.isRunning && <span className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />}
+              {!railwayStats?.isRunning && <span className="w-3 h-3 bg-gray-500 rounded-full" />}
+              Railway Backend (24/7 Cloud)
+            </h3>
+            <div className="text-sm text-gray-400">
+              {railwayError ? (
+                <span className="text-red-400">⚠️ {railwayError}</span>
+              ) : railwayStats ? (
+                <>
+                  Status: <span className={railwayStats.isRunning ? 'text-green-400' : 'text-yellow-400'}>
+                    {railwayStats.isRunning ? '🟢 Running' : '🟡 Stopped'}
+                  </span> • 
+                  Total tags: {railwayStats.stats.totalTags} • 
+                  Pending deletes: {railwayStats.pendingDeletes}
+                  {railwayStats.stats.startedAt && (
+                    <> • Started: {new Date(railwayStats.stats.startedAt).toLocaleTimeString()}</>
+                  )}
+                </>
               ) : (
-                runnerLog.map((log, i) => (
-                  <div key={i} className={`${
-                    log.includes('✅') ? 'text-green-400' :
-                    log.includes('❌') ? 'text-red-400' :
-                    log.includes('⚠️') ? 'text-yellow-400' :
-                    log.includes('🚀') ? 'text-blue-400' :
-                    'text-gray-400'
-                  }`}>{log}</div>
-                ))
+                <span className="text-gray-500">Connecting...</span>
               )}
             </div>
           </div>
-        )}
+          <div className="bg-black/50 rounded-lg p-3 max-h-32 overflow-y-auto font-mono text-xs">
+            {runnerLog.length === 0 ? (
+              <div className="text-gray-500">
+                {railwayStats?.isRunning 
+                  ? '✅ Rotation running in cloud. Tags will execute according to schedule.'
+                  : 'Click "Start Rotation" to begin 24/7 ghost tag automation.'}
+              </div>
+            ) : (
+              runnerLog.map((log, i) => (
+                <div key={i} className={`${
+                  log.includes('✅') ? 'text-green-400' :
+                  log.includes('❌') ? 'text-red-400' :
+                  log.includes('⚠️') ? 'text-yellow-400' :
+                  log.includes('🚀') ? 'text-blue-400' :
+                  'text-gray-400'
+                }`}>{log}</div>
+              ))
+            )}
+          </div>
+          <div className="mt-2 text-xs text-gray-500">
+            Backend: <code className="bg-gray-900 px-1 rounded">s4s-worker-production.up.railway.app</code>
+          </div>
+        </div>
         
         {/* Test Single Tag */}
         <div className="mb-6 bg-gray-800/50 rounded-xl p-4 border border-yellow-700/30">
@@ -535,34 +618,43 @@ export default function RotationPage() {
         </div>
         
         <div className="grid md:grid-cols-2 gap-8">
-          {/* Ghost Tags - Active Now */}
+          {/* Ghost Tags - Active Now (REAL from Railway) */}
           <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
             <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-              <span className={`px-2 py-0.5 ${activeSlots.length > 0 ? 'bg-green-600 animate-pulse' : 'bg-gray-600'} text-white text-xs rounded`}>
-                {activeSlots.length > 0 ? 'LIVE' : 'PREVIEW'}
+              <span className={`px-2 py-0.5 ${realActiveTags.length > 0 ? 'bg-green-600 animate-pulse' : 'bg-gray-600'} text-white text-xs rounded`}>
+                {realActiveTags.length > 0 ? 'LIVE' : railwayStats?.isRunning ? 'WAITING' : 'STOPPED'}
               </span>
-              👻 Active Ghost Tags ({activeSlots.length})
+              👻 Active Ghost Tags ({realActiveTags.length})
             </h2>
-            <p className="text-gray-400 text-xs mb-3">Tags posted in last 5 min — still visible before auto-delete</p>
-            {activeSlots.length > 0 ? (
+            <p className="text-gray-400 text-xs mb-3">Real posts from Railway — auto-delete in 5 min</p>
+            {realActiveTags.length > 0 ? (
               <div className="space-y-2 max-h-48 overflow-y-auto">
-                {activeSlots.map((slot, i) => {
-                  const h = slot.hourOffset || 0
-                  const formatTime = `${h === 0 ? 12 : h > 12 ? h - 12 : h}:${String(slot.minuteOffset).padStart(2, '0')} ${h >= 12 ? 'PM' : 'AM'}`
+                {realActiveTags.map((tag, i) => {
+                  const time = new Date(tag.createdAt).toLocaleTimeString('en-US', { 
+                    hour: 'numeric', 
+                    minute: '2-digit',
+                    hour12: true,
+                    timeZone: 'America/Puerto_Rico'
+                  })
                   return (
-                    <div key={i} className="flex items-center justify-between bg-green-900/30 border border-green-700/50 rounded-lg p-3">
+                    <div key={tag.postId} className="flex items-center justify-between bg-green-900/30 border border-green-700/50 rounded-lg p-3">
                       <div className="flex items-center gap-2">
-                        <span className="text-gray-400">@{slot.promoterUsername}</span>
+                        <span className="text-gray-400">@{tag.promoter}</span>
                         <span className="text-green-500">→</span>
-                        <span className="text-gray-200 font-medium">@{slot.targetUsername}</span>
+                        <span className="text-gray-200 font-medium">@{tag.target}</span>
                       </div>
-                      <div className="text-green-500/70 font-mono text-sm">{formatTime}</div>
+                      <div className="text-right">
+                        <div className="text-green-500/70 font-mono text-sm">{time}</div>
+                        <div className="text-gray-500 text-xs">deletes in {Math.floor(tag.deletesIn / 60)}:{String(tag.deletesIn % 60).padStart(2, '0')}</div>
+                      </div>
                     </div>
                   )
                 })}
               </div>
             ) : (
-              <div className="text-gray-500 text-center py-4">No tags currently live (automation not running yet)</div>
+              <div className="text-gray-500 text-center py-4">
+                {railwayStats?.isRunning ? 'Waiting for scheduled tags...' : 'Start rotation to see live tags'}
+              </div>
             )}
             
             <h3 className="text-lg font-medium text-gray-300 mt-6 mb-3">
