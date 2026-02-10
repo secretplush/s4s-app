@@ -36,7 +36,7 @@ interface ScheduleItem {
  * Generate a 24h Railway-compatible schedule
  * Returns: { modelUsername: [{ target, scheduledTime, executed }, ...], ... }
  */
-export function generateRailwaySchedule(): Record<string, ScheduleItem[]> {
+function generateRailwaySchedule(): Record<string, ScheduleItem[]> {
   const models = CONNECTED_MODELS
   const n = models.length
   const schedule: Record<string, ScheduleItem[]> = {}

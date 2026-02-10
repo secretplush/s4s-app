@@ -1,0 +1,30 @@
+{
+  "source": "ninacarlson $100+ spenders collection",
+  "captured_at": "2026-02-09T00:48:00-04:00",
+  "total_users": 22,
+  "note": "These are the $100+ spenders. For 200 spenders, use 'With Tips' chat filter.",
+  "spenders": [
+    {"name": "Soccerguy0990", "username": "soccerguy0990", "chat_id": 426220436, "lists": ["$100+", "$500+"], "total": "$826.40"},
+    {"name": "MDNYJetsFan", "username": "mdjets26", "chat_id": 541720405, "lists": ["$100+"], "total": "$437.60", "notes": "has all"},
+    {"name": "Axe", "username": "axe123456789", "chat_id": null, "lists": ["$100+"], "total": "$331.20"},
+    {"name": "John Gerrick", "username": "johng5", "chat_id": 12185453, "lists": ["$100+"], "total": "$328.80"},
+    {"name": "Charles", "username": "u467003110", "chat_id": 467003110, "lists": ["$100+"], "total": "$307.20"},
+    {"name": "Justin", "username": "u549927716", "chat_id": null, "lists": ["$100+"], "total": "$307.20"},
+    {"name": "Toph94", "username": "u241909752", "chat_id": 241909752, "lists": ["$100+"], "total": "$289.60", "display": "first VIP"},
+    {"name": "Daniel", "username": "u38951769", "chat_id": null, "lists": ["$100+"], "total": "$277.60"},
+    {"name": "Anthony Greendown", "username": "sirgreendown", "chat_id": 89744455, "lists": ["$100+"], "total": "$231.20"},
+    {"name": "Audis3500", "username": "u25365091", "chat_id": 25365091, "lists": ["$100+"]},
+    {"name": "User59999", "username": "u78884098", "chat_id": 78884098, "lists": ["$100+"]},
+    {"name": "MC18", "username": "u91417736", "chat_id": 91417736, "lists": ["$100+", "FansMetric Online"]},
+    {"name": "pot whale", "username": "u158972252", "chat_id": 158972252, "lists": ["$100+"], "notes": "Mark"},
+    {"name": "Jamin", "username": "jazer014", "chat_id": null, "lists": ["$100+"]},
+    {"name": "Jimmy4565", "username": "jimmy4565", "chat_id": 496514776, "lists": ["$100+"]},
+    {"name": "Sky", "username": "u504025837", "chat_id": 504025837, "lists": ["$100+"]},
+    {"name": "Dylan", "username": "u140781379", "chat_id": 140781379, "lists": ["$100+"]},
+    {"name": "Dame", "username": "u413130120", "chat_id": 413130120, "lists": ["$100+"]},
+    {"name": "JGold", "username": "u502410652", "chat_id": 502410652, "lists": ["$100+"]},
+    {"name": "woopsCap", "username": "woopscap", "chat_id": 13463295, "lists": ["$100+"]},
+    {"name": "Don", "username": "u25601228", "chat_id": 25601228, "lists": ["$100+"]},
+    {"name": "CXR", "username": "u59568486", "chat_id": 59568486, "lists": ["$100+"]}
+  ]
+}

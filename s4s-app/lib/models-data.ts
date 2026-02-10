@@ -166,12 +166,163 @@ export const CONNECTED_MODELS: Model[] = [
     avatar: 'https://thumbs.onlyfans.com/public/files/thumbs/c144/r/rn/rnd/rndb0kveiej4fnsrgrakmbiuy2iktzki1762744168/532745754/avatar.jpg',
     connected: true,
     totalEarnings: 20613.97
+  },
+  // New models added 2026-02-10
+  {
+    id: 'acct_29037b1ef83d4c838ab2ec49d61d26f6',
+    username: 'jessicaparkerrr',
+    displayName: 'Jessica Parker',
+    fans: 28597,
+    likes: 162,
+    avatar: 'https://public.onlyfans.com/files/r/ra/rai/raivfy8z7o2mg6r22ai3js1cyyk056nv1751804044/507343013/avatar.jpg',
+    connected: true,
+    totalEarnings: 0
+  },
+  {
+    id: 'acct_487806e5751b487bb302793ee1c3ef2c',
+    username: 'kaliblakexo',
+    displayName: 'Kali Blake',
+    fans: 41166,
+    likes: 182,
+    avatar: 'https://public.onlyfans.com/files/4/43/43n/43njxk7xsr7c9yrwkpccody4flspc5c21769200361/507053395/avatar.jpg',
+    connected: true,
+    totalEarnings: 0
+  },
+  {
+    id: 'acct_c85c710e083f4b4a94d826f76855543d',
+    username: 'laceythomass',
+    displayName: 'Lacey Thomas',
+    fans: 68491,
+    likes: 234,
+    avatar: 'https://public.onlyfans.com/files/e/ea/eaa/eaajrvl0jnx4jyayu5jxta30esiioajz1769989366/465737449/avatar.jpg',
+    connected: true,
+    totalEarnings: 0
+  },
+  {
+    id: 'acct_04d878af1813422fa6b310991f687d73',
+    username: 'lindamarievip',
+    displayName: 'Linda Marie',
+    fans: 18743,
+    likes: 585,
+    avatar: 'https://public.onlyfans.com/files/y/yb/yb8/yb8mkvci9r0tbaocqv9mb8tdwhuhlgsq1700071577/122926191/avatar.jpg',
+    connected: true,
+    totalEarnings: 0
+  },
+  {
+    id: 'acct_e84886b3217e4fbd8f82ee63ca8894e8',
+    username: 'lilyyymonroee',
+    displayName: 'Lily Monroe',
+    fans: 32385,
+    likes: 184,
+    avatar: 'https://public.onlyfans.com/files/v/vg/vgh/vghlvw16usbxjcsuwb5aroivzifof4rg1747509595/499585049/avatar.jpg',
+    connected: true,
+    totalEarnings: 0
+  },
+  {
+    id: 'acct_bfd09358f67849cba6d9f8cf4a565cd2',
+    username: 'dollyrhodesss',
+    displayName: 'Dolly Rhodes',
+    fans: 17780,
+    likes: 175,
+    avatar: 'https://public.onlyfans.com/files/s/sw/sw7/sw7icm45ddlp5owwqhlp9tsilgfxrbrl1756371226/515556945/avatar.jpg',
+    connected: true,
+    totalEarnings: 0
+  },
+  {
+    id: 'acct_b5f1a5fc3cfd4a959dbea7230814ae71',
+    username: 'chelseapaige',
+    displayName: 'Chelsea Paige',
+    fans: 766,
+    likes: 9,
+    avatar: 'https://public.onlyfans.com/files/a/a6/a62/a62pk4oi5xbl79y43rvulysnz7t4mwll1768432164/543526823/avatar.jpg',
+    connected: true,
+    totalEarnings: 0
+  },
+  {
+    id: 'acct_8b4b062aeef1441ba8f51a7b0f3fe5f2',
+    username: 'thesarasky',
+    displayName: 'Sara Sky',
+    fans: 56040,
+    likes: 730,
+    avatar: 'https://public.onlyfans.com/files/x/xl/xld/xldduucdlrpakibmatfwrvtksmee7o9s1745462174/273686795/avatar.jpg',
+    connected: true,
+    totalEarnings: 0
+  },
+  {
+    id: 'acct_15870053c2604e0f9e94d14a10749923',
+    username: 'yourrfavblondie',
+    displayName: 'Remi Skye',
+    fans: 108,
+    likes: 0,
+    avatar: 'https://public.onlyfans.com/files/u/um/umv/umv9dbjhtkuk2gln3xodmaf0tqwh3rte1770407224/539053779/avatar.jpg',
+    connected: true,
+    totalEarnings: 0
+  },
+  {
+    id: 'acct_7a273714a275417992b0f7c1d3389a2c',
+    username: 'skyyroseee',
+    displayName: 'Sky Rose',
+    fans: 260,
+    likes: 5,
+    avatar: 'https://public.onlyfans.com/files/0/0n/0nq/0nq7cwssclzbnojnsappmucraerz0sbd1769611487/548240223/avatar.jpg',
+    connected: true,
+    totalEarnings: 0
+  },
+  {
+    id: 'acct_766a8451ee6946009d20581ab11fdfc4',
+    username: 'tyybabyy',
+    displayName: 'Ty',
+    fans: 39055,
+    likes: 417,
+    avatar: 'https://public.onlyfans.com/files/w/wj/wjd/wjdyixzx8kwjllf2viylyljctk0sfy4b1698996864/43518697/avatar.jpg',
+    connected: true,
+    totalEarnings: 0
+  },
+  {
+    id: 'acct_ac70731a489741f0b6abc45a050f0301',
+    username: 'itsmealexisrae',
+    displayName: 'Alexis Rae',
+    fans: 49269,
+    likes: 913,
+    avatar: 'https://public.onlyfans.com/files/g/g3/g3p/g3pny2syj4ykdojyylbbuef41fafm6zq1719964628/343036974/avatar.jpg',
+    connected: true,
+    totalEarnings: 0
+  },
+  {
+    id: 'acct_40e51b831b3247ac806755362b494fe5',
+    username: 'lolaxmae',
+    displayName: 'Lola Mae',
+    fans: 517,
+    likes: 3,
+    avatar: 'https://public.onlyfans.com/files/d/dc/dcp/dcpf7eyprycpoihc9r0s5xfj4rgjjbu61769966424/538873960/avatar.jpg',
+    connected: true,
+    totalEarnings: 0
+  },
+  {
+    id: 'acct_6f2328ebe4c446038ea1847d2dbecc17',
+    username: 'rebeccabrownn',
+    displayName: 'Rebecca Brown',
+    fans: 666,
+    likes: 22,
+    avatar: 'https://public.onlyfans.com/files/c/c7/c7b/c7blgaiwjgklupohudqyj5njwekbr3ra1770070485/548279176/avatar.jpg',
+    connected: true,
+    totalEarnings: 0
+  },
+  {
+    id: 'acct_9665889fec2b46e9a05232afee59ef19',
+    username: 'oliviabrookess',
+    displayName: 'Olivia Brookes',
+    fans: 40908,
+    likes: 503,
+    avatar: 'https://public.onlyfans.com/files/d/dj/dje/djevrcxsoaumnvyvjoj3n9yqxigna3d91735921678/466573608/avatar.jpg',
+    connected: true,
+    totalEarnings: 0
   }
 ]
 
 // Totals
 export const NETWORK_STATS = {
-  totalModels: 15,
+  totalModels: 30,
   totalFans: CONNECTED_MODELS.reduce((sum, m) => sum + m.fans, 0),
   totalLikes: CONNECTED_MODELS.reduce((sum, m) => sum + m.likes, 0),
   totalEarnings: CONNECTED_MODELS.reduce((sum, m) => sum + m.totalEarnings, 0),

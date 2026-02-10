@@ -129,6 +129,49 @@ GET /api/{account}/statistics/statements/earnings
 **Plush Network Total:** $509,852 lifetime earnings across 91,886 fans ($5.55 avg LTV)
 **Top performer:** sadieeblake - $212K earnings, $7.13 LTV
 
+## Chatter Playbook Research (2026-02-09)
+
+**130+ spenders identified**, $7,283+ total revenue documented.
+
+### Buyer Types (Confirmed)
+| Type | Behavior | Example |
+|------|----------|---------|
+| Silent Bundle Buyer | Never responds, just buys PPVs (~20%) | John Gerrick, Karter, Jack75 |
+| Emotional Chaser | Responds to vulnerability/promises | Justin, Dame |
+| Demanding Skeptic | Calls BS but still buys | Charles, CXR |
+| Negotiator Whale | Wants VIP status, tips big | Toph94 ($150 tip) |
+| Sexual Energy Matcher | Responds to explicit escalation | Axe |
+| **Emotional Connection Buyer** | Craves relationship, self-blames when denied, returns for attention | **Jayy** ($76) |
+
+### Emotional Connection Buyer Discovery (2026-02-09)
+Jayy @u299750197 spent $76 with NO nudes delivered. Used "I'm new/shy 🥺" deflection TWICE - fan apologized BOTH times for pushing. Today still engaged: "I waited all day to talk before bed."
+**Key insight:** GFE monetization - sell relationship, not content. These fans can be milked indefinitely with attention.
+
+### Magic Price Points
+- $14.40 = Starter PPV (12+ fans at exactly this)
+- $22.40 = Second tier
+- $307.20 = **Funnel ceiling** (18 PPVs exhausted - Justin & Charles both hit wall)
+
+### Master Tactics (From Transcripts)
+| Category | Tactic | Script |
+|----------|--------|--------|
+| Pressure | Unsend Threat | "but ill just unsend ig, u dont want it" |
+| Pressure | Trust Test | "should i trust u" |
+| Deflection | 🥺 Denial | "wdym love i never showed u these vids before 🥺" |
+| Deflection | Promise First | "i promise u will be the first to see me naked" |
+| Upsell | VIP Tier | "$150 = Your first VIP" |
+| Vulnerability | Virgin Claim | "im still a virgin baby" |
+| Vulnerability | Gentle Request | "ull be gentle with me" |
+| Exclusivity | Secret Promise | "keep it just between us" |
+
+### Critical Findings
+- **Fans who call BS still buy**: Charles caught lie, CXR said "not hard" - both kept buying
+- **🥺 emoji deflects accusations**: Universal damage control
+- **VIP tier creates ownership**: Toph94 paid $150 just for "first VIP" status
+- **PPV during buyer's remorse WORKS**: Vulnerability hooks recover faster than apologies
+
+**Files:** `research/conversation-transcripts.md`, `research/whale-analysis.md`, `research/full-spender-list.md`
+
 ## Key Intelligence (2026-02-04)
 
 ### Competitor Making 7x Revenue
