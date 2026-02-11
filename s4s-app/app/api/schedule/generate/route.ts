@@ -34,7 +34,7 @@ function generateDaySchedule(
   
   const MAX_OUTBOUND_PER_MODEL = 56
   const targetsPerModel = n - 1
-  const TAGS_PER_PAIR = Math.max(1, Math.floor(MAX_OUTBOUND_PER_MODEL / targetsPerModel))
+  const TAGS_PER_PAIR = Math.max(1, Math.round(MAX_OUTBOUND_PER_MODEL / targetsPerModel))
   const tagsPerModel = targetsPerModel * TAGS_PER_PAIR
   
   // Build hour distribution

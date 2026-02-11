@@ -93,12 +93,12 @@ export function calculateDailyGhostSchedule(models: Model[]): ScheduleSlot[] {
   const MAX_OUTBOUND_PER_MODEL = 56 // Cap at ~56 to match Nina, avoid spam
   const targetsPerModel = n - 1
   
-  // Calculate tags per pair to stay under cap
+  // Calculate tags per pair to stay near cap
   // If 15 models: 56 / 14 = 4 tags per pair ✓
   // If 30 models: 56 / 29 = ~2 tags per pair ✓
   // If 60 models: 56 / 59 = ~1 tag per pair ✓
-  const TAGS_PER_PAIR_PER_DAY = Math.max(1, Math.floor(MAX_OUTBOUND_PER_MODEL / targetsPerModel))
-  const tagsPerModel = targetsPerModel * TAGS_PER_PAIR_PER_DAY
+  const TAGS_PER_PAIR_PER_DAY = Math.max(1, Math.round(MAX_OUTBOUND_PER_MODEL / targetsPerModel))
+  const tagsPerModel = Math.min(targetsPerModel * TAGS_PER_PAIR_PER_DAY, MAX_OUTBOUND_PER_MODEL)
   
   // Seeded random for daily variation
   const seededRandom = (seed: number) => {
@@ -330,7 +330,7 @@ export function formatScheduleForDisplay(schedule: ScheduleSlot[]): string {
 export function getRotationStats(modelCount: number) {
   const targetsPerModel = modelCount - 1
   const MAX_OUTBOUND_PER_MODEL = 56 // Cap to avoid spam
-  const TAGS_PER_PAIR = Math.max(1, Math.floor(MAX_OUTBOUND_PER_MODEL / targetsPerModel))
+  const TAGS_PER_PAIR = Math.max(1, Math.round(MAX_OUTBOUND_PER_MODEL / targetsPerModel))
   const tagsPerModelPerDay = Math.min(targetsPerModel * TAGS_PER_PAIR, MAX_OUTBOUND_PER_MODEL)
   const totalTagsPerDay = modelCount * tagsPerModelPerDay
   const avgIntervalMinutes = (24 * 60) / tagsPerModelPerDay // How often each model posts

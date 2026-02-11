@@ -320,6 +320,28 @@ export const CONNECTED_MODELS: Model[] = [
   }
 ]
 
+// Fetch live models from the OF API sync endpoint
+export async function fetchLiveModels(baseUrl: string): Promise<Model[]> {
+  try {
+    const res = await fetch(`${baseUrl}/api/sync-accounts`, { cache: 'no-store' })
+    if (!res.ok) throw new Error(`Sync API ${res.status}`)
+    const { accounts } = await res.json()
+    return accounts.map((a: any) => ({
+      id: a.id,
+      username: a.username,
+      displayName: a.displayName,
+      fans: a.fans,
+      likes: a.likes,
+      avatar: a.avatar,
+      connected: a.isAuthenticated,
+      totalEarnings: 0, // earnings not available from API
+    }))
+  } catch (e) {
+    console.error('fetchLiveModels failed, using static fallback:', e)
+    return CONNECTED_MODELS
+  }
+}
+
 // Totals
 export const NETWORK_STATS = {
   totalModels: 30,

@@ -35,6 +35,14 @@ interface RailwayStats {
   }
   modelsActive: number
   pendingDeletes: number
+  pinned?: {
+    enabled: boolean
+    activePosts: number
+    activePosts_detail?: { postId: string; promoter: string; featured: string; accountId: string; createdAt: number }[]
+    lastRun: string | null
+    featuredGirls: string[]
+    dayIndex: number
+  }
 }
 
 export default function RotationPage() {
@@ -256,16 +264,25 @@ export default function RotationPage() {
   // Fetch Railway backend stats (via proxy)
   const fetchRailwayStats = useCallback(async () => {
     try {
-      const [statsRes, activeRes] = await Promise.all([
+      const [statsRes, activeRes, pinnedRes] = await Promise.all([
         fetch(`${RAILWAY_PROXY}?endpoint=stats`),
-        fetch(`${RAILWAY_PROXY}?endpoint=active`)
+        fetch(`${RAILWAY_PROXY}?endpoint=active`),
+        fetch(`${RAILWAY_PROXY}?endpoint=pinned`)
       ])
       const statsData = await statsRes.json()
       const activeData = await activeRes.json()
+      const pinnedData = await pinnedRes.json()
       
       if (statsData.error) {
         setRailwayError(statsData.error)
       } else {
+        // Merge pinned detail into stats
+        if (pinnedData && !pinnedData.error) {
+          statsData.pinned = {
+            ...statsData.pinned,
+            activePosts_detail: pinnedData.activePosts || []
+          }
+        }
         setRailwayStats(statsData)
         setRailwayError(null)
       }
@@ -682,28 +699,66 @@ export default function RotationPage() {
             )}
           </div>
           
-          {/* 24hr Pinned Posts */}
+          {/* 24hr Pinned Posts - Live from Railway */}
           <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
             <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-              📌 Today's Pinned Posts
+              📌 Today&apos;s Pinned Posts
             </h2>
             <p className="text-gray-400 text-sm mb-4">
-              1:1 wheel rotation • Each model pins 1 other model • Full rotation in {CONNECTED_MODELS.length - 1} days
+              5 featured girls × 6 accounts each • Rotates daily • New accounts each cycle • Full rotation every {Math.ceil(CONNECTED_MODELS.length / 5)} days
             </p>
-            <div className="space-y-2 max-h-96 overflow-y-auto">
-              {pinnedAssignments.map((a, i) => (
-                <div key={i} className="flex items-center justify-between bg-gray-700/50 rounded-lg p-3">
-                  <div className="flex items-center gap-2">
-                    <span className="text-gray-400">@{a.promoter.username}</span>
-                    <span className="text-yellow-400">📌</span>
-                    <span className="text-white font-medium">@{a.target.username}</span>
+            {railwayStats?.pinned ? (
+              <>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+                  <div className="bg-gray-700/30 rounded-lg p-3 text-center">
+                    <div className="text-xl font-bold text-yellow-400">{railwayStats.pinned!.activePosts || 0}</div>
+                    <div className="text-gray-400 text-xs">Active Pins</div>
                   </div>
-                  <span className="text-xs text-gray-500">expireDays: 1</span>
+                  <div className="bg-gray-700/30 rounded-lg p-3 text-center">
+                    <div className="text-xl font-bold text-white">5 × 6</div>
+                    <div className="text-gray-400 text-xs">Girls × Accounts</div>
+                  </div>
+                  <div className="bg-gray-700/30 rounded-lg p-3 text-center">
+                    <div className="text-xl font-bold text-green-400">{railwayStats.pinned!.enabled ? 'ON' : 'OFF'}</div>
+                    <div className="text-gray-400 text-xs">Auto-Pin</div>
+                  </div>
+                  <div className="bg-gray-700/30 rounded-lg p-3 text-center">
+                    <div className="text-xl font-bold text-purple-400">Day {railwayStats.pinned!.dayIndex || 0}</div>
+                    <div className="text-gray-400 text-xs">of {Math.ceil(CONNECTED_MODELS.length / 5)}</div>
+                  </div>
                 </div>
-              ))}
-            </div>
+                {(railwayStats.pinned!.featuredGirls || []).length > 0 && (
+                  <div className="space-y-3 max-h-96 overflow-y-auto">
+                    {railwayStats.pinned!.featuredGirls.map((girl: string) => {
+                      const pins = (railwayStats.pinned!.activePosts_detail || []).filter((p: any) => p.featured === girl);
+                      return (
+                        <div key={girl} className="bg-gray-700/30 rounded-lg p-3">
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="text-yellow-400 text-lg">📌</span>
+                            <span className="text-white font-bold">@{girl}</span>
+                            <span className="text-gray-500 text-xs">({pins.length} pins)</span>
+                          </div>
+                          <div className="flex flex-wrap gap-1 ml-7">
+                            {pins.map((p: any, j: number) => (
+                              <span key={j} className="text-xs bg-gray-600/50 text-gray-300 px-2 py-0.5 rounded">
+                                @{p.promoter}
+                              </span>
+                            ))}
+                            {pins.length === 0 && (
+                              <span className="text-xs text-gray-500 italic">Loading pin details...</span>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="text-gray-500 text-sm">Loading pinned post data from Railway...</div>
+            )}
             <div className="mt-4 pt-4 border-t border-gray-700 text-sm text-gray-400">
-              <strong>Schedule:</strong> Posts at 6:00 AM AST daily • Auto-expires after 24hr
+              <strong>Schedule:</strong> Posts at 6:00 AM AST daily • Staggered over ~8 min • Auto-expires after 24hr • Different accounts each cycle
             </div>
           </div>
         </div>

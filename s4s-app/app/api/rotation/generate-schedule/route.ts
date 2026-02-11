@@ -18,6 +18,22 @@ const CONNECTED_MODELS = [
   { id: 'acct_fbd172e2681f4dfbb6026ce806ecaa28', username: 'zoeemonroe' },
   { id: 'acct_54e3119e77da4429b6537f7dd2883a05', username: 'biancaawoods' },
   { id: 'acct_2648cedf59644b0993ade9608bd868a1', username: 'aviannaarose' },
+  // New models added 2026-02-10
+  { id: 'acct_29037b1ef83d4c838ab2ec49d61d26f6', username: 'jessicaparkerrr' },
+  { id: 'acct_487806e5751b487bb302793ee1c3ef2c', username: 'kaliblakexo' },
+  { id: 'acct_c85c710e083f4b4a94d826f76855543d', username: 'laceythomass' },
+  { id: 'acct_04d878af1813422fa6b310991f687d73', username: 'lindamarievip' },
+  { id: 'acct_e84886b3217e4fbd8f82ee63ca8894e8', username: 'lilyyymonroee' },
+  { id: 'acct_bfd09358f67849cba6d9f8cf4a565cd2', username: 'dollyrhodesss' },
+  { id: 'acct_b5f1a5fc3cfd4a959dbea7230814ae71', username: 'chelseapaige' },
+  { id: 'acct_8b4b062aeef1441ba8f51a7b0f3fe5f2', username: 'thesarasky' },
+  { id: 'acct_15870053c2604e0f9e94d14a10749923', username: 'yourrfavblondie' },
+  { id: 'acct_7a273714a275417992b0f7c1d3389a2c', username: 'skyyroseee' },
+  { id: 'acct_766a8451ee6946009d20581ab11fdfc4', username: 'tyybabyy' },
+  { id: 'acct_ac70731a489741f0b6abc45a050f0301', username: 'itsmealexisrae' },
+  { id: 'acct_40e51b831b3247ac806755362b494fe5', username: 'lolaxmae' },
+  { id: 'acct_6f2328ebe4c446038ea1847d2dbecc17', username: 'rebeccabrownn' },
+  { id: 'acct_9665889fec2b46e9a05232afee59ef19', username: 'oliviabrookess' },
 ]
 
 const HOUR_WEIGHTS: Record<number, number> = {
@@ -43,7 +59,7 @@ function generateRailwaySchedule(): Record<string, ScheduleItem[]> {
   
   const MAX_OUTBOUND_PER_MODEL = 56
   const targetsPerModel = n - 1
-  const TAGS_PER_PAIR = Math.max(1, Math.floor(MAX_OUTBOUND_PER_MODEL / targetsPerModel))
+  const TAGS_PER_PAIR = Math.max(1, Math.round(MAX_OUTBOUND_PER_MODEL / targetsPerModel))
   const tagsPerModel = targetsPerModel * TAGS_PER_PAIR
   
   const now = Date.now()

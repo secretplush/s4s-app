@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { kv } from '@vercel/kv'
 
 // Increase timeout for long-running distribution
 export const maxDuration = 300 // 5 minutes
@@ -22,7 +23,23 @@ const ACCOUNT_IDS: { [username: string]: string } = {
   'maddieharperr': 'acct_a50799a789a6422c8389d7d055fcbd1a',
   'zoeemonroe': 'acct_fbd172e2681f4dfbb6026ce806ecaa28',
   'biancaawoods': 'acct_54e3119e77da4429b6537f7dd2883a05',
-  'aviannaarose': 'acct_2648cedf59644b0993ade9608bd868a1'
+  'aviannaarose': 'acct_2648cedf59644b0993ade9608bd868a1',
+  // New models added 2026-02-10
+  'jessicaparkerrr': 'acct_29037b1ef83d4c838ab2ec49d61d26f6',
+  'kaliblakexo': 'acct_487806e5751b487bb302793ee1c3ef2c',
+  'laceythomass': 'acct_c85c710e083f4b4a94d826f76855543d',
+  'lindamarievip': 'acct_04d878af1813422fa6b310991f687d73',
+  'lilyyymonroee': 'acct_e84886b3217e4fbd8f82ee63ca8894e8',
+  'dollyrhodesss': 'acct_bfd09358f67849cba6d9f8cf4a565cd2',
+  'chelseapaige': 'acct_b5f1a5fc3cfd4a959dbea7230814ae71',
+  'thesarasky': 'acct_8b4b062aeef1441ba8f51a7b0f3fe5f2',
+  'yourrfavblondie': 'acct_15870053c2604e0f9e94d14a10749923',
+  'skyyroseee': 'acct_7a273714a275417992b0f7c1d3389a2c',
+  'tyybabyy': 'acct_766a8451ee6946009d20581ab11fdfc4',
+  'itsmealexisrae': 'acct_ac70731a489741f0b6abc45a050f0301',
+  'lolaxmae': 'acct_40e51b831b3247ac806755362b494fe5',
+  'rebeccabrownn': 'acct_6f2328ebe4c446038ea1847d2dbecc17',
+  'oliviabrookess': 'acct_9665889fec2b46e9a05232afee59ef19'
 }
 
 interface DistributeRequest {
@@ -175,6 +192,23 @@ export async function POST(req: NextRequest) {
 
     const successful = results.filter(r => r.vaultId !== null)
     const failed = results.filter(r => r.vaultId === null)
+
+    // Save successful vault mappings to KV
+    if (successful.length > 0) {
+      try {
+        const mappings = (await kv.get('vault_mappings') as Record<string, Record<string, string>>) || {}
+        if (!mappings[sourceUsername]) {
+          mappings[sourceUsername] = {}
+        }
+        for (const result of successful) {
+          mappings[sourceUsername][result.username] = result.vaultId!
+        }
+        await kv.set('vault_mappings', mappings)
+        console.log(`Saved ${successful.length} vault mappings for ${sourceUsername} to KV`)
+      } catch (kvError) {
+        console.error('Failed to save vault mappings to KV:', kvError)
+      }
+    }
 
     return NextResponse.json({
       success: true,
