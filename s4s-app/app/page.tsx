@@ -491,14 +491,16 @@ function VaultGapsModal({ models, onClose }: { models: Model[]; onClose: () => v
                       onClick={() => toggleExpand(g.targetUsername)}
                       className="w-full flex items-center justify-between px-3 py-2 bg-gray-800 hover:bg-gray-750 text-left"
                     >
-                      <span className="text-sm text-white">@{g.targetUsername}</span>
-                      <span className="text-xs text-yellow-400">{g.missingFrom.length} missing {expanded.has(g.targetUsername) ? '▲' : '▼'}</span>
+                      <span className="text-sm text-white">@{g.targetUsername}&apos;s vault</span>
+                      <span className="text-xs text-red-400">{g.missingFrom.length} models haven&apos;t sent their photo here {expanded.has(g.targetUsername) ? '▲' : '▼'}</span>
                     </button>
                     {expanded.has(g.targetUsername) && (
-                      <div className="px-3 py-2 bg-gray-800/50 flex flex-wrap gap-1">
+                      <div className="px-3 py-2 bg-gray-800/50">
+                        <p className="text-xs text-gray-500 mb-2">These models need to distribute their promo image → @{g.targetUsername}&apos;s vault:</p>
+                        <div className="flex flex-wrap gap-1">
                         {g.missingFrom.map(m => (
                           <span key={m} className="text-xs px-2 py-0.5 bg-red-500/20 text-red-400 rounded inline-flex items-center gap-1">
-                            @{m} ⚠
+                            @{m}
                             <button
                               onClick={(e) => { e.stopPropagation(); dismissGap(m, g.targetUsername) }}
                               className="ml-0.5 hover:text-green-400 text-red-300"
@@ -506,6 +508,7 @@ function VaultGapsModal({ models, onClose }: { models: Model[]; onClose: () => v
                             >✕</button>
                           </span>
                         ))}
+                        </div>
                       </div>
                     )}
                   </div>
