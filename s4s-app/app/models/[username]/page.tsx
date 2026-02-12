@@ -14,7 +14,32 @@ import {
 export default function ModelPage() {
   const params = useParams()
   const username = params.username as string
-  const model = CONNECTED_MODELS.find(m => m.username === username)
+  // Check hardcoded list first, then localStorage for synced models
+  const [model, setModel] = useState<any>(() => {
+    const found = CONNECTED_MODELS.find(m => m.username === username)
+    if (found) return found
+    if (typeof window !== 'undefined') {
+      try {
+        const cached = localStorage.getItem('synced_models')
+        if (cached) {
+          const synced = JSON.parse(cached)
+          return synced.find((m: any) => m.username === username) || null
+        }
+      } catch {}
+    }
+    return null
+  })
+
+  // Get all models (synced or hardcoded) for vault count
+  const allModels = (() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const cached = localStorage.getItem('synced_models')
+        if (cached) return JSON.parse(cached)
+      } catch {}
+    }
+    return CONNECTED_MODELS
+  })()
 
   const [promoImages, setPromoImages] = useState<PromoImage[]>([])
   const [loaded, setLoaded] = useState(false)
@@ -137,9 +162,9 @@ export default function ModelPage() {
     if (!image || !image.base64) return
 
     // Only distribute to models that DON'T have this image yet
-    const targetUsernames = CONNECTED_MODELS
-      .filter(m => m.username !== username && !image.vaultIds[m.username])
-      .map(m => m.username)
+    const targetUsernames = allModels
+      .filter((m: any) => m.username !== username && !image.vaultIds[m.username])
+      .map((m: any) => m.username)
     
     if (targetUsernames.length === 0) {
       setDistributeProgress('✓ All vaults already have this image')
@@ -308,7 +333,7 @@ export default function ModelPage() {
               <div className="text-4xl mb-4">📸</div>
               <p className="text-white font-medium">Drag & drop promo images here</p>
               <p className="text-gray-400 text-sm mt-2">
-                Up to 6 images • JPG, PNG • Will be distributed to all {CONNECTED_MODELS.length - 1} other model vaults
+                Up to 6 images • JPG, PNG • Will be distributed to all {allModels.length - 1} other model vaults
               </p>
               <label className="mt-4 inline-block px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg text-white cursor-pointer">
                 Or click to browse
@@ -375,7 +400,7 @@ export default function ModelPage() {
                       onClick={() => setVaultDetailsImage(img.id)}
                       className="px-2 py-1 bg-black/50 hover:bg-black/70 text-gray-300 text-xs rounded cursor-pointer transition"
                     >
-                      {Object.keys(img.vaultIds).length}/{CONNECTED_MODELS.length - 1} vaults
+                      {Object.keys(img.vaultIds).length}/{allModels.length - 1} vaults
                     </button>
                   </div>
 
@@ -383,7 +408,7 @@ export default function ModelPage() {
                   <div className="absolute bottom-0 left-0 right-0 p-3 space-y-2">
                     {/* Distribute Button - only shows if missing vaults */}
                     {(() => {
-                      const missingCount = CONNECTED_MODELS.filter(m => m.username !== username && !img.vaultIds[m.username]).length
+                      const missingCount = allModels.filter((m: any) => m.username !== username && !img.vaultIds[m.username]).length
                       return missingCount > 0 ? (
                         <button
                           onClick={() => handleDistribute(img.id)}
@@ -463,7 +488,7 @@ export default function ModelPage() {
           <h3 className="text-lg font-semibold text-white mb-3">📦 How Distribution Works</h3>
           <div className="text-gray-400 text-sm space-y-2">
             <p>1. You upload a promo image for <strong className="text-white">{model.displayName}</strong></p>
-            <p>2. We distribute it to all {CONNECTED_MODELS.length - 1} other models' vaults</p>
+            <p>2. We distribute it to all {allModels.length - 1} other models' vaults</p>
             <p>3. When rotation runs, other models post this image with "@{model.username}"</p>
             <p>4. Image stays in vaults forever (reusable, no re-upload needed)</p>
           </div>
@@ -471,7 +496,7 @@ export default function ModelPage() {
           <div className="mt-4 pt-4 border-t border-gray-800">
             <h4 className="text-sm font-medium text-white mb-2">Vault Distribution Status</h4>
             <div className="flex flex-wrap gap-2">
-              {CONNECTED_MODELS.filter(m => m.id !== model.id).map(m => (
+              {allModels.filter((m: any) => m.id !== model.id).map((m: any) => (
                 <div
                   key={m.id}
                   className="px-2 py-1 bg-gray-800 rounded text-xs text-gray-400"
@@ -492,7 +517,7 @@ export default function ModelPage() {
       {vaultDetailsImage && (() => {
         const image = promoImages.find(img => img.id === vaultDetailsImage)
         if (!image) return null
-        const otherModels = CONNECTED_MODELS.filter(m => m.username !== username)
+        const otherModels = allModels.filter((m: any) => m.username !== username)
         
         return (
           <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
@@ -508,7 +533,7 @@ export default function ModelPage() {
               </div>
               <div className="p-4 overflow-y-auto max-h-[60vh]">
                 <div className="space-y-2">
-                  {otherModels.map(m => {
+                  {otherModels.map((m: any) => {
                     const vaultId = image.vaultIds[m.username]
                     return (
                       <div

@@ -107,6 +107,31 @@ Fans who appear in BOTH "$100+ total spent" AND "$10+ tipped" lists are the idea
 - **Anthony Greendown** (@sirgreendown)
 Only 2 out of 18 tippers overlap = rare but high-value
 
+## Mass DM System (2026-02-11)
+
+- **Live and working** — first window 30/30 sent at 2-min intervals
+- 12 windows/day (every 2 hours), all 30 models per window
+- Spacing formula: `60 min / N models` = interval between sends
+- No catch-up on missed windows (5 min grace then skip)
+- Enable regenerates fresh schedule from current time
+- Sends to fans + following, excludes SFS Exclude list per model
+- SFS Exclude list IDs were wrong for 14 models (pointing to empty duplicates) — fixed 2026-02-11
+
+## Daily Audit System (2026-02-11)
+
+- Pilot: laceythomass, chloecookk, sadieeblake
+- Pulls chats + transactions from OF API, AI scores conversations
+- v1 was too dumb (flagged scripts as red flags) → v2 uses Nina playbook as benchmark
+- Need to pull ALL convos (100+), not just 10 — filter out mass messages/bumps
+- **Critical:** Analysis must be smart enough that chatters trust it. Don't flag SOPs as mistakes.
+- CEO view on S4S app, granular chatter view on Chatter Intel app
+
+## OF API Accounts (2026-02-11)
+
+- **49 accounts connected** (was 35, Kiefer added 14 new ones)
+- Built sync-accounts feature to dynamically pull from API (no more hardcoded lists)
+- New models need promo photos uploaded before joining S4S rotation
+
 ## S4S Automation App (2026-02-08)
 
 **Live app:** https://s4s-app.vercel.app

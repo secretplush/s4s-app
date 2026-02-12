@@ -7,39 +7,45 @@ export const maxDuration = 300 // 5 minutes
 const OF_API_BASE = 'https://app.onlyfansapi.com/api'
 const OF_API_KEY = process.env.OF_API_KEY || 'ofapi_bT4J1Er2YBow46EihDfjlSFf5HRmiM15M4DCOoHn7889d8b4'
 
-// Map usernames to OFAPI account IDs
-const ACCOUNT_IDS: { [username: string]: string } = {
-  'milliexhart': 'acct_ebca85077e0a4b7da04cf14176466411',
-  'zoepriceee': 'acct_f05bf7874c974a5d875a1ef01c5bbc3b',
-  'novaleighh': 'acct_9ee32f0bac4e4e8394a09f2c9fa2fbb7',
-  'lucymonroee': 'acct_0653d6e6c3984bea8d3adc84cc616c7c',
-  'chloecookk': 'acct_6bb6d77ac2c741ecb54d865237bb04f4',
-  'jackiesmithh': 'acct_bd6a75d6943141589cf5e43586653258',
-  'brookeewest': 'acct_749c75e13d7e4685813f2a2867ce614d',
-  'ayaaann': 'acct_b0b0698a614643c5932cfccd23f7c430',
-  'chloeecavalli': 'acct_b5e739f9f40a4da99b2f5ca559168012',
-  'sadieeblake': 'acct_cfb853d0ba714aeaa9a89e3026ec6190',
-  'lolasinclairr': 'acct_bde8d615937548f18c4e54b7cedf8c1d',
-  'maddieharperr': 'acct_a50799a789a6422c8389d7d055fcbd1a',
-  'zoeemonroe': 'acct_fbd172e2681f4dfbb6026ce806ecaa28',
-  'biancaawoods': 'acct_54e3119e77da4429b6537f7dd2883a05',
-  'aviannaarose': 'acct_2648cedf59644b0993ade9608bd868a1',
-  // New models added 2026-02-10
-  'jessicaparkerrr': 'acct_29037b1ef83d4c838ab2ec49d61d26f6',
-  'kaliblakexo': 'acct_487806e5751b487bb302793ee1c3ef2c',
-  'laceythomass': 'acct_c85c710e083f4b4a94d826f76855543d',
-  'lindamarievip': 'acct_04d878af1813422fa6b310991f687d73',
-  'lilyyymonroee': 'acct_e84886b3217e4fbd8f82ee63ca8894e8',
-  'dollyrhodesss': 'acct_bfd09358f67849cba6d9f8cf4a565cd2',
-  'chelseapaige': 'acct_b5f1a5fc3cfd4a959dbea7230814ae71',
-  'thesarasky': 'acct_8b4b062aeef1441ba8f51a7b0f3fe5f2',
-  'yourrfavblondie': 'acct_15870053c2604e0f9e94d14a10749923',
-  'skyyroseee': 'acct_7a273714a275417992b0f7c1d3389a2c',
-  'tyybabyy': 'acct_766a8451ee6946009d20581ab11fdfc4',
-  'itsmealexisrae': 'acct_ac70731a489741f0b6abc45a050f0301',
-  'lolaxmae': 'acct_40e51b831b3247ac806755362b494fe5',
-  'rebeccabrownn': 'acct_6f2328ebe4c446038ea1847d2dbecc17',
-  'oliviabrookess': 'acct_9665889fec2b46e9a05232afee59ef19'
+// Dynamic account ID lookup - fetches from OF API, caches in memory
+let accountIdCache: { [username: string]: string } = {}
+let cacheTimestamp = 0
+const CACHE_TTL = 5 * 60 * 1000 // 5 minutes
+
+async function getAccountIds(): Promise<{ [username: string]: string }> {
+  const now = Date.now()
+  if (Object.keys(accountIdCache).length > 0 && now - cacheTimestamp < CACHE_TTL) {
+    return accountIdCache
+  }
+
+  try {
+    const res = await fetch(`${OF_API_BASE}/accounts`, {
+      headers: { 'Authorization': `Bearer ${OF_API_KEY}` },
+      cache: 'no-store',
+    })
+    if (!res.ok) {
+      console.error(`Failed to fetch accounts: ${res.status}`)
+      return accountIdCache // return stale cache on error
+    }
+    const data = await res.json()
+    const rawAccounts: any[] = Array.isArray(data) ? data : data.data || data.accounts || []
+
+    const newCache: { [username: string]: string } = {}
+    for (const acct of rawAccounts) {
+      const username = acct.onlyfans_username || acct.onlyfans_user_data?.username
+      const id = acct.id || acct.prefixed_id
+      if (username && id) {
+        newCache[username] = id
+      }
+    }
+    accountIdCache = newCache
+    cacheTimestamp = now
+    console.log(`Refreshed account ID cache: ${Object.keys(newCache).length} accounts`)
+    return newCache
+  } catch (e) {
+    console.error('Failed to refresh account IDs:', e)
+    return accountIdCache
+  }
 }
 
 interface DistributeRequest {
@@ -68,10 +74,10 @@ function base64ToBuffer(dataUrl: string): { buffer: Buffer; mimeType: string } {
 }
 
 // Upload image and get vault_id via post-then-delete trick
-async function uploadToVault(username: string, imageBase64: string, filename: string, sourceUsername: string): Promise<{ vaultId: string | null; error?: string }> {
-  const accountId = ACCOUNT_IDS[username]
+async function uploadToVault(username: string, imageBase64: string, filename: string, sourceUsername: string, accountIds: { [username: string]: string }): Promise<{ vaultId: string | null; error?: string }> {
+  const accountId = accountIds[username]
   if (!accountId) {
-    return { vaultId: null, error: `No account ID for ${username}` }
+    return { vaultId: null, error: `No account ID for ${username} (not found in OF API)` }
   }
 
   try {
@@ -173,13 +179,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
+    // Fetch account IDs dynamically from OF API
+    const accountIds = await getAccountIds()
+
     // Process all models in parallel (each has its own account, so rate limits are per-account)
     const promises = targetUsernames.map(async (username, index) => {
       // Stagger starts by 1 second to avoid overwhelming the API
       await new Promise(r => setTimeout(r, index * 1000))
       
       console.log(`Distributing to ${username}...`)
-      const { vaultId, error } = await uploadToVault(username, imageBase64, filename, sourceUsername)
+      const { vaultId, error } = await uploadToVault(username, imageBase64, filename, sourceUsername, accountIds)
       
       return {
         username,

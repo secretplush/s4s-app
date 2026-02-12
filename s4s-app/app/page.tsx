@@ -264,8 +264,19 @@ function VaultGapsModal({ models, onClose }: { models: Model[]; onClose: () => v
     setFixResults([])
     setFixProgress(null)
     try {
-      // Scan directly from IndexedDB — don't trust KV
+      // Scan IndexedDB AND cross-reference KV as fallback
       const allUsernames = models.map(m => m.username)
+
+      // Fetch KV mappings as fallback source
+      let kvMappings: Record<string, Record<string, string>> = {}
+      try {
+        const kvRes = await fetch('/api/vault-gaps?raw=1')
+        const kvData = await kvRes.json()
+        if (kvData.mappings) kvMappings = kvData.mappings
+      } catch (e) {
+        console.warn('Could not fetch KV mappings, using IndexedDB only:', e)
+      }
+
       const gapsFound: VaultGap[] = []
       let total = 0
 
@@ -273,10 +284,13 @@ function VaultGapsModal({ models, onClose }: { models: Model[]; onClose: () => v
         const missing: string[] = []
         for (const source of allUsernames) {
           if (source === target) continue
-          // Check if source's image has a vaultId for this target
+          // Check IndexedDB first
           const images = await loadImages(source)
           const activeImg = images.find(img => img.isActive)
-          if (!activeImg || !activeImg.vaultIds?.[target]) {
+          const hasInIdb = activeImg?.vaultIds?.[target]
+          // Fallback: check KV mappings
+          const hasInKv = kvMappings[source]?.[target]
+          if (!hasInIdb && !hasInKv) {
             missing.push(source)
           }
         }
@@ -405,8 +419,11 @@ function VaultGapsModal({ models, onClose }: { models: Model[]; onClose: () => v
     setFixProgress({ current: totalGaps, total: totalGaps, label: 'Syncing to server...' })
     await syncToKV()
 
-    setFixProgress({ current: totalGaps, total: totalGaps, label: 'Done!' })
+    setFixProgress({ current: totalGaps, total: totalGaps, label: 'Done! Re-scanning...' })
     setFixing(false)
+
+    // Auto re-scan after fixing to refresh gap list
+    await checkGaps()
   }
 
   return (
@@ -523,7 +540,16 @@ function VaultGapsModal({ models, onClose }: { models: Model[]; onClose: () => v
 }
 
 function ModelsView({ models: initialModels }: { models: Model[] }) {
-  const [models, setModels] = useState<Model[]>(initialModels)
+  // Load synced models from localStorage, falling back to hardcoded
+  const [models, setModels] = useState<Model[]>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const cached = localStorage.getItem('synced_models')
+        if (cached) return JSON.parse(cached)
+      } catch {}
+    }
+    return initialModels
+  })
   const sortedModels = [...models].sort((a, b) => b.fans - a.fans)
   const [imageCounts, setImageCounts] = useState<{[key: string]: { total: number; active: number; needsDistribution?: boolean; vaultStatus?: string }}>({})
   const [showSyncModal, setShowSyncModal] = useState(false)
@@ -568,6 +594,8 @@ function ModelsView({ models: initialModels }: { models: Model[] }) {
       const needsPhotos = liveModels.filter(m => !imageCounts[m.username]?.total)
       
       setModels(liveModels)
+      // Persist to localStorage so model pages can find synced models
+      localStorage.setItem('synced_models', JSON.stringify(liveModels))
       setSyncResult({ total: liveModels.length, newCount: newAccounts.length, needsPhotos: needsPhotos.length })
     } catch (e) {
       console.error('Sync failed:', e)
