@@ -43,6 +43,14 @@ interface RailwayStats {
     featuredGirls: string[]
     dayIndex: number
   }
+  massDm?: {
+    enabled: boolean
+    todaySent: number
+    todayPending: number
+    todayTotal: number
+    lastSent: string | null
+    schedule: string
+  }
 }
 
 export default function RotationPage() {
@@ -60,6 +68,11 @@ export default function RotationPage() {
   const [railwayLoading, setRailwayLoading] = useState(false)
   const [runnerLog, setRunnerLog] = useState<string[]>([])
   const [realActiveTags, setRealActiveTags] = useState<{promoter: string, target: string, postId: string, createdAt: string, deletesIn: number}[]>([])
+  
+  // Unified dashboard state
+  const [lastUpdatedAt, setLastUpdatedAt] = useState<number>(Date.now())
+  const [secondsSinceUpdate, setSecondsSinceUpdate] = useState(0)
+  const [logExpanded, setLogExpanded] = useState(false)
   
   // Legacy local state (for test tags only now)
   const [executedTags, setExecutedTags] = useState<ExecutedTag[]>([])
@@ -362,6 +375,19 @@ export default function RotationPage() {
     return () => clearInterval(interval)
   }, [fetchRailwayStats])
   
+  // Track last updated timestamp
+  useEffect(() => {
+    if (railwayStats) setLastUpdatedAt(Date.now())
+  }, [railwayStats])
+  
+  // Count seconds since last update
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSecondsSinceUpdate(Math.floor((Date.now() - lastUpdatedAt) / 1000))
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [lastUpdatedAt])
+  
   // Ghost tags only live ~5 minutes, so "active" = posted in last 5 min
   const currentTimeMinutes = currentHour * 60 + currentMinute
   const activeSlots = schedule.filter(s => {
@@ -409,54 +435,198 @@ export default function RotationPage() {
           </div>
         </div>
         
-        {/* Railway Backend Status Panel */}
-        <div className="mb-6 bg-gray-800/70 rounded-xl p-4 border border-gray-700">
-          <div className="flex items-center justify-between mb-3">
+        {/* Unified Live Operations Dashboard */}
+        <div className="mb-6 bg-gray-800/70 rounded-xl border border-gray-700 overflow-hidden">
+          {/* Dashboard Header */}
+          <div className="flex items-center justify-between px-5 py-3 border-b border-gray-700/50">
             <h3 className="text-lg font-bold text-white flex items-center gap-2">
-              {railwayStats?.isRunning && <span className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />}
-              {!railwayStats?.isRunning && <span className="w-3 h-3 bg-gray-500 rounded-full" />}
-              Railway Backend (24/7 Cloud)
+              ⚡ Live Operations Dashboard
             </h3>
-            <div className="text-sm text-gray-400">
-              {railwayError ? (
-                <span className="text-red-400">⚠️ {railwayError}</span>
-              ) : railwayStats ? (
-                <>
-                  Status: <span className={railwayStats.isRunning ? 'text-green-400' : 'text-yellow-400'}>
-                    {railwayStats.isRunning ? '🟢 Running' : '🟡 Stopped'}
-                  </span> • 
-                  Total tags: {railwayStats.stats.totalTags} • 
-                  Pending deletes: {railwayStats.pendingDeletes}
-                  {railwayStats.stats.startedAt && (
-                    <> • Started: {new Date(railwayStats.stats.startedAt).toLocaleTimeString()}</>
-                  )}
-                </>
-              ) : (
-                <span className="text-gray-500">Connecting...</span>
-              )}
+            <div className="flex items-center gap-3 text-xs text-gray-500">
+              {railwayError && <span className="text-red-400">⚠️ {railwayError}</span>}
+              <span>Last updated: {secondsSinceUpdate}s ago</span>
+              <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
             </div>
           </div>
-          <div className="bg-black/50 rounded-lg p-3 max-h-32 overflow-y-auto font-mono text-xs">
-            {runnerLog.length === 0 ? (
-              <div className="text-gray-500">
-                {railwayStats?.isRunning 
-                  ? '✅ Rotation running in cloud. Tags will execute according to schedule.'
-                  : 'Click "Start Rotation" to begin 24/7 ghost tag automation.'}
+          
+          {/* 3-Column Dashboard */}
+          <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-700/50">
+            {/* Column 1: Ghost Tags */}
+            <div className="p-5">
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-lg">👻</span>
+                <span className="font-bold text-white">Ghost Tags</span>
+                {railwayStats?.isRunning ? (
+                  <span className="ml-auto flex items-center gap-1.5 text-xs text-green-400">
+                    <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                    Running
+                  </span>
+                ) : (
+                  <span className="ml-auto flex items-center gap-1.5 text-xs text-red-400">
+                    <span className="w-2 h-2 bg-red-500 rounded-full" />
+                    Stopped
+                  </span>
+                )}
               </div>
-            ) : (
-              runnerLog.map((log, i) => (
-                <div key={i} className={`${
-                  log.includes('✅') ? 'text-green-400' :
-                  log.includes('❌') ? 'text-red-400' :
-                  log.includes('⚠️') ? 'text-yellow-400' :
-                  log.includes('🚀') ? 'text-blue-400' :
-                  'text-gray-400'
-                }`}>{log}</div>
-              ))
-            )}
+              <div className="space-y-3">
+                <div>
+                  <div className="text-3xl font-bold text-purple-400">{railwayStats?.stats.totalTags ?? '—'}</div>
+                  <div className="text-gray-500 text-xs">tags today</div>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="bg-gray-900/50 rounded-lg p-2 text-center">
+                    <div className="text-lg font-bold text-green-400">{realActiveTags.length}</div>
+                    <div className="text-gray-500 text-[10px]">active now</div>
+                  </div>
+                  <div className="bg-gray-900/50 rounded-lg p-2 text-center">
+                    <div className="text-lg font-bold text-yellow-400">{railwayStats?.pendingDeletes ?? 0}</div>
+                    <div className="text-gray-500 text-[10px]">pending deletes</div>
+                  </div>
+                </div>
+                <div className="text-xs text-gray-500">
+                  {(() => {
+                    const next = upcomingSlots[0]
+                    if (!next) return 'No upcoming tags'
+                    const h = next.hourOffset || 0
+                    const slotMin = h * 60 + next.minuteOffset
+                    const nowMin = currentHour * 60 + currentMinute
+                    const diff = slotMin - nowMin
+                    return `Next tag in ~${diff} min`
+                  })()}
+                </div>
+                {railwayStats?.stats.startedAt && (
+                  <div className="text-xs text-gray-600">
+                    Started: {new Date(railwayStats.stats.startedAt).toLocaleTimeString('en-US', { timeZone: 'America/Puerto_Rico', hour: 'numeric', minute: '2-digit' })}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Column 2: Pinned Posts */}
+            <div className="p-5">
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-lg">📌</span>
+                <span className="font-bold text-white">Pinned Posts</span>
+                {railwayStats?.pinned?.enabled ? (
+                  <span className="ml-auto flex items-center gap-1.5 text-xs text-green-400">
+                    <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                    ON
+                  </span>
+                ) : (
+                  <span className="ml-auto text-xs text-gray-500">OFF</span>
+                )}
+              </div>
+              <div className="space-y-3">
+                <div>
+                  <div className="text-3xl font-bold text-yellow-400">{railwayStats?.pinned?.activePosts ?? '—'}</div>
+                  <div className="text-gray-500 text-xs">active pins</div>
+                </div>
+                {railwayStats?.pinned?.featuredGirls && railwayStats.pinned.featuredGirls.length > 0 && (
+                  <div>
+                    <div className="text-gray-500 text-[10px] mb-1">Featured today:</div>
+                    <div className="flex flex-wrap gap-1">
+                      {railwayStats.pinned.featuredGirls.map(g => (
+                        <span key={g} className="text-[10px] bg-yellow-900/40 text-yellow-300 px-1.5 py-0.5 rounded">@{g}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                <div className="text-xs text-gray-500">
+                  Day {railwayStats?.pinned?.dayIndex ?? '?'} of {Math.ceil(CONNECTED_MODELS.length / 5)} rotation
+                </div>
+                {railwayStats?.pinned?.lastRun && (
+                  <div className="text-xs text-gray-600">
+                    Last run: {new Date(railwayStats.pinned.lastRun).toLocaleTimeString('en-US', { timeZone: 'America/Puerto_Rico', hour: 'numeric', minute: '2-digit' })}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Column 3: Mass DMs */}
+            <div className="p-5">
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-lg">📨</span>
+                <span className="font-bold text-white">Mass DMs</span>
+                {railwayStats?.massDm?.enabled ? (
+                  <span className="ml-auto flex items-center gap-1.5 text-xs text-green-400">
+                    <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                    ON
+                  </span>
+                ) : (
+                  <span className="ml-auto text-xs text-gray-500">OFF</span>
+                )}
+              </div>
+              <div className="space-y-3">
+                <div>
+                  <div className="text-3xl font-bold text-cyan-400">
+                    {railwayStats?.massDm ? `${railwayStats.massDm.todaySent}` : '—'}
+                    {railwayStats?.massDm && <span className="text-lg text-gray-500"> / {railwayStats.massDm.todayTotal}</span>}
+                  </div>
+                  <div className="text-gray-500 text-xs">sent today</div>
+                </div>
+                {railwayStats?.massDm && railwayStats.massDm.todayTotal > 0 && (
+                  <div>
+                    <div className="w-full bg-gray-900/50 rounded-full h-2">
+                      <div
+                        className="bg-cyan-500 h-2 rounded-full transition-all"
+                        style={{ width: `${Math.min(100, (railwayStats.massDm.todaySent / railwayStats.massDm.todayTotal) * 100)}%` }}
+                      />
+                    </div>
+                    <div className="text-[10px] text-gray-500 mt-1">
+                      {Math.round((railwayStats.massDm.todaySent / railwayStats.massDm.todayTotal) * 100)}% complete
+                    </div>
+                  </div>
+                )}
+                <div className="text-xs text-gray-500">
+                  {railwayStats?.massDm ? `${railwayStats.massDm.todayPending} pending this window` : 'No data'}
+                </div>
+                {railwayStats?.massDm?.schedule && (
+                  <div className="text-xs text-gray-600">{railwayStats.massDm.schedule}</div>
+                )}
+                {railwayStats?.massDm?.lastSent && (
+                  <div className="text-xs text-gray-600">
+                    Last sent: {new Date(railwayStats.massDm.lastSent).toLocaleTimeString('en-US', { timeZone: 'America/Puerto_Rico', hour: 'numeric', minute: '2-digit' })}
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
-          <div className="mt-2 text-xs text-gray-500">
-            Backend: <code className="bg-gray-900 px-1 rounded">s4s-worker-production.up.railway.app</code>
+
+          {/* Collapsible Terminal Log */}
+          <div className="border-t border-gray-700/50">
+            <button
+              onClick={() => setLogExpanded(!logExpanded)}
+              className="w-full flex items-center justify-between px-5 py-2 text-xs text-gray-500 hover:text-gray-400 transition-colors"
+            >
+              <span className="flex items-center gap-2">
+                <code className="bg-gray-900 px-1 rounded">s4s-worker-production.up.railway.app</code>
+                <span>• {runnerLog.length} log entries</span>
+              </span>
+              <span>{logExpanded ? '▼ Hide Log' : '▶ Show Log'}</span>
+            </button>
+            {logExpanded && (
+              <div className="px-5 pb-4">
+                <div className="bg-black/50 rounded-lg p-3 max-h-32 overflow-y-auto font-mono text-xs">
+                  {runnerLog.length === 0 ? (
+                    <div className="text-gray-500">
+                      {railwayStats?.isRunning
+                        ? '✅ Rotation running in cloud. Tags will execute according to schedule.'
+                        : 'Click "Start Rotation" to begin 24/7 ghost tag automation.'}
+                    </div>
+                  ) : (
+                    runnerLog.map((log, i) => (
+                      <div key={i} className={`${
+                        log.includes('✅') ? 'text-green-400' :
+                        log.includes('❌') ? 'text-red-400' :
+                        log.includes('⚠️') ? 'text-yellow-400' :
+                        log.includes('🚀') ? 'text-blue-400' :
+                        'text-gray-400'
+                      }`}>{log}</div>
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
         
