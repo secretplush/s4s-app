@@ -287,10 +287,9 @@ function VaultGapsModal({ models, onClose }: { models: Model[]; onClose: () => v
         const missing: string[] = []
         for (const source of allUsernames) {
           if (source === target) continue
-          // Check IndexedDB first
+          // Check IndexedDB first — check ALL images, not just active
           const images = await loadImages(source)
-          const activeImg = images.find(img => img.isActive)
-          const hasInIdb = activeImg?.vaultIds?.[target]
+          const hasInIdb = images.some(img => img.vaultIds?.[target])
           // Fallback: check KV mappings
           const hasInKv = kvMappings[source]?.[target]
           if (!hasInIdb && !hasInKv) {
