@@ -622,8 +622,17 @@ function ModelsView({ models, onRefresh }: { models: Model[]; onRefresh: () => P
           >
             🔍 Check Vault Gaps
           </button>
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
-            + Add Model
+          <button
+            onClick={async () => {
+              const btn = document.activeElement as HTMLButtonElement
+              if (btn) btn.textContent = '⏳ Pushing...'
+              const result = await syncToKV()
+              if (btn) btn.textContent = result.success ? `✅ ${result.message}` : `❌ ${result.message}`
+              setTimeout(() => { if (btn) btn.textContent = '🚀 Push to Railway' }, 5000)
+            }}
+            className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg text-sm font-medium"
+          >
+            🚀 Push to Railway
           </button>
         </div>
       </div>
