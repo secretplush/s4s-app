@@ -16,8 +16,8 @@ export function calculateLTV(model: Model): number {
   return model.totalEarnings / model.fans
 }
 
-const SYNC_CACHE_KEY = 'synced_models'
-const SYNC_TIMESTAMP_KEY = 'synced_models_ts'
+const SYNC_CACHE_KEY = 'synced_models_v2'
+const SYNC_TIMESTAMP_KEY = 'synced_models_v2_ts'
 const CACHE_TTL = 5 * 60 * 1000 // 5 minutes
 
 /**
