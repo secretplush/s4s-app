@@ -122,3 +122,49 @@ export function getSeededPinnedCaption(username: string, seed: number): string {
   const template = PINNED_CAPTIONS[index]
   return template.replace(/{username}/g, `@${username}`)
 }
+
+// ============================================
+// MASS DM CAPTIONS (sent to fans via mass message)
+// ============================================
+export const MASS_DM_CAPTIONS = [
+  "Have you seen my friend {username}? 😍",
+  "You NEED to check out my girl {username} 🔥",
+  "My friend {username} is so hot omg go see her 😩",
+  "Go say hi to my bestie {username} 💕",
+  "Ok but have you seen {username} yet?? 👀",
+  "My girl {username} is so fine it's not even fair 🥵",
+  "You'd love my friend {username} trust me 😘",
+  "Obsessed with my girl {username} rn go follow her 💋",
+  "If you like me you'll LOVE {username} 😍",
+  "Go show some love to {username} for me babe 💗",
+  "My friend {username} just started and she's already killing it 🔥",
+  "Seriously go check out {username} before everyone else does 👀",
+  "I can't stop looking at {username}'s page omg 🥵",
+  "Do me a favor and go follow my girl {username} 😘",
+  "You're welcome in advance… {username} 🫣",
+  "My bestie {username} is too fine to not share 💕",
+  "Tell {username} I sent you 😏",
+  "Just wait until you see {username} 🤤",
+  "Go subscribe to my girl {username} you won't regret it 😍",
+  "Sharing my fav girl {username} with you because I'm nice like that 😘",
+  "My college roommate {username} finally made one 😍",
+  "This girl from my class {username} just started… go look 👀",
+  "My sorority sister {username} is so bad omg 🥵",
+  "Ok so {username} just turned 18 and made an OF… you're welcome 🫣",
+  "{username} literally just started posting and she's already so hot 🔥",
+  "My friend {username} from school finally caved and made one 😩",
+  "College girls do it better… go see {username} 💋",
+  "This freshman {username} is about to blow up go follow now 👀",
+  "{username} just turned 18 and I can't believe her page 🤤",
+  "My dorm mate {username} started an OF and I'm obsessed 😍",
+  "She just turned 18 last week… go see {username} before she blows up 🔥",
+  "{username} is brand new and already hotter than everyone 🥵",
+  "My study buddy {username} finally made a page go show her love 💕",
+  "Just found out {username} from my campus made one… omg 👀",
+  "Newest girl on campus {username} just dropped her first posts 😘",
+  "This college girl {username} is unreal go look 🫣",
+  "{username} just started her page and she's so nervous go be nice 🥺",
+  "My girl {username} is fresh out of high school and already killing it 🔥",
+  "Campus cutie {username} finally joined… trust me on this one 😏",
+  "She's barely 18 and already this fine?? go see {username} 😩",
+]

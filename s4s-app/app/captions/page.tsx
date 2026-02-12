@@ -2,17 +2,17 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { GHOST_CAPTIONS, PINNED_CAPTIONS } from '@/lib/ghost-captions'
+import { GHOST_CAPTIONS, PINNED_CAPTIONS, MASS_DM_CAPTIONS } from '@/lib/ghost-captions'
 
 export default function CaptionsPage() {
   const [testUsername, setTestUsername] = useState('sadieeblake')
-  const [activeTab, setActiveTab] = useState<'ghost' | 'pinned'>('ghost')
+  const [activeTab, setActiveTab] = useState<'ghost' | 'pinned' | 'massdm'>('ghost')
   
   const formatCaption = (template: string) => {
     return template.replace(/{username}/g, `@${testUsername}`)
   }
   
-  const captions = activeTab === 'ghost' ? GHOST_CAPTIONS : PINNED_CAPTIONS
+  const captions = activeTab === 'ghost' ? GHOST_CAPTIONS : activeTab === 'pinned' ? PINNED_CAPTIONS : MASS_DM_CAPTIONS
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900 p-4 md:p-8">
@@ -22,7 +22,7 @@ export default function CaptionsPage() {
           <div>
             <h1 className="text-3xl font-bold text-white">S4S Captions</h1>
             <p className="text-purple-300 mt-1">
-              {GHOST_CAPTIONS.length} ghost + {PINNED_CAPTIONS.length} pinned templates
+              {GHOST_CAPTIONS.length} ghost + {PINNED_CAPTIONS.length} pinned + {MASS_DM_CAPTIONS.length} mass DM templates
             </p>
           </div>
           <Link 
@@ -49,11 +49,21 @@ export default function CaptionsPage() {
             onClick={() => setActiveTab('pinned')}
             className={`px-4 py-2 rounded-lg font-medium transition-colors ${
               activeTab === 'pinned' 
-                ? 'bg-cyan-600 text-white' 
+                ? 'bg-yellow-600 text-white' 
                 : 'bg-purple-800/50 text-purple-300 hover:bg-purple-700/50'
             }`}
           >
             📌 Pinned Posts ({PINNED_CAPTIONS.length})
+          </button>
+          <button
+            onClick={() => setActiveTab('massdm')}
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              activeTab === 'massdm' 
+                ? 'bg-cyan-600 text-white' 
+                : 'bg-purple-800/50 text-purple-300 hover:bg-purple-700/50'
+            }`}
+          >
+            📨 Mass DMs ({MASS_DM_CAPTIONS.length})
           </button>
         </div>
         
@@ -61,17 +71,24 @@ export default function CaptionsPage() {
         <div className={`rounded-xl p-4 mb-6 border ${
           activeTab === 'ghost' 
             ? 'bg-purple-800/30 border-purple-500/30' 
+            : activeTab === 'pinned'
+            ? 'bg-yellow-800/30 border-yellow-500/30'
             : 'bg-cyan-800/30 border-cyan-500/30'
         }`}>
           {activeTab === 'ghost' ? (
             <p className="text-purple-200">
-              <strong>Ghost Tags:</strong> Quick, casual captions. Posts are deleted after ~5 minutes. 
-              Can be more ephemeral and hype-focused.
+              <strong>Ghost Tags:</strong> Quick, casual captions posted on model pages. Deleted after ~5 minutes. 
+              Ephemeral and hype-focused. Used for the 57 daily outbound tags per model.
+            </p>
+          ) : activeTab === 'pinned' ? (
+            <p className="text-yellow-200">
+              <strong>Pinned Posts:</strong> More genuine, recommendation-style captions. 
+              Pinned to top of profile for 24 hours. Need to feel authentic and personal.
             </p>
           ) : (
             <p className="text-cyan-200">
-              <strong>Pinned Posts:</strong> More genuine, recommendation-style captions. 
-              These stay visible for 24 hours, so they need to feel authentic and personal.
+              <strong>Mass DMs:</strong> Sent directly to fans via mass message with a promo photo attached. 
+              12 windows per day, all models. Excluded from SFS Exclude lists.
             </p>
           )}
         </div>
@@ -96,6 +113,8 @@ export default function CaptionsPage() {
               className={`rounded-xl p-4 border transition-colors ${
                 activeTab === 'ghost'
                   ? 'bg-purple-800/30 border-purple-600/20 hover:border-purple-500/40'
+                  : activeTab === 'pinned'
+                  ? 'bg-yellow-800/30 border-yellow-600/20 hover:border-yellow-500/40'
                   : 'bg-cyan-800/30 border-cyan-600/20 hover:border-cyan-500/40'
               }`}
             >
