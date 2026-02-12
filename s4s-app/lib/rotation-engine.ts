@@ -328,10 +328,10 @@ export function formatScheduleForDisplay(schedule: ScheduleSlot[]): string {
  * Stats for the rotation
  */
 export function getRotationStats(modelCount: number) {
-  const targetsPerModel = modelCount - 1
-  const MAX_OUTBOUND_PER_MODEL = 56 // Cap to avoid spam
-  const TAGS_PER_PAIR = Math.max(1, Math.round(MAX_OUTBOUND_PER_MODEL / targetsPerModel))
-  const tagsPerModelPerDay = Math.min(targetsPerModel * TAGS_PER_PAIR, MAX_OUTBOUND_PER_MODEL)
+  // Must match Railway config exactly
+  const PROMOTER_ONLY_COUNT = 1 // taylorskully
+  const tagsPerModelPerDay = 57
+  const targetsPerModel = modelCount - 1 - PROMOTER_ONLY_COUNT // exclude self + promoter-only
   const totalTagsPerDay = modelCount * tagsPerModelPerDay
   const avgIntervalMinutes = (24 * 60) / tagsPerModelPerDay // How often each model posts
   
@@ -362,6 +362,6 @@ export function getRotationStats(modelCount: number) {
     dayOfYear,
     rotationType: 'daily-weighted',
     hourlyDistribution, // actual tags per hour for agency
-    tagsPerPair: TAGS_PER_PAIR
+    tagsPerPair: Math.max(1, Math.ceil(tagsPerModelPerDay / Math.max(1, targetsPerModel)))
   }
 }
