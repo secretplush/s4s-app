@@ -53,6 +53,16 @@ export async function fetchAndCacheModels(): Promise<Model[]> {
     const res = await fetch('/api/sync-accounts', { cache: 'no-store' })
     if (!res.ok) throw new Error(`Sync API ${res.status}`)
     const { accounts } = await res.json()
+    // Fetch earnings data (cached in KV, refreshes hourly)
+    let earningsMap: Record<string, number> = {}
+    try {
+      const earningsRes = await fetch('/api/earnings', { cache: 'no-store' })
+      if (earningsRes.ok) {
+        const earningsData = await earningsRes.json()
+        earningsMap = earningsData.earnings || {}
+      }
+    } catch {}
+
     const models: Model[] = accounts.map((a: any) => ({
       id: a.id,
       username: a.username,
@@ -61,7 +71,7 @@ export async function fetchAndCacheModels(): Promise<Model[]> {
       likes: a.likes,
       avatar: a.avatar,
       connected: a.isAuthenticated,
-      totalEarnings: 0,
+      totalEarnings: earningsMap[a.username] || 0,
     }))
 
     // Cache
