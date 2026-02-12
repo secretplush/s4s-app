@@ -54,7 +54,7 @@ export async function fetchAndCacheModels(): Promise<Model[]> {
     if (!res.ok) throw new Error(`Sync API ${res.status}`)
     const { accounts } = await res.json()
     // Fetch earnings data (cached in KV, refreshes hourly)
-    let earningsMap: Record<string, number> = {}
+    let earningsMap: Record<string, { net: number; gross: number }> = {}
     try {
       const earningsRes = await fetch('/api/earnings', { cache: 'no-store' })
       if (earningsRes.ok) {
@@ -71,7 +71,7 @@ export async function fetchAndCacheModels(): Promise<Model[]> {
       likes: a.likes,
       avatar: a.avatar,
       connected: a.isAuthenticated,
-      totalEarnings: earningsMap[a.username] || 0,
+      totalEarnings: earningsMap[a.username]?.gross || 0,
     }))
 
     // Cache

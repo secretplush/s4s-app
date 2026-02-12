@@ -22,18 +22,21 @@ async function kvSet(key: string, value: any, ttl?: number) {
   })
 }
 
-async function fetchEarnings(accountId: string): Promise<number> {
+async function fetchEarnings(accountId: string): Promise<{ net: number; gross: number }> {
   try {
     const res = await fetch(
-      `${OF_API_BASE}/${accountId}/statistics/statements/earnings?start_date=2022-01-01&end_date=${new Date().toISOString().slice(0, 10)}&type=total`,
+      `${OF_API_BASE}/${accountId}/statistics/overview`,
       { headers: { Authorization: `Bearer ${OF_API_KEY}` }, cache: 'no-store' }
     )
-    if (!res.ok) return -1
+    if (!res.ok) return { net: -1, gross: -1 }
     const data = await res.json()
-    const chart = data?.data?.total?.chartCount || []
-    return chart.reduce((sum: number, c: any) => sum + (c.count || 0), 0)
+    const earning = data?.data?.earning || {}
+    return { 
+      net: earning.total || 0,
+      gross: earning.gross || 0
+    }
   } catch {
-    return -1
+    return { net: -1, gross: -1 }
   }
 }
 
@@ -54,19 +57,19 @@ export async function GET() {
     .filter((a: any) => a.onlyfans_username && a.id)
 
   // Fetch earnings in batches of 5 to avoid rate limits
-  const earnings: Record<string, number> = {}
+  const earnings: Record<string, { net: number; gross: number }> = {}
   const BATCH_SIZE = 5
   
   for (let i = 0; i < accounts.length; i += BATCH_SIZE) {
     const batch = accounts.slice(i, i + BATCH_SIZE)
     const results = await Promise.all(
       batch.map(async (a: any) => {
-        const amount = await fetchEarnings(a.id)
-        return { username: a.onlyfans_username, amount }
+        const data = await fetchEarnings(a.id)
+        return { username: a.onlyfans_username, ...data }
       })
     )
     results.forEach(r => {
-      if (r.amount >= 0) earnings[r.username] = r.amount
+      if (r.net >= 0) earnings[r.username] = { net: r.net, gross: r.gross }
     })
     // Small delay between batches
     if (i + BATCH_SIZE < accounts.length) {
