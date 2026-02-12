@@ -396,7 +396,13 @@ function VaultGapsModal({ models, onClose }: { models: Model[]; onClose: () => v
             targetUsernames
           })
         })
-        const data = await res.json()
+        const text = await res.text()
+        let data: any
+        try {
+          data = JSON.parse(text)
+        } catch {
+          throw new Error(text.slice(0, 100))
+        }
 
         if (data.success && data.results) {
           // Update vaultIds in IndexedDB image
