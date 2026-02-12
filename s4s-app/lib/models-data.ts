@@ -78,6 +78,30 @@ export async function fetchAndCacheModels(): Promise<Model[]> {
 }
 
 /**
+ * Server-side: fetch models directly from OF API (for API routes).
+ */
+export async function getServerModels(): Promise<{ id: string; username: string; displayName: string }[]> {
+  const OF_API_BASE = 'https://app.onlyfansapi.com/api'
+  const OF_API_KEY = process.env.OF_API_KEY || 'ofapi_bT4J1Er2YBow46EihDfjlSFf5HRmiM15M4DCOoHn7889d8b4'
+  
+  const res = await fetch(`${OF_API_BASE}/accounts`, {
+    headers: { 'Authorization': `Bearer ${OF_API_KEY}` },
+    cache: 'no-store',
+  })
+  if (!res.ok) throw new Error(`OF API error: ${res.status}`)
+  const data = await res.json()
+  const rawAccounts: any[] = Array.isArray(data) ? data : data.data || data.accounts || []
+  
+  return rawAccounts
+    .filter((a: any) => a.onlyfans_username && a.id)
+    .map((a: any) => ({
+      id: a.id,
+      username: a.onlyfans_username,
+      displayName: a.display_name || a.onlyfans_user_data?.name || a.onlyfans_username,
+    }))
+}
+
+/**
  * Compute network stats from a models array (dynamic).
  */
 export function computeNetworkStats(models: Model[]) {

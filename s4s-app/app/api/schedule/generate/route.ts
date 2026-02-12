@@ -91,13 +91,32 @@ export async function POST(request: Request) {
     const body = await request.json()
     const { days = 14 } = body
     
-    // Load models and vault mappings from KV
-    const models = await kv.get<{ id: string; username: string }[]>('models')
+    // Load models from OF API (dynamic, no hardcoded lists)
+    const OF_API_BASE = 'https://app.onlyfansapi.com/api'
+    const OF_API_KEY = process.env.OF_API_KEY || 'ofapi_bT4J1Er2YBow46EihDfjlSFf5HRmiM15M4DCOoHn7889d8b4'
+    
+    let models: { id: string; username: string }[] = []
+    try {
+      const acctRes = await fetch(`${OF_API_BASE}/accounts`, {
+        headers: { 'Authorization': `Bearer ${OF_API_KEY}` },
+        cache: 'no-store',
+      })
+      if (acctRes.ok) {
+        const acctData = await acctRes.json()
+        const rawAccounts: any[] = Array.isArray(acctData) ? acctData : acctData.data || acctData.accounts || []
+        models = rawAccounts
+          .filter((a: any) => a.onlyfans_username && a.id)
+          .map((a: any) => ({ id: a.id, username: a.onlyfans_username }))
+      }
+    } catch (e) {
+      console.error('Failed to fetch models from OF API:', e)
+    }
+    
     const vaultMappings = await kv.get<Record<string, Record<string, string>>>('vault_mappings')
     
     if (!models || models.length < 2) {
       return NextResponse.json({ 
-        error: 'Need at least 2 models synced. Run vault sync first.'
+        error: 'Need at least 2 models synced. Check OF API connection.'
       }, { status: 400 })
     }
     
