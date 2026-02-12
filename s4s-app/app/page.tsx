@@ -460,7 +460,7 @@ function VaultGapsModal({ models, onClose }: { models: Model[]; onClose: () => v
         </div>
 
         <p className="text-sm text-gray-400 mb-4">
-          Scans all {models.length} models to find missing vault mappings. Fix all gaps to ensure every model&apos;s promo image exists in every other model&apos;s vault.
+          Scans which models are missing OTHER models&apos; promo images in their vault. e.g. &quot;@tessa — 49 missing&quot; means 49 models haven&apos;t distributed their image TO tessa&apos;s vault yet.
         </p>
 
         {/* Loading state */}
@@ -497,13 +497,13 @@ function VaultGapsModal({ models, onClose }: { models: Model[]; onClose: () => v
                     {expanded.has(g.targetUsername) && (
                       <div className="px-3 py-2 bg-gray-800/50 flex flex-wrap gap-1">
                         {g.missingFrom.map(m => (
-                          <span key={m} className="text-xs px-2 py-0.5 bg-yellow-500/20 text-yellow-400 rounded inline-flex items-center gap-1">
-                            @{m}
+                          <span key={m} className="text-xs px-2 py-0.5 bg-red-500/20 text-red-400 rounded inline-flex items-center gap-1">
+                            @{m} ⚠
                             <button
                               onClick={(e) => { e.stopPropagation(); dismissGap(m, g.targetUsername) }}
-                              className="ml-0.5 hover:text-green-400 text-yellow-600"
-                              title="Dismiss (mark as verified)"
-                            >✓</button>
+                              className="ml-0.5 hover:text-green-400 text-red-300"
+                              title="Dismiss false positive"
+                            >✕</button>
                           </span>
                         ))}
                       </div>
