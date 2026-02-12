@@ -651,7 +651,12 @@ function ModelsView({ models, onRefresh }: { models: Model[]; onRefresh: () => P
         </div>
       )}
 
-      {showSyncModal && <VaultGapsModal models={models} onClose={() => setShowSyncModal(false)} />}
+      {showSyncModal && <VaultGapsModal models={models} onClose={async () => {
+        setShowSyncModal(false)
+        // Refresh image counts after gap fixes
+        const counts = await getImageCounts(models.length)
+        setImageCounts(counts)
+      }} />}
 
       <div className="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden">
         <table className="w-full">
