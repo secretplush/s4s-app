@@ -42,7 +42,7 @@ export default function RotationPage() {
   // Railway backend state
   const [railwayStats, setRailwayStats] = useState<RailwayStats | null>(null)
   const [railwayError, setRailwayError] = useState<string | null>(null)
-  const [railwayLoading, setRailwayLoading] = useState(false)
+  // railwayLoading removed — individual toggle states used instead
   const [runnerLog, setRunnerLog] = useState<string[]>([])
   const [realActiveTags, setRealActiveTags] = useState<{promoter: string, target: string, postId: string, createdAt: string, deletesIn: number}[]>([])
   const [massDmFeed, setMassDmFeed] = useState<{promoter: string, target: string, status: string, timestamp: number}[]>([])
@@ -52,6 +52,9 @@ export default function RotationPage() {
   const [lastUpdatedAt, setLastUpdatedAt] = useState<number>(Date.now())
   const [secondsSinceUpdate, setSecondsSinceUpdate] = useState(0)
   const [logExpanded, setLogExpanded] = useState(false)
+  const [togglingGhost, setTogglingGhost] = useState(false)
+  const [togglingPinned, setTogglingPinned] = useState(false)
+  const [togglingMassDm, setTogglingMassDm] = useState(false)
   
   const addLog = useCallback((msg: string) => {
     const time = new Date().toLocaleTimeString('en-US', { timeZone: 'America/Puerto_Rico' })
@@ -109,58 +112,57 @@ export default function RotationPage() {
     }
   }, [])
   
-  // Start rotation on Railway
-  const startRotation = useCallback(async () => {
-    setRailwayLoading(true)
-    addLog('📅 Generating 24h schedule...')
+  // Toggle ghost tags
+  const toggleGhostTags = useCallback(async () => {
+    setTogglingGhost(true)
+    const isOn = railwayStats?.isRunning
     try {
-      const scheduleRes = await fetch('/api/rotation/generate-schedule', { method: 'POST' })
-      const scheduleData = await scheduleRes.json()
-      
-      if (!scheduleData.success) {
-        addLog(`❌ Failed to generate schedule: ${scheduleData.error}`)
-        setRailwayLoading(false)
-        return
-      }
-      
-      addLog(`✅ Schedule pushed: ${scheduleData.models} models, ${scheduleData.totalTags} tags`)
-      
-      addLog('▶️ Starting Railway rotation service...')
-      const response = await fetch(`${RAILWAY_PROXY}?endpoint=start`, { method: 'POST' })
-      const data = await response.json()
-      if (data.success || data.message?.includes('started') || data.status === 'already running') {
-        addLog('✅ Railway rotation STARTED - running 24/7 in cloud')
-        addLog('🔄 Schedule auto-refreshes at midnight AST')
-        await fetchRailwayStats()
+      if (isOn) {
+        addLog('⏹️ Stopping ghost tags...')
+        await fetch(`${RAILWAY_PROXY}?endpoint=stop`, { method: 'POST' })
+        addLog('⏹️ Ghost tags STOPPED')
       } else {
-        addLog(`❌ Failed to start: ${data.error || data.message}`)
+        addLog('📅 Generating schedule & starting ghost tags...')
+        const scheduleRes = await fetch('/api/rotation/generate-schedule', { method: 'POST' })
+        const scheduleData = await scheduleRes.json()
+        if (scheduleData.success) {
+          addLog(`✅ Schedule: ${scheduleData.models} models, ${scheduleData.totalTags} tags`)
+        }
+        await fetch(`${RAILWAY_PROXY}?endpoint=start`, { method: 'POST' })
+        addLog('✅ Ghost tags STARTED')
       }
-    } catch (error) {
-      addLog(`❌ Error starting Railway: ${error}`)
-    } finally {
-      setRailwayLoading(false)
-    }
-  }, [addLog, fetchRailwayStats])
-  
-  // Stop rotation on Railway
-  const stopRotation = useCallback(async () => {
-    setRailwayLoading(true)
-    addLog('⏹️ Stopping Railway rotation service...')
+      await fetchRailwayStats()
+    } catch (e) { addLog(`❌ Error: ${e}`) }
+    finally { setTogglingGhost(false) }
+  }, [railwayStats?.isRunning, addLog, fetchRailwayStats])
+
+  // Toggle pinned posts
+  const togglePinned = useCallback(async () => {
+    setTogglingPinned(true)
+    const isOn = railwayStats?.pinned?.enabled
     try {
-      const response = await fetch(`${RAILWAY_PROXY}?endpoint=stop`, { method: 'POST' })
-      const data = await response.json()
-      if (data.success || data.message?.includes('stopped')) {
-        addLog('⏹️ Railway rotation STOPPED')
-        await fetchRailwayStats()
-      } else {
-        addLog(`❌ Failed to stop: ${data.error || data.message}`)
-      }
-    } catch (error) {
-      addLog(`❌ Error stopping Railway: ${error}`)
-    } finally {
-      setRailwayLoading(false)
-    }
-  }, [addLog, fetchRailwayStats])
+      const endpoint = isOn ? 'pinned/disable' : 'pinned/enable'
+      addLog(`${isOn ? '⏹️ Disabling' : '▶️ Enabling'} pinned posts...`)
+      await fetch(`${RAILWAY_PROXY}?endpoint=${endpoint}`, { method: 'POST' })
+      addLog(`${isOn ? '⏹️' : '✅'} Pinned posts ${isOn ? 'DISABLED' : 'ENABLED'}`)
+      await fetchRailwayStats()
+    } catch (e) { addLog(`❌ Error: ${e}`) }
+    finally { setTogglingPinned(false) }
+  }, [railwayStats?.pinned?.enabled, addLog, fetchRailwayStats])
+
+  // Toggle mass DMs
+  const toggleMassDm = useCallback(async () => {
+    setTogglingMassDm(true)
+    const isOn = railwayStats?.massDm?.enabled
+    try {
+      const endpoint = isOn ? 'mass-dm/disable' : 'mass-dm/enable'
+      addLog(`${isOn ? '⏹️ Disabling' : '▶️ Enabling'} mass DMs...`)
+      await fetch(`${RAILWAY_PROXY}?endpoint=${endpoint}`, { method: 'POST' })
+      addLog(`${isOn ? '⏹️' : '✅'} Mass DMs ${isOn ? 'DISABLED' : 'ENABLED'}`)
+      await fetchRailwayStats()
+    } catch (e) { addLog(`❌ Error: ${e}`) }
+    finally { setTogglingMassDm(false) }
+  }, [railwayStats?.massDm?.enabled, addLog, fetchRailwayStats])
   
   // Poll Railway stats every 10 seconds
   useEffect(() => {
@@ -194,20 +196,7 @@ export default function RotationPage() {
             <h1 className="text-3xl font-bold text-white">Rotation Schedule</h1>
             <p className="text-gray-400">{CONNECTED_MODELS.length} models connected</p>
           </div>
-          <div className="text-right flex items-center gap-4">
-            <button
-              onClick={railwayStats?.isRunning ? stopRotation : startRotation}
-              disabled={railwayLoading}
-              className={`px-6 py-3 rounded-lg font-bold text-lg transition-all ${
-                railwayLoading 
-                  ? 'bg-gray-600 text-gray-400 cursor-wait'
-                  : railwayStats?.isRunning 
-                    ? 'bg-red-600 hover:bg-red-700 text-white animate-pulse' 
-                    : 'bg-green-600 hover:bg-green-700 text-white'
-              }`}
-            >
-              {railwayLoading ? '⏳ Working...' : railwayStats?.isRunning ? '⏹️ Stop Rotation' : '▶️ Start Rotation'}
-            </button>
+          <div className="text-right">
             <div>
               <div className="text-3xl font-mono text-green-400">
                 {currentTimeAST || '--:--:-- AST'}
@@ -238,17 +227,13 @@ export default function RotationPage() {
               <div className="flex items-center gap-2 mb-4">
                 <span className="text-lg">👻</span>
                 <span className="font-bold text-white">Ghost Tags</span>
-                {railwayStats?.isRunning ? (
-                  <span className="ml-auto flex items-center gap-1.5 text-xs text-green-400">
-                    <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                    Running
-                  </span>
-                ) : (
-                  <span className="ml-auto flex items-center gap-1.5 text-xs text-red-400">
-                    <span className="w-2 h-2 bg-red-500 rounded-full" />
-                    Stopped
-                  </span>
-                )}
+                <button
+                  onClick={toggleGhostTags}
+                  disabled={togglingGhost}
+                  className={`ml-auto relative w-11 h-6 rounded-full transition-colors ${togglingGhost ? 'opacity-50 cursor-wait' : 'cursor-pointer'} ${railwayStats?.isRunning ? 'bg-green-500' : 'bg-gray-600'}`}
+                >
+                  <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform shadow ${railwayStats?.isRunning ? 'translate-x-5' : ''}`} />
+                </button>
               </div>
               <div className="space-y-3">
                 <div>
@@ -278,14 +263,13 @@ export default function RotationPage() {
               <div className="flex items-center gap-2 mb-4">
                 <span className="text-lg">📌</span>
                 <span className="font-bold text-white">Pinned Posts</span>
-                {railwayStats?.pinned?.enabled ? (
-                  <span className="ml-auto flex items-center gap-1.5 text-xs text-green-400">
-                    <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                    ON
-                  </span>
-                ) : (
-                  <span className="ml-auto text-xs text-gray-500">OFF</span>
-                )}
+                <button
+                  onClick={togglePinned}
+                  disabled={togglingPinned}
+                  className={`ml-auto relative w-11 h-6 rounded-full transition-colors ${togglingPinned ? 'opacity-50 cursor-wait' : 'cursor-pointer'} ${railwayStats?.pinned?.enabled ? 'bg-green-500' : 'bg-gray-600'}`}
+                >
+                  <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform shadow ${railwayStats?.pinned?.enabled ? 'translate-x-5' : ''}`} />
+                </button>
               </div>
               <div className="space-y-3">
                 <div>
@@ -318,14 +302,13 @@ export default function RotationPage() {
               <div className="flex items-center gap-2 mb-4">
                 <span className="text-lg">📨</span>
                 <span className="font-bold text-white">Mass DMs</span>
-                {railwayStats?.massDm?.enabled ? (
-                  <span className="ml-auto flex items-center gap-1.5 text-xs text-green-400">
-                    <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                    ON
-                  </span>
-                ) : (
-                  <span className="ml-auto text-xs text-gray-500">OFF</span>
-                )}
+                <button
+                  onClick={toggleMassDm}
+                  disabled={togglingMassDm}
+                  className={`ml-auto relative w-11 h-6 rounded-full transition-colors ${togglingMassDm ? 'opacity-50 cursor-wait' : 'cursor-pointer'} ${railwayStats?.massDm?.enabled ? 'bg-green-500' : 'bg-gray-600'}`}
+                >
+                  <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform shadow ${railwayStats?.massDm?.enabled ? 'translate-x-5' : ''}`} />
+                </button>
               </div>
               <div className="space-y-3">
                 <div>
