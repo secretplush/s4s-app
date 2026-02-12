@@ -45,6 +45,8 @@ export default function RotationPage() {
   const [railwayLoading, setRailwayLoading] = useState(false)
   const [runnerLog, setRunnerLog] = useState<string[]>([])
   const [realActiveTags, setRealActiveTags] = useState<{promoter: string, target: string, postId: string, createdAt: string, deletesIn: number}[]>([])
+  const [massDmFeed, setMassDmFeed] = useState<{promoter: string, target: string, status: string, timestamp: number}[]>([])
+  const [ghostTagFeed, setGhostTagFeed] = useState<{promoter: string, target: string, postId: string, timestamp: number}[]>([])
   
   // Dashboard state
   const [lastUpdatedAt, setLastUpdatedAt] = useState<number>(Date.now())
@@ -70,14 +72,18 @@ export default function RotationPage() {
   // Fetch Railway backend stats (via proxy)
   const fetchRailwayStats = useCallback(async () => {
     try {
-      const [statsRes, activeRes, pinnedRes] = await Promise.all([
+      const [statsRes, activeRes, pinnedRes, dmFeedRes, tagFeedRes] = await Promise.all([
         fetch(`${RAILWAY_PROXY}?endpoint=stats`),
         fetch(`${RAILWAY_PROXY}?endpoint=active`),
-        fetch(`${RAILWAY_PROXY}?endpoint=pinned`)
+        fetch(`${RAILWAY_PROXY}?endpoint=pinned`),
+        fetch(`${RAILWAY_PROXY}?endpoint=feed/mass-dm`),
+        fetch(`${RAILWAY_PROXY}?endpoint=feed/ghost-tags`)
       ])
       const statsData = await statsRes.json()
       const activeData = await activeRes.json()
       const pinnedData = await pinnedRes.json()
+      const dmFeedData = await dmFeedRes.json().catch(() => ({ feed: [] }))
+      const tagFeedData = await tagFeedRes.json().catch(() => ({ feed: [] }))
       
       if (statsData.error) {
         setRailwayError(statsData.error)
@@ -95,6 +101,8 @@ export default function RotationPage() {
       if (activeData.tags) {
         setRealActiveTags(activeData.tags)
       }
+      if (dmFeedData.feed) setMassDmFeed(dmFeedData.feed)
+      if (tagFeedData.feed) setGhostTagFeed(tagFeedData.feed)
     } catch (error) {
       setRailwayError('Cannot reach Railway backend')
       console.error('Railway stats error:', error)
@@ -393,44 +401,117 @@ export default function RotationPage() {
           </div>
         </div>
         
-        {/* Active Ghost Tags Feed (LIVE from Railway) */}
-        <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
-          <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-            <span className={`px-2 py-0.5 ${realActiveTags.length > 0 ? 'bg-green-600 animate-pulse' : 'bg-gray-600'} text-white text-xs rounded`}>
-              {realActiveTags.length > 0 ? 'LIVE' : railwayStats?.isRunning ? 'WAITING' : 'STOPPED'}
-            </span>
-            👻 Active Ghost Tags ({realActiveTags.length})
-          </h2>
-          <p className="text-gray-400 text-xs mb-3">Real posts from Railway — auto-delete in 5 min</p>
-          {realActiveTags.length > 0 ? (
-            <div className="space-y-2 max-h-64 overflow-y-auto">
-              {realActiveTags.map((tag) => {
-                const time = new Date(tag.createdAt).toLocaleTimeString('en-US', { 
-                  hour: 'numeric', 
-                  minute: '2-digit',
-                  hour12: true,
-                  timeZone: 'America/Puerto_Rico'
-                })
-                return (
-                  <div key={tag.postId} className="flex items-center justify-between bg-green-900/30 border border-green-700/50 rounded-lg p-3">
-                    <div className="flex items-center gap-2">
-                      <span className="text-gray-400">@{tag.promoter}</span>
-                      <span className="text-green-500">→</span>
-                      <span className="text-gray-200 font-medium">@{tag.target}</span>
+        {/* Live Feeds - Side by Side */}
+        <div className="grid md:grid-cols-2 gap-6">
+          {/* Ghost Tags Feed */}
+          <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
+            <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+              <span className={`px-2 py-0.5 ${realActiveTags.length > 0 ? 'bg-green-600 animate-pulse' : 'bg-gray-600'} text-white text-xs rounded`}>
+                {realActiveTags.length > 0 ? 'LIVE' : railwayStats?.isRunning ? 'WAITING' : 'STOPPED'}
+              </span>
+              👻 Ghost Tags
+            </h2>
+            
+            {/* Currently Active (on OF right now) */}
+            {realActiveTags.length > 0 && (
+              <>
+                <p className="text-green-400 text-xs font-medium mb-2">🟢 On OF right now ({realActiveTags.length})</p>
+                <div className="space-y-1.5 mb-4 max-h-36 overflow-y-auto">
+                  {realActiveTags.map((tag) => {
+                    const time = new Date(tag.createdAt).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'America/Puerto_Rico' })
+                    return (
+                      <div key={tag.postId} className="flex items-center justify-between bg-green-900/30 border border-green-700/50 rounded-lg px-3 py-2">
+                        <div className="flex items-center gap-1.5 text-sm">
+                          <span className="text-gray-400">@{tag.promoter}</span>
+                          <span className="text-green-500">→</span>
+                          <span className="text-gray-200 font-medium">@{tag.target}</span>
+                        </div>
+                        <span className="text-green-500/70 font-mono text-xs">{time}</span>
+                      </div>
+                    )
+                  })}
+                </div>
+              </>
+            )}
+            
+            {/* Recent History */}
+            <p className="text-gray-500 text-xs font-medium mb-2">Recent ({ghostTagFeed.length})</p>
+            {ghostTagFeed.length > 0 ? (
+              <div className="space-y-1 max-h-64 overflow-y-auto">
+                {ghostTagFeed.slice(0, 30).map((tag, i) => {
+                  const time = new Date(tag.timestamp).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'America/Puerto_Rico' })
+                  return (
+                    <div key={`${tag.postId}-${i}`} className="flex items-center justify-between bg-gray-700/30 rounded-lg px-3 py-1.5">
+                      <div className="flex items-center gap-1.5 text-sm">
+                        <span className="text-gray-500">@{tag.promoter}</span>
+                        <span className="text-purple-400">→</span>
+                        <span className="text-gray-400">@{tag.target}</span>
+                      </div>
+                      <span className="text-gray-600 font-mono text-xs">{time}</span>
                     </div>
-                    <div className="text-right">
-                      <div className="text-green-500/70 font-mono text-sm">{time}</div>
-                      <div className="text-gray-500 text-xs">deletes in {Math.floor(tag.deletesIn / 60)}:{String(tag.deletesIn % 60).padStart(2, '0')}</div>
+                  )
+                })}
+              </div>
+            ) : (
+              <div className="text-gray-600 text-center py-4 text-sm">
+                {railwayStats?.isRunning ? 'Feed populates as tags fire...' : 'Start rotation to see tags'}
+              </div>
+            )}
+          </div>
+
+          {/* Mass DM Feed */}
+          <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
+            <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+              <span className={`px-2 py-0.5 ${railwayStats?.massDm?.enabled ? 'bg-cyan-600 animate-pulse' : 'bg-gray-600'} text-white text-xs rounded`}>
+                {railwayStats?.massDm?.enabled ? 'LIVE' : 'OFF'}
+              </span>
+              📨 Mass DMs
+              {railwayStats?.massDm && (
+                <span className="text-sm font-normal text-gray-500 ml-auto">
+                  {railwayStats.massDm.todaySent} / {railwayStats.massDm.todayTotal} today
+                </span>
+              )}
+            </h2>
+            
+            {/* Progress bar */}
+            {railwayStats?.massDm && railwayStats.massDm.todayTotal > 0 && (
+              <div className="mb-4">
+                <div className="w-full bg-gray-900/50 rounded-full h-2.5">
+                  <div
+                    className="bg-cyan-500 h-2.5 rounded-full transition-all"
+                    style={{ width: `${Math.min(100, (railwayStats.massDm.todaySent / railwayStats.massDm.todayTotal) * 100)}%` }}
+                  />
+                </div>
+                <div className="text-[10px] text-gray-500 mt-1">
+                  {Math.round((railwayStats.massDm.todaySent / railwayStats.massDm.todayTotal) * 100)}% • {railwayStats.massDm.todayPending} pending this window
+                </div>
+              </div>
+            )}
+            
+            {/* Recent sends */}
+            <p className="text-gray-500 text-xs font-medium mb-2">Recent sends ({massDmFeed.length})</p>
+            {massDmFeed.length > 0 ? (
+              <div className="space-y-1 max-h-80 overflow-y-auto">
+                {massDmFeed.slice(0, 50).map((dm, i) => {
+                  const time = new Date(dm.timestamp).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true, timeZone: 'America/Puerto_Rico' })
+                  return (
+                    <div key={`dm-${i}`} className="flex items-center justify-between bg-cyan-900/20 border border-cyan-800/30 rounded-lg px-3 py-1.5">
+                      <div className="flex items-center gap-1.5 text-sm">
+                        <span className="text-gray-400">@{dm.promoter}</span>
+                        <span className="text-cyan-400">→</span>
+                        <span className="text-gray-300">@{dm.target}</span>
+                      </div>
+                      <span className="text-cyan-500/60 font-mono text-xs">{time}</span>
                     </div>
-                  </div>
-                )
-              })}
-            </div>
-          ) : (
-            <div className="text-gray-500 text-center py-4">
-              {railwayStats?.isRunning ? 'Waiting for scheduled tags...' : 'Start rotation to see live tags'}
-            </div>
-          )}
+                  )
+                })}
+              </div>
+            ) : (
+              <div className="text-gray-600 text-center py-4 text-sm">
+                {railwayStats?.massDm?.enabled ? 'Feed populates as DMs send...' : 'Mass DMs not enabled'}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </main>
