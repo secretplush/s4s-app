@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, Suspense } from 'react'
+import { useState, useEffect, useCallback, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Model, calculateLTV, computeNetworkStats } from '@/lib/models-data'
@@ -114,6 +114,72 @@ export default function Dashboard() {
   )
 }
 
+function LiveS4SStatus() {
+  const [stats, setStats] = useState<any>(null)
+  
+  const fetchStats = useCallback(async () => {
+    try {
+      const res = await fetch('/api/railway?endpoint=stats', { cache: 'no-store' })
+      if (res.ok) setStats(await res.json())
+    } catch {}
+  }, [])
+  
+  useEffect(() => {
+    fetchStats()
+    const interval = setInterval(fetchStats, 15000)
+    return () => clearInterval(interval)
+  }, [fetchStats])
+  
+  if (!stats) return <div className="text-gray-500 text-sm">Loading...</div>
+  
+  return (
+    <div className="grid grid-cols-3 gap-4">
+      <div className="space-y-2">
+        <div className="flex items-center gap-2">
+          <span>👻</span>
+          <span className="text-white font-medium">Ghost Tags</span>
+          {stats.isRunning ? (
+            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+          ) : (
+            <span className="w-2 h-2 bg-red-500 rounded-full" />
+          )}
+        </div>
+        <div className="text-2xl font-bold text-purple-400">{stats.stats?.totalTags ?? 0}</div>
+        <div className="text-xs text-gray-500">tags today • {stats.modelsActive} models</div>
+      </div>
+      <div className="space-y-2">
+        <div className="flex items-center gap-2">
+          <span>📌</span>
+          <span className="text-white font-medium">Pinned Posts</span>
+          {stats.pinned?.enabled ? (
+            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+          ) : (
+            <span className="w-2 h-2 bg-gray-500 rounded-full" />
+          )}
+        </div>
+        <div className="text-2xl font-bold text-yellow-400">{stats.pinned?.activePosts ?? 0}</div>
+        <div className="text-xs text-gray-500">active pins • day {stats.pinned?.dayIndex ?? '?'}</div>
+      </div>
+      <div className="space-y-2">
+        <div className="flex items-center gap-2">
+          <span>📨</span>
+          <span className="text-white font-medium">Mass DMs</span>
+          {stats.massDm?.enabled ? (
+            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+          ) : (
+            <span className="w-2 h-2 bg-gray-500 rounded-full" />
+          )}
+        </div>
+        <div className="text-2xl font-bold text-cyan-400">
+          {stats.massDm?.todaySent ?? 0}
+          <span className="text-sm text-gray-500"> / {stats.massDm?.todayTotal ?? 0}</span>
+        </div>
+        <div className="text-xs text-gray-500">sent today</div>
+      </div>
+    </div>
+  )
+}
+
 function DashboardView({ rotationStatus, models }: { rotationStatus: string; models: Model[] }) {
   const NETWORK_STATS = computeNetworkStats(models)
   const sortedByFans = [...models].sort((a, b) => b.fans - a.fans)
@@ -154,10 +220,10 @@ function DashboardView({ rotationStatus, models }: { rotationStatus: string; mod
         </div>
         <div className="bg-gray-900 rounded-xl p-4 border border-gray-800">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-2xl">👻</span>
+            <span className="text-2xl">❤️</span>
           </div>
-          <div className="text-3xl font-bold text-white">0</div>
-          <div className="text-sm text-gray-400">Ghost Tags Today</div>
+          <div className="text-3xl font-bold text-white">{NETWORK_STATS.totalLikes.toLocaleString()}</div>
+          <div className="text-sm text-gray-400">Total Likes</div>
         </div>
       </div>
 
@@ -195,54 +261,16 @@ function DashboardView({ rotationStatus, models }: { rotationStatus: string; mod
         </div>
       </div>
 
-      {/* Network Status */}
-      <div className="grid grid-cols-2 gap-4">
-        <div className="bg-gray-900 rounded-xl p-6 border border-gray-800">
-          <h3 className="text-lg font-semibold text-white mb-4">🔄 Ghost Tag Rotation</h3>
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span className="text-gray-400">Status</span>
-              <span className={rotationStatus === 'running' ? 'text-green-400' : 'text-gray-500'}>
-                {rotationStatus === 'running' ? 'Active' : 'Inactive'}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-400">Interval</span>
-              <span className="text-white">4.3 min (15 models)</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-400">Delete After</span>
-              <span className="text-white">5 minutes</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-400">Posts Today</span>
-              <span className="text-white">0</span>
-            </div>
+      {/* Live S4S Status — links to /rotation for full dashboard */}
+      <a href="/rotation" className="block">
+        <div className="bg-gray-900 rounded-xl p-6 border border-gray-800 hover:border-purple-500/50 transition-colors cursor-pointer">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-white">⚡ S4S Operations</h3>
+            <span className="text-xs text-gray-500">Click for full dashboard →</span>
           </div>
+          <LiveS4SStatus />
         </div>
-
-        <div className="bg-gray-900 rounded-xl p-6 border border-gray-800">
-          <h3 className="text-lg font-semibold text-white mb-4">📌 24hr Pinned Posts</h3>
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span className="text-gray-400">Status</span>
-              <span className="text-gray-500">Not configured</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-400">Models/Day</span>
-              <span className="text-white">10-11</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-400">Active Posts</span>
-              <span className="text-white">0</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-400">API Parameter</span>
-              <span className="text-white font-mono text-xs">expireDays: 1</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      </a>
     </div>
   )
 }
