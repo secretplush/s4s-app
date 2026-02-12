@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
-import { CONNECTED_MODELS } from '@/lib/models-data'
+import { loadCachedModels } from '@/lib/models-data'
 import { loadImages } from '@/lib/indexed-db'
 
 interface Status {
@@ -52,7 +52,8 @@ export default function ControlPanel() {
       const mappings: Record<string, Record<string, string>> = {}
       const models: { id: string; username: string }[] = []
       
-      for (const model of CONNECTED_MODELS) {
+      const MODELS = loadCachedModels()
+      for (const model of MODELS) {
         models.push({ id: model.id, username: model.username })
         
         // Load images for this model (as target - they uploaded promos of themselves)

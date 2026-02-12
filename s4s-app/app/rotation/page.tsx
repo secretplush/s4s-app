@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
-import { CONNECTED_MODELS } from '@/lib/models-data'
+import { useModels } from '@/lib/use-models'
 import { 
   calculateDailyGhostSchedule,
   getRotationStats, 
@@ -46,6 +46,7 @@ interface RailwayStats {
 }
 
 export default function RotationPage() {
+  const { models: CONNECTED_MODELS } = useModels()
   const [schedule, setSchedule] = useState<ScheduleSlot[]>([])
   const [stats, setStats] = useState<ReturnType<typeof getRotationStats> | null>(null)
   const [currentHour, setCurrentHour] = useState(0)

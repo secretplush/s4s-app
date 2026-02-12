@@ -1,40 +1,6 @@
 import { NextResponse } from 'next/server'
 import { kv } from '@vercel/kv'
-
-// Models data - must match CONNECTED_MODELS in lib/models-data.ts
-const CONNECTED_MODELS = [
-  { id: 'acct_ebca85077e0a4b7da04cf14176466411', username: 'milliexhart' },
-  { id: 'acct_f05bf7874c974a5d875a1ef01c5bbc3b', username: 'zoepriceee' },
-  { id: 'acct_9ee32f0bac4e4e8394a09f2c9fa2fbb7', username: 'novaleighh' },
-  { id: 'acct_0653d6e6c3984bea8d3adc84cc616c7c', username: 'lucymonroee' },
-  { id: 'acct_6bb6d77ac2c741ecb54d865237bb04f4', username: 'chloecookk' },
-  { id: 'acct_bd6a75d6943141589cf5e43586653258', username: 'jackiesmithh' },
-  { id: 'acct_749c75e13d7e4685813f2a2867ce614d', username: 'brookeewest' },
-  { id: 'acct_b0b0698a614643c5932cfccd23f7c430', username: 'ayaaann' },
-  { id: 'acct_b5e739f9f40a4da99b2f5ca559168012', username: 'chloeecavalli' },
-  { id: 'acct_cfb853d0ba714aeaa9a89e3026ec6190', username: 'sadieeblake' },
-  { id: 'acct_bde8d615937548f18c4e54b7cedf8c1d', username: 'lolasinclairr' },
-  { id: 'acct_a50799a789a6422c8389d7d055fcbd1a', username: 'maddieharperr' },
-  { id: 'acct_fbd172e2681f4dfbb6026ce806ecaa28', username: 'zoeemonroe' },
-  { id: 'acct_54e3119e77da4429b6537f7dd2883a05', username: 'biancaawoods' },
-  { id: 'acct_2648cedf59644b0993ade9608bd868a1', username: 'aviannaarose' },
-  // New models added 2026-02-10
-  { id: 'acct_29037b1ef83d4c838ab2ec49d61d26f6', username: 'jessicaparkerrr' },
-  { id: 'acct_487806e5751b487bb302793ee1c3ef2c', username: 'kaliblakexo' },
-  { id: 'acct_c85c710e083f4b4a94d826f76855543d', username: 'laceythomass' },
-  { id: 'acct_04d878af1813422fa6b310991f687d73', username: 'lindamarievip' },
-  { id: 'acct_e84886b3217e4fbd8f82ee63ca8894e8', username: 'lilyyymonroee' },
-  { id: 'acct_bfd09358f67849cba6d9f8cf4a565cd2', username: 'dollyrhodesss' },
-  { id: 'acct_b5f1a5fc3cfd4a959dbea7230814ae71', username: 'chelseapaige' },
-  { id: 'acct_8b4b062aeef1441ba8f51a7b0f3fe5f2', username: 'thesarasky' },
-  { id: 'acct_15870053c2604e0f9e94d14a10749923', username: 'yourrfavblondie' },
-  { id: 'acct_7a273714a275417992b0f7c1d3389a2c', username: 'skyyroseee' },
-  { id: 'acct_766a8451ee6946009d20581ab11fdfc4', username: 'tyybabyy' },
-  { id: 'acct_ac70731a489741f0b6abc45a050f0301', username: 'itsmealexisrae' },
-  { id: 'acct_40e51b831b3247ac806755362b494fe5', username: 'lolaxmae' },
-  { id: 'acct_6f2328ebe4c446038ea1847d2dbecc17', username: 'rebeccabrownn' },
-  { id: 'acct_9665889fec2b46e9a05232afee59ef19', username: 'oliviabrookess' },
-]
+import { getServerModels } from '@/lib/models-data'
 
 const HOUR_WEIGHTS: Record<number, number> = {
   0: 4, 1: 9, 2: 6, 3: 3, 4: 8, 5: 4, 6: 4, 7: 7, 8: 3, 9: 3,
@@ -52,8 +18,7 @@ interface ScheduleItem {
  * Generate a 24h Railway-compatible schedule
  * Returns: { modelUsername: [{ target, scheduledTime, executed }, ...], ... }
  */
-function generateRailwaySchedule(): Record<string, ScheduleItem[]> {
-  const models = CONNECTED_MODELS
+function generateRailwaySchedule(models: { id: string; username: string }[]): Record<string, ScheduleItem[]> {
   const n = models.length
   const schedule: Record<string, ScheduleItem[]> = {}
   
@@ -130,7 +95,8 @@ function generateRailwaySchedule(): Record<string, ScheduleItem[]> {
 }
 
 export async function GET() {
-  const schedule = generateRailwaySchedule()
+  const allModels = await getServerModels()
+  const schedule = generateRailwaySchedule(allModels)
   
   const totalTags = Object.values(schedule).reduce((sum, s) => sum + s.length, 0)
   const models = Object.keys(schedule).length
@@ -158,7 +124,8 @@ export async function POST() {
   
   try {
     // Generate fresh 24h schedule
-    const schedule = generateRailwaySchedule()
+    const allModels = await getServerModels()
+    const schedule = generateRailwaySchedule(allModels)
     
     const totalTags = Object.values(schedule).reduce((sum, s) => sum + s.length, 0)
     const models = Object.keys(schedule).length

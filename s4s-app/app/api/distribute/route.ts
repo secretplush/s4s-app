@@ -59,6 +59,7 @@ interface VaultResult {
   username: string
   vaultId: string | null
   error?: string
+  rawResponse?: any
 }
 
 // Convert base64 data URL to Buffer
@@ -74,7 +75,7 @@ function base64ToBuffer(dataUrl: string): { buffer: Buffer; mimeType: string } {
 }
 
 // Upload image and get vault_id via post-then-delete trick
-async function uploadToVault(username: string, imageBase64: string, filename: string, sourceUsername: string, accountIds: { [username: string]: string }): Promise<{ vaultId: string | null; error?: string }> {
+async function uploadToVault(username: string, imageBase64: string, filename: string, sourceUsername: string, accountIds: { [username: string]: string }): Promise<{ vaultId: string | null; error?: string; rawResponse?: any }> {
   const accountId = accountIds[username]
   if (!accountId) {
     return { vaultId: null, error: `No account ID for ${username} (not found in OF API)` }
@@ -136,10 +137,29 @@ async function uploadToVault(username: string, imageBase64: string, filename: st
     const postData = postResponse.data || postResponse
     const postId = postData.id || postData.post_id
 
-    // Extract vault_id from the post's media
+    // Log full response for debugging vault_id extraction
+    console.log(`[uploadToVault] ${username} full postResponse:`, JSON.stringify(postResponse, null, 2))
+    if (postData.media && postData.media.length > 0) {
+      console.log(`[uploadToVault] ${username} media[0] keys:`, Object.keys(postData.media[0]))
+      console.log(`[uploadToVault] ${username} media[0]:`, JSON.stringify(postData.media[0], null, 2))
+    }
+
+    // Extract vault_id from the post's media - try multiple paths
     let vaultId: string | null = null
     if (postData.media && postData.media.length > 0) {
-      vaultId = postData.media[0].id?.toString() || postData.media[0].vault_id?.toString()
+      const m = postData.media[0]
+      vaultId = m.id?.toString()
+        || m.vault_id?.toString()
+        || m.mediaId?.toString()
+        || m.media_id?.toString()
+        || m.canView?.toString()
+        || null
+      // Try extracting numeric ID from file URLs as last resort
+      if (!vaultId && m.files) {
+        const urlMatch = JSON.stringify(m.files).match(/\/(\d{5,})/)
+        if (urlMatch) vaultId = urlMatch[1]
+      }
+      console.log(`[uploadToVault] ${username} extracted vaultId: ${vaultId}`)
     }
 
     // Step 3: Delete the post immediately (vault copy remains)
@@ -160,10 +180,10 @@ async function uploadToVault(username: string, imageBase64: string, filename: st
     }
 
     if (!vaultId) {
-      return { vaultId: null, error: 'Could not extract vault_id from post' }
+      return { vaultId: null, error: 'Could not extract vault_id from post', rawResponse: postResponse }
     }
 
-    return { vaultId }
+    return { vaultId, rawResponse: postResponse }
 
   } catch (e) {
     return { vaultId: null, error: `Exception: ${e}` }
@@ -188,12 +208,13 @@ export async function POST(req: NextRequest) {
       await new Promise(r => setTimeout(r, index * 1000))
       
       console.log(`Distributing to ${username}...`)
-      const { vaultId, error } = await uploadToVault(username, imageBase64, filename, sourceUsername, accountIds)
+      const { vaultId, error, rawResponse } = await uploadToVault(username, imageBase64, filename, sourceUsername, accountIds)
       
       return {
         username,
         vaultId,
-        error
+        error,
+        rawResponse
       } as VaultResult
     })
 

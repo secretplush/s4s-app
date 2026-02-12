@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
-import { CONNECTED_MODELS, calculateLTV } from '@/lib/models-data'
+import { calculateLTV, loadCachedModels } from '@/lib/models-data'
 import { 
   loadImages, 
   saveImages, 
@@ -14,32 +14,14 @@ import {
 export default function ModelPage() {
   const params = useParams()
   const username = params.username as string
-  // Check hardcoded list first, then localStorage for synced models
+  // Load model from localStorage cached models
   const [model, setModel] = useState<any>(() => {
-    const found = CONNECTED_MODELS.find(m => m.username === username)
-    if (found) return found
-    if (typeof window !== 'undefined') {
-      try {
-        const cached = localStorage.getItem('synced_models')
-        if (cached) {
-          const synced = JSON.parse(cached)
-          return synced.find((m: any) => m.username === username) || null
-        }
-      } catch {}
-    }
-    return null
+    const cached = loadCachedModels()
+    return cached.find((m: any) => m.username === username) || null
   })
 
-  // Get all models (synced or hardcoded) for vault count
-  const allModels = (() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const cached = localStorage.getItem('synced_models')
-        if (cached) return JSON.parse(cached)
-      } catch {}
-    }
-    return CONNECTED_MODELS
-  })()
+  // Get all models from cache
+  const allModels = loadCachedModels()
 
   const [promoImages, setPromoImages] = useState<PromoImage[]>([])
   const [loaded, setLoaded] = useState(false)

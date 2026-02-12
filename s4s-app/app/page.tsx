@@ -3,13 +3,15 @@
 import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { CONNECTED_MODELS, NETWORK_STATS, Model, calculateLTV } from '@/lib/models-data'
+import { Model, calculateLTV, computeNetworkStats } from '@/lib/models-data'
+import { useModels } from '@/lib/use-models'
 import { getImageCounts, migrateFromLocalStorage, loadImages, getAllUsernames, syncToKV } from '@/lib/indexed-db'
 
 function DashboardContent() {
   const searchParams = useSearchParams()
   const tabParam = searchParams.get('tab') as 'dashboard' | 'models' | 'rotation' | 'analytics' | 'settings' | null
   const [activeTab, setActiveTab] = useState<'dashboard' | 'models' | 'rotation' | 'analytics' | 'settings'>('dashboard')
+  const { models: allModels, loading: modelsLoading, refresh: refreshModels } = useModels()
   
   // Sync tab from URL
   useEffect(() => {
@@ -92,10 +94,10 @@ function DashboardContent() {
 
         {/* Main Content */}
         <main className="flex-1 p-6">
-          {activeTab === 'dashboard' && <DashboardView rotationStatus={rotationStatus} />}
-          {activeTab === 'models' && <ModelsView models={CONNECTED_MODELS} />}
-          {activeTab === 'rotation' && <RotationView />}
-          {activeTab === 'analytics' && <AnalyticsView />}
+          {activeTab === 'dashboard' && <DashboardView rotationStatus={rotationStatus} models={allModels} />}
+          {activeTab === 'models' && <ModelsView models={allModels} onRefresh={refreshModels} />}
+          {activeTab === 'rotation' && <RotationView models={allModels} />}
+          {activeTab === 'analytics' && <AnalyticsView models={allModels} />}
           {activeTab === 'settings' && <SettingsView />}
         </main>
       </div>
@@ -111,8 +113,9 @@ export default function Dashboard() {
   )
 }
 
-function DashboardView({ rotationStatus }: { rotationStatus: string }) {
-  const sortedByFans = [...CONNECTED_MODELS].sort((a, b) => b.fans - a.fans)
+function DashboardView({ rotationStatus, models }: { rotationStatus: string; models: Model[] }) {
+  const NETWORK_STATS = computeNetworkStats(models)
+  const sortedByFans = [...models].sort((a, b) => b.fans - a.fans)
   
   return (
     <div className="space-y-6">
@@ -309,6 +312,29 @@ function VaultGapsModal({ models, onClose }: { models: Model[]; onClose: () => v
     setChecking(false)
   }
 
+  const dismissGap = async (sourceUsername: string, targetUsername: string) => {
+    try {
+      // Save synthetic vault ID to IndexedDB
+      const images = await loadImages(sourceUsername)
+      const activeImg = images.find(img => img.isActive)
+      if (activeImg) {
+        const { saveImages } = await import('@/lib/indexed-db')
+        const updatedImages = images.map(img =>
+          img.id === activeImg.id
+            ? { ...img, vaultIds: { ...img.vaultIds, [targetUsername]: 'manual_verified' } }
+            : img
+        )
+        await saveImages(sourceUsername, updatedImages)
+      }
+      // Sync to KV
+      await syncToKV()
+      // Re-scan
+      await checkGaps()
+    } catch (e) {
+      console.error('Failed to dismiss gap:', e)
+    }
+  }
+
   // Auto-check on mount
   useEffect(() => { checkGaps() }, [])
 
@@ -472,7 +498,14 @@ function VaultGapsModal({ models, onClose }: { models: Model[]; onClose: () => v
                     {expanded.has(g.targetUsername) && (
                       <div className="px-3 py-2 bg-gray-800/50 flex flex-wrap gap-1">
                         {g.missingFrom.map(m => (
-                          <span key={m} className="text-xs px-2 py-0.5 bg-yellow-500/20 text-yellow-400 rounded">@{m}</span>
+                          <span key={m} className="text-xs px-2 py-0.5 bg-yellow-500/20 text-yellow-400 rounded inline-flex items-center gap-1">
+                            @{m}
+                            <button
+                              onClick={(e) => { e.stopPropagation(); dismissGap(m, g.targetUsername) }}
+                              className="ml-0.5 hover:text-green-400 text-yellow-600"
+                              title="Dismiss (mark as verified)"
+                            >✓</button>
+                          </span>
                         ))}
                       </div>
                     )}
@@ -539,17 +572,7 @@ function VaultGapsModal({ models, onClose }: { models: Model[]; onClose: () => v
   )
 }
 
-function ModelsView({ models: initialModels }: { models: Model[] }) {
-  // Load synced models from localStorage, falling back to hardcoded
-  const [models, setModels] = useState<Model[]>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const cached = localStorage.getItem('synced_models')
-        if (cached) return JSON.parse(cached)
-      } catch {}
-    }
-    return initialModels
-  })
+function ModelsView({ models, onRefresh }: { models: Model[]; onRefresh: () => Promise<Model[]> }) {
   const sortedModels = [...models].sort((a, b) => b.fans - a.fans)
   const [imageCounts, setImageCounts] = useState<{[key: string]: { total: number; active: number; needsDistribution?: boolean; vaultStatus?: string }}>({})
   const [showSyncModal, setShowSyncModal] = useState(false)
@@ -570,32 +593,10 @@ function ModelsView({ models: initialModels }: { models: Model[] }) {
     setSyncing(true)
     setSyncResult(null)
     try {
-      const res = await fetch('/api/sync-accounts')
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error)
-      
-      const liveModels: Model[] = data.accounts.map((a: any) => {
-        // Preserve earnings from static data if available
-        const existing = initialModels.find(m => m.username === a.username)
-        return {
-          id: a.id,
-          username: a.username,
-          displayName: a.displayName,
-          fans: a.fans,
-          likes: a.likes,
-          avatar: a.avatar,
-          connected: a.isAuthenticated,
-          totalEarnings: existing?.totalEarnings || 0,
-        }
-      })
-      
-      const existingUsernames = new Set(initialModels.map(m => m.username))
-      const newAccounts = liveModels.filter(m => !existingUsernames.has(m.username))
+      const prevUsernames = new Set(models.map(m => m.username))
+      const liveModels = await onRefresh()
+      const newAccounts = liveModels.filter(m => !prevUsernames.has(m.username))
       const needsPhotos = liveModels.filter(m => !imageCounts[m.username]?.total)
-      
-      setModels(liveModels)
-      // Persist to localStorage so model pages can find synced models
-      localStorage.setItem('synced_models', JSON.stringify(liveModels))
       setSyncResult({ total: liveModels.length, newCount: newAccounts.length, needsPhotos: needsPhotos.length })
     } catch (e) {
       console.error('Sync failed:', e)
@@ -727,8 +728,8 @@ function ModelsView({ models: initialModels }: { models: Model[] }) {
   )
 }
 
-function RotationView() {
-  const modelCount = CONNECTED_MODELS.length
+function RotationView({ models }: { models: Model[] }) {
+  const modelCount = models.length
   const interval = 60 / (modelCount - 1)
   const postsPerHour = modelCount * (modelCount - 1)
   
@@ -847,9 +848,10 @@ function RotationView() {
   )
 }
 
-function AnalyticsView() {
-  const sortedByFans = [...CONNECTED_MODELS].sort((a, b) => b.fans - a.fans)
-  const sortedByLTV = [...CONNECTED_MODELS].sort((a, b) => calculateLTV(b) - calculateLTV(a))
+function AnalyticsView({ models }: { models: Model[] }) {
+  const NETWORK_STATS = computeNetworkStats(models)
+  const sortedByFans = [...models].sort((a, b) => b.fans - a.fans)
+  const sortedByLTV = [...models].sort((a, b) => calculateLTV(b) - calculateLTV(a))
   
   return (
     <div className="space-y-6">
@@ -869,7 +871,7 @@ function AnalyticsView() {
           <div className="text-sm text-gray-400">Network Avg LTV</div>
         </div>
         <div className="bg-gray-900 rounded-xl p-4 border border-gray-800">
-          <div className="text-3xl font-bold text-white">{Math.round(NETWORK_STATS.totalFans / 15).toLocaleString()}</div>
+          <div className="text-3xl font-bold text-white">{models.length > 0 ? Math.round(NETWORK_STATS.totalFans / models.length).toLocaleString() : '0'}</div>
           <div className="text-sm text-gray-400">Avg Fans/Model</div>
         </div>
       </div>
@@ -908,7 +910,7 @@ function AnalyticsView() {
           <div className="space-y-3">
             {sortedByLTV.map(model => {
               const ltv = calculateLTV(model)
-              const maxLTV = Math.max(...CONNECTED_MODELS.map(m => calculateLTV(m)), 1)
+              const maxLTV = Math.max(...models.map(m => calculateLTV(m)), 1)
               const percentage = (ltv / maxLTV) * 100
               return (
                 <div key={model.id} className="flex items-center gap-3">
