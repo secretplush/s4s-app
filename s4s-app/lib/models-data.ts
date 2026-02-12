@@ -71,7 +71,7 @@ export async function fetchAndCacheModels(): Promise<Model[]> {
       likes: a.likes,
       avatar: a.avatar,
       connected: a.isAuthenticated,
-      totalEarnings: earningsMap[a.username]?.gross || 0,
+      totalEarnings: earningsMap[a.username]?.net || 0,
     }))
 
     // Cache
