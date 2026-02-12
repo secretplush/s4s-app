@@ -268,18 +268,8 @@ function VaultGapsModal({ models, onClose }: { models: Model[]; onClose: () => v
     setFixResults([])
     setFixProgress(null)
     try {
-      // Scan IndexedDB AND cross-reference KV as fallback
+      // Scan IndexedDB only — this is the source of truth (matches model page counts)
       const allUsernames = models.map(m => m.username)
-
-      // Fetch KV mappings as fallback source
-      let kvMappings: Record<string, Record<string, string>> = {}
-      try {
-        const kvRes = await fetch('/api/vault-gaps?raw=1')
-        const kvData = await kvRes.json()
-        if (kvData.mappings) kvMappings = kvData.mappings
-      } catch (e) {
-        console.warn('Could not fetch KV mappings, using IndexedDB only:', e)
-      }
 
       const gapsFound: VaultGap[] = []
       let total = 0
@@ -288,12 +278,10 @@ function VaultGapsModal({ models, onClose }: { models: Model[]; onClose: () => v
         const missing: string[] = []
         for (const source of allUsernames) {
           if (source === target) continue
-          // Check IndexedDB first — check ALL images, not just active
+          // Check ALL images in IndexedDB, not just active
           const images = await loadImages(source)
-          const hasInIdb = images.some(img => img.vaultIds?.[target])
-          // Fallback: check KV mappings
-          const hasInKv = kvMappings[source]?.[target]
-          if (!hasInIdb && !hasInKv) {
+          const hasVaultId = images.some(img => img.vaultIds?.[target])
+          if (!hasVaultId) {
             missing.push(source)
           }
         }
