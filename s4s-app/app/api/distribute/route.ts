@@ -84,6 +84,7 @@ async function uploadToVault(username: string, imageBase64: string, filename: st
   try {
     // Convert base64 to buffer for multipart upload
     const { buffer, mimeType } = base64ToBuffer(imageBase64)
+    console.log(`[uploadToVault] ${username} image size: ${(buffer.length / 1024).toFixed(0)}KB`)
     
     // Step 1: Upload the media using multipart/form-data
     const formData = new FormData()

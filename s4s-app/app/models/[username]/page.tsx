@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
+import { compressImage } from '@/lib/image-utils'
 import { calculateLTV, loadCachedModels } from '@/lib/models-data'
 import { 
   loadImages, 
@@ -162,7 +163,7 @@ export default function ModelPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          imageBase64: image.base64,
+          imageBase64: await compressImage(image.base64),
           filename: image.filename,
           sourceUsername: username,
           targetUsernames

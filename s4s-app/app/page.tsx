@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { Model, calculateLTV, computeNetworkStats } from '@/lib/models-data'
 import { useModels } from '@/lib/use-models'
 import { getImageCounts, migrateFromLocalStorage, loadImages, getAllUsernames, syncToKV } from '@/lib/indexed-db'
+import { compressImage } from '@/lib/image-utils'
 
 function DashboardContent() {
   const searchParams = useSearchParams()
@@ -397,7 +398,7 @@ function VaultGapsModal({ models, onClose }: { models: Model[]; onClose: () => v
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              imageBase64: activeImg.base64,
+              imageBase64: await compressImage(activeImg.base64),
               filename: activeImg.filename || `${sourceUsername}_promo.jpg`,
               sourceUsername,
               targetUsernames: chunk
