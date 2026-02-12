@@ -18,14 +18,16 @@ interface ScheduleItem {
  * Generate a 24h Railway-compatible schedule
  * Returns: { modelUsername: [{ target, scheduledTime, executed }, ...], ... }
  */
+// Models that promote others but are NEVER tagged themselves (no promo image)
+const PROMOTER_ONLY = new Set(['taylorskully'])
+
 function generateRailwaySchedule(models: { id: string; username: string }[]): Record<string, ScheduleItem[]> {
   const n = models.length
+  const targetableModels = models.filter(m => !PROMOTER_ONLY.has(m.username))
   const schedule: Record<string, ScheduleItem[]> = {}
   
-  const MAX_OUTBOUND_PER_MODEL = 56
-  const targetsPerModel = n - 1
-  const TAGS_PER_PAIR = Math.max(1, Math.round(MAX_OUTBOUND_PER_MODEL / targetsPerModel))
-  const tagsPerModel = targetsPerModel * TAGS_PER_PAIR
+  const TAGS_PER_MODEL_PER_DAY = 57
+  const tagsPerModel = TAGS_PER_MODEL_PER_DAY
   
   const now = Date.now()
   const dayOfYear = Math.floor((now - new Date(new Date().getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24))
@@ -49,12 +51,10 @@ function generateRailwaySchedule(models: { id: string; username: string }[]): Re
     const modelOffset = (promoterIdx * 2 * 60 * 1000) // 2 min stagger per model
     
     for (let tagIdx = 0; tagIdx < tagsPerModel; tagIdx++) {
-      // Rotate through targets
-      const targetOffset = tagIdx % (n - 1)
-      let targetIdx = (promoterIdx + targetOffset + 1) % n
-      if (targetIdx === promoterIdx) targetIdx = (targetIdx + 1) % n
-      
-      const target = models[targetIdx]
+      // Rotate through targetable models (excludes promoter-only)
+      const target = targetableModels[tagIdx % targetableModels.length]
+      // Skip if targeting self
+      if (target.username === promoter.username) continue
       
       // Base time for this tag
       let scheduledTime = now + startOffset + modelOffset + (tagIdx * baseSpacingMs)
