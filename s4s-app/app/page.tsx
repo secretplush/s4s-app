@@ -382,58 +382,60 @@ function VaultGapsModal({ models, onClose }: { models: Model[]; onClose: () => v
         continue
       }
 
-      setFixProgress({ current: completed, total: totalGaps, label: `📤 ${sourceUsername} → ${targetUsernames.length} models (parallel)` })
+      setFixProgress({ current: completed, total: totalGaps, label: `📤 ${sourceUsername} → ${targetUsernames.length} models` })
 
       try {
-        // Use /api/distribute — uploads to all targets in PARALLEL
-        const res = await fetch('/api/distribute', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            imageBase64: activeImg.base64,
-            filename: activeImg.filename || `${sourceUsername}_promo.jpg`,
-            sourceUsername,
-            targetUsernames
+        // Chunk targets into groups of 3 to avoid API timeouts and rate limits
+        const CHUNK_SIZE = 3
+        const allChunkResults: any[] = []
+        
+        for (let ci = 0; ci < targetUsernames.length; ci += CHUNK_SIZE) {
+          const chunk = targetUsernames.slice(ci, ci + CHUNK_SIZE)
+          setFixProgress({ current: completed, total: totalGaps, label: `📤 ${sourceUsername} → batch ${Math.floor(ci/CHUNK_SIZE)+1}/${Math.ceil(targetUsernames.length/CHUNK_SIZE)}` })
+          
+          const res = await fetch('/api/distribute', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              imageBase64: activeImg.base64,
+              filename: activeImg.filename || `${sourceUsername}_promo.jpg`,
+              sourceUsername,
+              targetUsernames: chunk
+            })
           })
-        })
-        const text = await res.text()
-        let data: any
-        try {
-          data = JSON.parse(text)
-        } catch {
-          throw new Error(text.slice(0, 100))
+          const text = await res.text()
+          let chunkData: any
+          try {
+            chunkData = JSON.parse(text)
+          } catch {
+            throw new Error(text.slice(0, 100))
+          }
+          if (chunkData.results) allChunkResults.push(...chunkData.results)
+        }
+        
+        // Update vaultIds in IndexedDB image
+        const newVaultIds: Record<string, string> = {}
+        for (const r of allChunkResults) {
+          completed++
+          results.push({
+            label: `${sourceUsername} → ${r.username}`,
+            success: !!r.vaultId,
+            error: r.error
+          })
+          if (r.vaultId) {
+            newVaultIds[r.username] = r.vaultId
+          }
         }
 
-        if (data.success && data.results) {
-          // Update vaultIds in IndexedDB image
-          const newVaultIds: Record<string, string> = {}
-          for (const r of data.results) {
-            completed++
-            results.push({
-              label: `${sourceUsername} → ${r.username}`,
-              success: !!r.vaultId,
-              error: r.error
-            })
-            if (r.vaultId) {
-              newVaultIds[r.username] = r.vaultId
-            }
-          }
-
-          // Save updated vaultIds back to IndexedDB
-          if (Object.keys(newVaultIds).length > 0) {
-            const { saveImages } = await import('@/lib/indexed-db')
-            const updatedImages = images.map(img =>
-              img.id === activeImg.id
-                ? { ...img, vaultIds: { ...img.vaultIds, ...newVaultIds } }
-                : img
-            )
-            await saveImages(sourceUsername, updatedImages)
-          }
-        } else {
-          for (const t of targetUsernames) {
-            completed++
-            results.push({ label: `${sourceUsername} → ${t}`, success: false, error: data.error || 'API error' })
-          }
+        // Save updated vaultIds back to IndexedDB
+        if (Object.keys(newVaultIds).length > 0) {
+          const { saveImages } = await import('@/lib/indexed-db')
+          const updatedImages = images.map(img =>
+            img.id === activeImg.id
+              ? { ...img, vaultIds: { ...img.vaultIds, ...newVaultIds } }
+              : img
+          )
+          await saveImages(sourceUsername, updatedImages)
         }
       } catch (e) {
         for (const t of targetUsernames) {

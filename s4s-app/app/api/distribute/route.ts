@@ -202,23 +202,23 @@ export async function POST(req: NextRequest) {
     // Fetch account IDs dynamically from OF API
     const accountIds = await getAccountIds()
 
-    // Process all models in parallel (each has its own account, so rate limits are per-account)
-    const promises = targetUsernames.map(async (username, index) => {
-      // Stagger starts by 1 second to avoid overwhelming the API
-      await new Promise(r => setTimeout(r, index * 1000))
-      
-      console.log(`Distributing to ${username}...`)
-      const { vaultId, error, rawResponse } = await uploadToVault(username, imageBase64, filename, sourceUsername, accountIds)
-      
-      return {
-        username,
-        vaultId,
-        error,
-        rawResponse
-      } as VaultResult
-    })
-
-    const results = await Promise.all(promises)
+    // Process all targets concurrently — each uses a different OF account
+    // The 11s delay inside uploadToVault is per-account, so parallel is safe
+    // Limit concurrency to 3 to avoid global API rate limits
+    const CONCURRENCY = 3
+    const results: VaultResult[] = []
+    
+    for (let i = 0; i < targetUsernames.length; i += CONCURRENCY) {
+      const batch = targetUsernames.slice(i, i + CONCURRENCY)
+      const batchResults = await Promise.all(
+        batch.map(async (username) => {
+          console.log(`Distributing to ${username}...`)
+          const { vaultId, error, rawResponse } = await uploadToVault(username, imageBase64, filename, sourceUsername, accountIds)
+          return { username, vaultId, error, rawResponse } as VaultResult
+        })
+      )
+      results.push(...batchResults)
+    }
 
     const successful = results.filter(r => r.vaultId !== null)
     const failed = results.filter(r => r.vaultId === null)
