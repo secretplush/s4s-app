@@ -595,42 +595,48 @@ function Step4ReverseDistribute({ username, allModels, onNext, onBack }: {
       }))
     )
 
-    setProgress({ current: 0, total: compressed.length, label: `Uploading ${compressed.length} images in batch...` })
+    // Send in batches of 10 to stay under Vercel's body size limit
+    const BATCH_SIZE = 10
+    let totalSuccess = 0
 
-    // Send ALL images in one batch API call
-    try {
-      const res = await fetch('/api/distribute-batch', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          targetUsername: username,
-          images: compressed
+    for (let i = 0; i < compressed.length; i += BATCH_SIZE) {
+      const batch = compressed.slice(i, i + BATCH_SIZE)
+      setProgress({ current: i, total: compressed.length, label: `Uploading batch ${Math.floor(i / BATCH_SIZE) + 1}/${Math.ceil(compressed.length / BATCH_SIZE)} (${batch.length} images)...` })
+
+      try {
+        const res = await fetch('/api/distribute-batch', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            targetUsername: username,
+            images: batch
+          })
         })
-      })
-      const data = await res.json()
+        const data = await res.json()
 
-      if (data.results) {
-        for (const r of data.results) {
-          if (r.vaultId) {
-            // Update source model's image in IndexedDB
-            const allImgs = await loadImages(r.sourceUsername)
-            const updated = allImgs.map(i =>
-              (i as any).imageId === r.imageId || i.id === r.imageId
-                ? { ...i, vaultIds: { ...i.vaultIds, [username]: r.vaultId } }
-                : i
-            )
-            await saveImages(r.sourceUsername, updated)
-            setCompletedModels(prev => { const next = new Set(prev); next.add(r.sourceUsername); return next })
-          } else if (r.error) {
-            setErrors(prev => [...prev, { model: r.sourceUsername, error: r.error }])
+        if (data.results) {
+          for (const r of data.results) {
+            if (r.vaultId) {
+              totalSuccess++
+              const allImgs = await loadImages(r.sourceUsername)
+              const updated = allImgs.map(i =>
+                (i as any).imageId === r.imageId || i.id === r.imageId
+                  ? { ...i, vaultIds: { ...i.vaultIds, [username]: r.vaultId } }
+                  : i
+              )
+              await saveImages(r.sourceUsername, updated)
+              setCompletedModels(prev => { const next = new Set(prev); next.add(r.sourceUsername); return next })
+            } else if (r.error) {
+              setErrors(prev => [...prev, { model: r.sourceUsername, error: r.error }])
+            }
           }
         }
-        setProgress({ current: data.summary?.successful || 0, total: compressed.length, label: `Done! ${data.summary?.successful || 0}/${compressed.length} succeeded` })
+      } catch (e) {
+        setErrors(prev => [...prev, { model: `batch ${Math.floor(i / BATCH_SIZE) + 1}`, error: String(e) }])
       }
-    } catch (e) {
-      setErrors(prev => [...prev, { model: 'batch', error: String(e) }])
     }
 
+    setProgress({ current: totalSuccess, total: compressed.length, label: `Done! ${totalSuccess}/${compressed.length} succeeded` })
     setDistributing(false)
   }
 
