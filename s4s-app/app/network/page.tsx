@@ -58,12 +58,17 @@ export default function NetworkPage() {
             <h1 className="text-xl font-bold">🔌 Network Overview</h1>
             <span className="text-xs text-gray-500">Live from OF API + Railway</span>
           </div>
-          <button
-            onClick={() => loadRailway()}
-            className="px-3 py-1.5 bg-gray-800 hover:bg-gray-700 rounded text-sm"
-          >
-            🔄 Refresh
-          </button>
+          <div className="flex gap-2">
+            <Link href="/add-model" className="px-3 py-1.5 bg-green-600 hover:bg-green-700 rounded text-sm font-medium">
+              ➕ Add Model
+            </Link>
+            <button
+              onClick={() => loadRailway()}
+              className="px-3 py-1.5 bg-gray-800 hover:bg-gray-700 rounded text-sm"
+            >
+              🔄 Refresh
+            </button>
+          </div>
         </div>
       </div>
 

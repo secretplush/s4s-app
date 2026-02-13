@@ -59,6 +59,7 @@ function DashboardContent() {
               { id: 'captions', icon: '💬', label: 'Captions', href: '/captions' },
               { id: 'mass-dm', icon: '📨', label: 'Mass DMs', href: '/mass-dm' },
               { id: 'network', icon: '🔌', label: 'Network', href: '/network' },
+              { id: 'add-model', icon: '➕', label: 'Add Model', href: '/add-model' },
             ].map(item => (
               <li key={item.id}>
                 <Link
