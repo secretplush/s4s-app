@@ -591,12 +591,12 @@ function Step4ReverseDistribute({ username, allModels, onNext, onBack }: {
     const compressed = await Promise.all(
       allPending.map(async (p) => ({
         ...p,
-        base64: await compressImage(p.base64)
+        base64: await compressImage(p.base64, 400 * 1024)
       }))
     )
 
-    // Send in batches of 10 to stay under Vercel's body size limit
-    const BATCH_SIZE = 10
+    // Send in batches of 5 to stay under Vercel's 4.5MB body size limit
+    const BATCH_SIZE = 5
     let totalSuccess = 0
 
     for (let i = 0; i < compressed.length; i += BATCH_SIZE) {
