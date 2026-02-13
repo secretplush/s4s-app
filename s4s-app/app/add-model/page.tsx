@@ -573,47 +573,53 @@ function Step4ReverseDistribute({ username, allModels, onNext, onBack }: {
     let current = 0
     const total = sourceImages.filter(s => !completedModels.has(s.username)).length
 
-    for (const source of sourceImages) {
-      if (completedModels.has(source.username)) continue
-      current++
-      setProgress({ current, total, label: `Uploading from @${source.username} (${current}/${total})` })
+    // Process 5 models in parallel for speed
+    const PARALLEL = 5
+    const pending = sourceImages.filter(s => !completedModels.has(s.username))
+    
+    for (let c = 0; c < pending.length; c += PARALLEL) {
+      const batch = pending.slice(c, c + PARALLEL)
+      
+      await Promise.all(batch.map(async (source) => {
+        current++
+        setProgress({ current: c + batch.length, total, label: `Uploading batch ${Math.floor(c / PARALLEL) + 1}... (${Math.min(c + PARALLEL, total)}/${total})` })
 
-      for (const img of source.images) {
-        if (img.vaultIds[username]) continue // already done
-        if (!img.base64) {
-          setErrors(prev => [...prev, { model: source.username, error: 'No base64 data' }])
-          continue
-        }
-
-        try {
-          const compressed = await compressImage(img.base64)
-          const res = await fetch('/api/distribute-to-new-model', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              targetUsername: username,
-              sourceUsername: source.username,
-              imageId: img.id,
-              base64: compressed
-            })
-          })
-          const data = await res.json()
-          if (data.vaultId) {
-            // Update the source model's image in IndexedDB
-            const allImgs = await loadImages(source.username)
-            const updated = allImgs.map(i =>
-              i.id === img.id ? { ...i, vaultIds: { ...i.vaultIds, [username]: data.vaultId } } : i
-            )
-            await saveImages(source.username, updated)
-          } else {
-            setErrors(prev => [...prev, { model: source.username, error: data.error || 'No vault ID' }])
+        for (const img of source.images) {
+          if (img.vaultIds[username]) continue
+          if (!img.base64) {
+            setErrors(prev => [...prev, { model: source.username, error: 'No base64 data' }])
+            continue
           }
-        } catch (e) {
-          setErrors(prev => [...prev, { model: source.username, error: String(e) }])
-        }
-      }
 
-      setCompletedModels(prev => { const next = new Set(prev); next.add(source.username); return next })
+          try {
+            const compressed = await compressImage(img.base64)
+            const res = await fetch('/api/distribute-to-new-model', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                targetUsername: username,
+                sourceUsername: source.username,
+                imageId: img.id,
+                base64: compressed
+              })
+            })
+            const data = await res.json()
+            if (data.vaultId) {
+              const allImgs = await loadImages(source.username)
+              const updated = allImgs.map(i =>
+                i.id === img.id ? { ...i, vaultIds: { ...i.vaultIds, [username]: data.vaultId } } : i
+              )
+              await saveImages(source.username, updated)
+            } else {
+              setErrors(prev => [...prev, { model: source.username, error: data.error || 'No vault ID' }])
+            }
+          } catch (e) {
+            setErrors(prev => [...prev, { model: source.username, error: String(e) }])
+          }
+        }
+
+        setCompletedModels(prev => { const next = new Set(prev); next.add(source.username); return next })
+      }))
     }
 
     setDistributing(false)
