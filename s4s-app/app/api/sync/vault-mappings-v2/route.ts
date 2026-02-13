@@ -23,6 +23,24 @@ export async function POST(request: Request) {
     await kv.set('vault_mappings_v2', mappings_v2)
     await kv.set('last_sync_v2', new Date().toISOString())
 
+    // Also build and write v1 vault_mappings for backward compat
+    // v1 format: { promoter: { target: vaultId } } (picks first available from any use)
+    const v1: Record<string, Record<string, string>> = {}
+    for (const promoter of Object.keys(mappings_v2)) {
+      v1[promoter] = {}
+      for (const target of Object.keys(mappings_v2[promoter])) {
+        const uses = mappings_v2[promoter][target]
+        const firstVault = uses.ghost?.[0] || uses.pinned?.[0] || uses.massDm?.[0]
+        if (firstVault) v1[promoter][target] = firstVault
+      }
+    }
+    await kv.set('vault_mappings', v1)
+
+    // Trigger worker schedule regeneration
+    try {
+      await fetch('https://s4s-worker-production.up.railway.app/api/regenerate-schedule', { method: 'POST' })
+    } catch (_) {} // best effort
+
     // Count stats
     let totalEntries = 0
     for (const promoter of Object.keys(mappings_v2)) {
