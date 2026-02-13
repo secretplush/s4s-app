@@ -40,6 +40,136 @@ export default function ModelPage() {
   const [removeConfirmText, setRemoveConfirmText] = useState('')
   const [removing, setRemoving] = useState(false)
   const [removeError, setRemoveError] = useState('')
+  const [isDeactivated, setIsDeactivated] = useState(false)
+  const [deactivating, setDeactivating] = useState(false)
+  const [reactivating, setReactivating] = useState(false)
+  const [deactivateMessage, setDeactivateMessage] = useState('')
+
+  // Check deactivation status on mount
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('s4s:deactivated')
+      const list: string[] = raw ? JSON.parse(raw) : []
+      setIsDeactivated(list.includes(username))
+    } catch (_) {}
+  }, [username])
+
+  const handleDeactivate = async () => {
+    setDeactivating(true)
+    setDeactivateMessage('')
+    try {
+      const res = await fetch('/api/deactivate-model', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username })
+      })
+      const data = await res.json()
+      if (!data.success) throw new Error(data.error || 'Failed')
+
+      // Add to deactivated list
+      const raw = localStorage.getItem('s4s:deactivated')
+      const list: string[] = raw ? JSON.parse(raw) : []
+      if (!list.includes(username)) list.push(username)
+      localStorage.setItem('s4s:deactivated', JSON.stringify(list))
+      setIsDeactivated(true)
+      setDeactivateMessage('Model deactivated — removed from rotation but data preserved')
+      setTimeout(() => setDeactivateMessage(''), 4000)
+    } catch (e: any) {
+      setDeactivateMessage(`Error: ${e.message}`)
+    } finally {
+      setDeactivating(false)
+    }
+  }
+
+  const handleReactivate = async () => {
+    setReactivating(true)
+    setDeactivateMessage('')
+    try {
+      // Build vault mappings from IndexedDB images
+      const images = await loadImages(username)
+      const allUsernames = await getAllUsernames()
+
+      // Build v1 asPromoter: this model's images have vaultIds for other models
+      const asPromoterV1: Record<string, string> = {}
+      for (const img of images) {
+        for (const [target, vaultId] of Object.entries(img.vaultIds)) {
+          if (target !== username) asPromoterV1[target] = vaultId
+        }
+      }
+
+      // Build v1 asTarget: other models' images that have a vaultId for this model
+      const asTargetV1: Record<string, string> = {}
+      for (const other of allUsernames) {
+        if (other === username) continue
+        const otherImgs = await loadImages(other)
+        for (const img of otherImgs) {
+          if (img.vaultIds[username]) {
+            asTargetV1[other] = img.vaultIds[username]
+          }
+        }
+      }
+
+      // Build v2 asPromoter
+      const asPromoterV2: Record<string, Record<string, string[]>> = {}
+      for (const img of images) {
+        const uses = img.uses || []
+        if (uses.length === 0) continue
+        for (const [target, vaultId] of Object.entries(img.vaultIds)) {
+          if (target === username) continue
+          if (!asPromoterV2[target]) asPromoterV2[target] = {}
+          for (const use of uses) {
+            if (!asPromoterV2[target][use]) asPromoterV2[target][use] = []
+            if (!asPromoterV2[target][use].includes(vaultId)) {
+              asPromoterV2[target][use].push(vaultId)
+            }
+          }
+        }
+      }
+
+      // Build v2 asTarget
+      const asTargetV2: Record<string, Record<string, string[]>> = {}
+      for (const other of allUsernames) {
+        if (other === username) continue
+        const otherImgs = await loadImages(other)
+        for (const img of otherImgs) {
+          if (!img.vaultIds[username]) continue
+          const uses = img.uses || []
+          if (uses.length === 0) continue
+          if (!asTargetV2[other]) asTargetV2[other] = {}
+          for (const use of uses) {
+            if (!asTargetV2[other][use]) asTargetV2[other][use] = []
+            if (!asTargetV2[other][use].includes(img.vaultIds[username])) {
+              asTargetV2[other][use].push(img.vaultIds[username])
+            }
+          }
+        }
+      }
+
+      const res = await fetch('/api/reactivate-model', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username,
+          vaultMappingsV1: { asPromoter: asPromoterV1, asTarget: asTargetV1 },
+          vaultMappingsV2: { asPromoter: asPromoterV2, asTarget: asTargetV2 }
+        })
+      })
+      const data = await res.json()
+      if (!data.success) throw new Error(data.error || 'Failed')
+
+      // Remove from deactivated list
+      const raw = localStorage.getItem('s4s:deactivated')
+      const list: string[] = raw ? JSON.parse(raw) : []
+      localStorage.setItem('s4s:deactivated', JSON.stringify(list.filter(u => u !== username)))
+      setIsDeactivated(false)
+      setDeactivateMessage('Model reactivated — back in rotation!')
+      setTimeout(() => setDeactivateMessage(''), 4000)
+    } catch (e: any) {
+      setDeactivateMessage(`Error: ${e.message}`)
+    } finally {
+      setReactivating(false)
+    }
+  }
 
   const handleRemoveModel = async () => {
     if (removeConfirmText !== username) return
@@ -355,7 +485,14 @@ export default function ModelPage() {
               className="w-24 h-24 rounded-full object-cover border-4 border-purple-500"
             />
             <div className="flex-1">
-              <h1 className="text-2xl font-bold text-white">{model.displayName}</h1>
+              <div className="flex items-center gap-3">
+                <h1 className="text-2xl font-bold text-white">{model.displayName}</h1>
+                {isDeactivated && (
+                  <span className="px-2 py-0.5 text-xs font-bold rounded bg-amber-900/60 border border-amber-700 text-amber-400">
+                    INACTIVE
+                  </span>
+                )}
+              </div>
               <p className="text-gray-400">@{model.username}</p>
               <div className="flex gap-6 mt-3">
                 <div>
@@ -378,12 +515,34 @@ export default function ModelPage() {
                 <div className="text-3xl font-bold text-white">{promoImages.length}</div>
                 <div className="text-sm text-green-400">{activeCount} active</div>
               </div>
-              <button
-                onClick={() => setShowRemoveModal(true)}
-                className="px-3 py-1.5 text-xs font-medium rounded-lg bg-red-900/50 border border-red-800 text-red-400 hover:bg-red-900 hover:text-red-300 transition"
-              >
-                Remove Model
-              </button>
+              {deactivateMessage && (
+                <div className="text-xs text-amber-400 mb-1">{deactivateMessage}</div>
+              )}
+              <div className="flex gap-2">
+                {isDeactivated ? (
+                  <button
+                    onClick={handleReactivate}
+                    disabled={reactivating}
+                    className="px-3 py-1.5 text-xs font-medium rounded-lg bg-green-900/50 border border-green-800 text-green-400 hover:bg-green-900 hover:text-green-300 transition disabled:opacity-50"
+                  >
+                    {reactivating ? '⏳ Reactivating...' : '✅ Reactivate'}
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleDeactivate}
+                    disabled={deactivating}
+                    className="px-3 py-1.5 text-xs font-medium rounded-lg bg-amber-900/50 border border-amber-700 text-amber-400 hover:bg-amber-900 hover:text-amber-300 transition disabled:opacity-50"
+                  >
+                    {deactivating ? '⏳...' : '⏸ Deactivate'}
+                  </button>
+                )}
+                <button
+                  onClick={() => setShowRemoveModal(true)}
+                  className="px-3 py-1.5 text-xs font-medium rounded-lg bg-red-900/50 border border-red-800 text-red-400 hover:bg-red-900 hover:text-red-300 transition"
+                >
+                  🗑 Remove
+                </button>
+              </div>
             </div>
           </div>
         </div>

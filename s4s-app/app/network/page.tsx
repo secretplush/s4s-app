@@ -34,6 +34,14 @@ export default function NetworkPage() {
     return () => clearInterval(interval)
   }, [loadRailway])
 
+  const [deactivatedList, setDeactivatedList] = useState<string[]>([])
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('s4s:deactivated')
+      if (raw) setDeactivatedList(JSON.parse(raw))
+    } catch (_) {}
+  }, [])
+
   const sortedModels = [...models].sort((a, b) => (b.totalEarnings || 0) - (a.totalEarnings || 0))
   const connectedCount = models.length
   const totalFans = models.reduce((sum, m) => sum + (m.fans || 0), 0)
@@ -144,8 +152,9 @@ export default function NetworkPage() {
               {sortedModels.map((model, i) => {
                 const ltv = model.fans > 0 && model.totalEarnings > 0 ? model.totalEarnings / model.fans : 0
                 const isFeatured = railwayStats?.pinned?.featuredGirls?.includes(model.username)
+                const isInactive = deactivatedList.includes(model.username)
                 return (
-                  <tr key={model.username} className="border-b border-gray-800/50 hover:bg-gray-800/30">
+                  <tr key={model.username} className={`border-b border-gray-800/50 hover:bg-gray-800/30 ${isInactive ? 'opacity-50' : ''}`}>
                     <td className="px-4 py-3 text-gray-500">{i + 1}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
@@ -155,7 +164,14 @@ export default function NetworkPage() {
                           <div className="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center text-xs">👩</div>
                         )}
                         <div>
-                          <div className="text-white font-medium">{model.displayName}</div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-white font-medium">{model.displayName}</span>
+                            {isInactive && (
+                              <span className="px-1.5 py-0.5 text-[10px] font-bold rounded bg-amber-900/60 border border-amber-700 text-amber-400">
+                                INACTIVE
+                              </span>
+                            )}
+                          </div>
                           <div className="text-gray-500 text-xs">@{model.username}</div>
                         </div>
                       </div>
@@ -169,7 +185,11 @@ export default function NetworkPage() {
                     </td>
                     <td className="px-4 py-3 text-center">
                       <div className="flex items-center justify-center gap-1">
-                        <span className="w-2 h-2 rounded-full bg-green-500" title="Connected" />
+                        {isInactive ? (
+                          <span className="w-2 h-2 rounded-full bg-amber-500" title="Inactive" />
+                        ) : (
+                          <span className="w-2 h-2 rounded-full bg-green-500" title="Connected" />
+                        )}
                         {isFeatured && <span className="text-xs" title="Featured today">📌</span>}
                       </div>
                     </td>
