@@ -206,20 +206,14 @@ export async function POST(req: NextRequest) {
     // Process all targets concurrently — each uses a different OF account
     // The 11s delay inside uploadToVault is per-account, so parallel is safe
     // Limit concurrency to 3 to avoid global API rate limits
-    const CONCURRENCY = 10
-    const results: VaultResult[] = []
-    
-    for (let i = 0; i < targetUsernames.length; i += CONCURRENCY) {
-      const batch = targetUsernames.slice(i, i + CONCURRENCY)
-      const batchResults = await Promise.all(
-        batch.map(async (username) => {
-          console.log(`Distributing to ${username}...`)
-          const { vaultId, error, rawResponse } = await uploadToVault(username, imageBase64, filename, sourceUsername, accountIds)
-          return { username, vaultId, error, rawResponse } as VaultResult
-        })
-      )
-      results.push(...batchResults)
-    }
+    // Fire all uploads simultaneously — each goes to a different OF account, no rate limit conflict
+    const results: VaultResult[] = await Promise.all(
+      targetUsernames.map(async (username) => {
+        console.log(`Distributing to ${username}...`)
+        const { vaultId, error, rawResponse } = await uploadToVault(username, imageBase64, filename, sourceUsername, accountIds)
+        return { username, vaultId, error, rawResponse } as VaultResult
+      })
+    )
 
     const successful = results.filter(r => r.vaultId !== null)
     const failed = results.filter(r => r.vaultId === null)

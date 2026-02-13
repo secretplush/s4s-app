@@ -414,44 +414,38 @@ function Step3Distribute({ username, promoImages, setPromoImages, allModels, onN
 
       if (targets.length === 0) continue
 
-      setProgress({ imgIdx: i + 1, imgTotal: activeImages.length, modelIdx: 0, modelTotal: targets.length, label: `Image ${i + 1}/${activeImages.length}` })
+      setProgress({ imgIdx: i + 1, imgTotal: activeImages.length, modelIdx: 0, modelTotal: targets.length, label: `Image ${i + 1}/${activeImages.length} → all ${targets.length} vaults at once` })
 
-      // Distribute in chunks of 3
-      const CHUNK = 10
+      // Fire all uploads simultaneously — each is a different OF account
       const newVaultIds: Record<string, string> = {}
-      for (let c = 0; c < targets.length; c += CHUNK) {
-        const chunk = targets.slice(c, c + CHUNK)
-        setProgress(p => ({ ...p, modelIdx: c, label: `Image ${i + 1}/${activeImages.length} → ${c}/${targets.length} vaults` }))
-
-        try {
-          const res = await fetch('/api/distribute', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              imageBase64: await compressImage(img.base64!),
-              filename: img.filename,
-              sourceUsername: username,
-              targetUsernames: chunk
-            })
+      try {
+        const res = await fetch('/api/distribute', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            imageBase64: await compressImage(img.base64!),
+            filename: img.filename,
+            sourceUsername: username,
+            targetUsernames: targets
           })
-          const data = await res.json()
-          if (data.results) {
-            for (const r of data.results) {
-              if (r.vaultId) {
-                newVaultIds[r.username] = r.vaultId
-                setCompletedModels(prev => {
-                  const next = new Set(prev)
-                  next.add(r.username)
-                  return next
-                })
-              } else if (r.error) {
-                setErrors(prev => [...prev, { model: r.username, error: r.error }])
-              }
+        })
+        const data = await res.json()
+        if (data.results) {
+          for (const r of data.results) {
+            if (r.vaultId) {
+              newVaultIds[r.username] = r.vaultId
+              setCompletedModels(prev => {
+                const next = new Set(prev)
+                next.add(r.username)
+                return next
+              })
+            } else if (r.error) {
+              setErrors(prev => [...prev, { model: r.username, error: r.error }])
             }
           }
-        } catch (e) {
-          setErrors(prev => [...prev, { model: chunk.join(', '), error: String(e) }])
         }
+      } catch (e) {
+        setErrors(prev => [...prev, { model: 'batch', error: String(e) }])
       }
 
       // Save vault IDs back to IndexedDB
