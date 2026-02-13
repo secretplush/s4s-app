@@ -417,7 +417,7 @@ function Step3Distribute({ username, promoImages, setPromoImages, allModels, onN
       setProgress({ imgIdx: i + 1, imgTotal: activeImages.length, modelIdx: 0, modelTotal: targets.length, label: `Image ${i + 1}/${activeImages.length}` })
 
       // Distribute in chunks of 3
-      const CHUNK = 3
+      const CHUNK = 10
       const newVaultIds: Record<string, string> = {}
       for (let c = 0; c < targets.length; c += CHUNK) {
         const chunk = targets.slice(c, c + CHUNK)

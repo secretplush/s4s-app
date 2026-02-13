@@ -19,7 +19,7 @@ async function getAccountIds(): Promise<{ [username: string]: string }> {
   }
 
   try {
-    const res = await fetch(`${OF_API_BASE}/accounts`, {
+    const res = await fetch(`${OF_API_BASE}/accounts?limit=200`, {
       headers: { 'Authorization': `Bearer ${OF_API_KEY}` },
       cache: 'no-store',
     })
@@ -206,7 +206,7 @@ export async function POST(req: NextRequest) {
     // Process all targets concurrently — each uses a different OF account
     // The 11s delay inside uploadToVault is per-account, so parallel is safe
     // Limit concurrency to 3 to avoid global API rate limits
-    const CONCURRENCY = 3
+    const CONCURRENCY = 10
     const results: VaultResult[] = []
     
     for (let i = 0; i < targetUsernames.length; i += CONCURRENCY) {
