@@ -5,15 +5,29 @@ const DB_NAME = 's4s_promo_db'
 const DB_VERSION = 1
 const STORE_NAME = 'promo_images'
 
+export type ImageUse = 'ghost' | 'pinned' | 'massDm'
+
 export interface PromoImage {
   id: string
   url: string
   filename: string
   uploadedAt: string
-  isActive: boolean
+  isActive: boolean  // backward compat: true when uses.length > 0
+  uses: ImageUse[]   // which features this image is active for
   vaultIds: { [modelId: string]: string }
   performance?: number
   base64?: string
+}
+
+/** Migrate legacy images that lack `uses` field */
+function migrateImageUses(img: PromoImage): PromoImage {
+  if (!img.uses) {
+    return {
+      ...img,
+      uses: img.isActive ? ['ghost', 'pinned', 'massDm'] : [],
+    }
+  }
+  return img
 }
 
 interface StoredData {
@@ -50,7 +64,7 @@ export async function loadImages(username: string): Promise<PromoImage[]> {
       request.onerror = () => reject(request.error)
       request.onsuccess = () => {
         const data = request.result as StoredData | undefined
-        resolve(data?.images || [])
+        resolve((data?.images || []).map(migrateImageUses))
       }
     })
   } catch (e) {
@@ -287,6 +301,86 @@ export async function syncToKV(): Promise<{ success: boolean; message: string }>
     } else {
       return { success: false, message: result.error || 'Sync failed' }
     }
+  } catch (e) {
+    return { success: false, message: String(e) }
+  }
+}
+
+// Export vault mappings v2 (per-use arrays)
+export async function exportVaultMappingsV2(): Promise<{
+  mappings_v2: { [promoter: string]: { [target: string]: { ghost: string[]; pinned: string[]; massDm: string[] } } }
+  models: string[]
+}> {
+  if (typeof window === 'undefined') return { mappings_v2: {}, models: [] }
+
+  try {
+    const db = await openDB()
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE_NAME, 'readonly')
+      const store = tx.objectStore(STORE_NAME)
+      const request = store.getAll()
+
+      request.onerror = () => reject(request.error)
+      request.onsuccess = () => {
+        const mappings_v2: { [promoter: string]: { [target: string]: { ghost: string[]; pinned: string[]; massDm: string[] } } } = {}
+        const models: string[] = []
+
+        for (const data of request.result as StoredData[]) {
+          models.push(data.username)
+          const target = data.username
+
+          for (const img of data.images) {
+            const uses = img.uses || (img.isActive ? ['ghost', 'pinned', 'massDm'] : [])
+            if (uses.length === 0) continue
+
+            for (const [promoter, vaultId] of Object.entries(img.vaultIds || {})) {
+              if (!mappings_v2[promoter]) mappings_v2[promoter] = {}
+              if (!mappings_v2[promoter][target]) mappings_v2[promoter][target] = { ghost: [], pinned: [], massDm: [] }
+
+              for (const use of uses) {
+                if (!mappings_v2[promoter][target][use].includes(vaultId)) {
+                  mappings_v2[promoter][target][use].push(vaultId)
+                }
+              }
+            }
+          }
+        }
+
+        resolve({ mappings_v2, models })
+      }
+    })
+  } catch (e) {
+    console.error('Failed to export vault mappings v2:', e)
+    return { mappings_v2: {}, models: [] }
+  }
+}
+
+// Sync vault mappings v2 to KV
+export async function syncToKVv2(): Promise<{ success: boolean; message: string }> {
+  try {
+    // Sync both v1 and v2
+    const [v1, v2] = await Promise.all([exportVaultMappings(), exportVaultMappingsV2()])
+
+    const [r1, r2] = await Promise.all([
+      fetch('/api/sync/vault-mappings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mappings: v1.mappings, models: v1.models })
+      }),
+      fetch('/api/sync/vault-mappings-v2', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mappings_v2: v2.mappings_v2, models: v2.models })
+      })
+    ])
+
+    const d1 = await r1.json()
+    const d2 = await r2.json()
+
+    if (d1.success && d2.success) {
+      return { success: true, message: `Synced v1 (${d1.totalVaultIds} mappings) + v2 to worker` }
+    }
+    return { success: false, message: d1.error || d2.error || 'Sync failed' }
   } catch (e) {
     return { success: false, message: String(e) }
   }

@@ -9,7 +9,9 @@ import {
   loadImages, 
   saveImages, 
   migrateFromLocalStorage,
-  type PromoImage 
+  syncToKVv2,
+  type PromoImage,
+  type ImageUse
 } from '@/lib/indexed-db'
 
 export default function ModelPage() {
@@ -105,10 +107,11 @@ export default function ModelPage() {
       // Real implementation would upload to OF API
       const newImage: PromoImage = {
         id: `img_${Date.now()}_${Math.random().toString(36).slice(2)}`,
-        url: base64, // Use base64 as URL (works in img src)
+        url: base64,
         filename: file.name,
         uploadedAt: new Date().toISOString(),
         isActive: false,
+        uses: [],
         vaultIds: {},
         base64: base64
       }
@@ -205,10 +208,23 @@ export default function ModelPage() {
     }
   }
 
-  const toggleActive = (imageId: string) => {
-    setPromoImages(prev => prev.map(img =>
-      img.id === imageId ? { ...img, isActive: !img.isActive } : img
-    ))
+  const toggleUse = (imageId: string, use: ImageUse) => {
+    setPromoImages(prev => prev.map(img => {
+      if (img.id !== imageId) return img
+      const uses = img.uses || []
+      const newUses = uses.includes(use) ? uses.filter(u => u !== use) : [...uses, use]
+      return { ...img, uses: newUses, isActive: newUses.length > 0 }
+    }))
+  }
+
+  const [syncing, setSyncing] = useState(false)
+  const [syncMessage, setSyncMessage] = useState('')
+  const handleSyncToWorker = async () => {
+    setSyncing(true)
+    const result = await syncToKVv2()
+    setSyncMessage(result.message)
+    setSyncing(false)
+    setTimeout(() => setSyncMessage(''), 3000)
   }
 
   const deleteImage = (imageId: string) => {
@@ -229,7 +245,7 @@ export default function ModelPage() {
   }
 
   const ltv = calculateLTV(model)
-  const activeCount = promoImages.filter(i => i.isActive).length
+  const activeCount = promoImages.filter(i => (i.uses || []).length > 0).length
 
   return (
     <div className="min-h-screen bg-gray-950 p-8">
@@ -240,12 +256,22 @@ export default function ModelPage() {
             ← Back to Models
           </Link>
           <div className="flex items-center gap-3">
+            {syncMessage && (
+              <span className="text-blue-400 text-sm">{syncMessage}</span>
+            )}
             {distributeProgress && (
               <span className="text-blue-400 text-sm">{distributeProgress}</span>
             )}
             {saveMessage && (
               <span className="text-green-400 text-sm">{saveMessage}</span>
             )}
+            <button
+              onClick={handleSyncToWorker}
+              disabled={syncing}
+              className="px-4 py-2 rounded-lg font-medium bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50"
+            >
+              {syncing ? '⏳ Syncing...' : '🔄 Sync to Worker'}
+            </button>
             <button
               onClick={handleSave}
               disabled={saved || saving}
@@ -350,7 +376,7 @@ export default function ModelPage() {
                 <div
                   key={img.id}
                   className={`relative rounded-xl overflow-hidden border-2 transition-all ${
-                    img.isActive
+                    (img.uses || []).length > 0
                       ? 'border-green-500 shadow-lg shadow-green-500/20'
                       : 'border-gray-700'
                   }`}
@@ -364,17 +390,25 @@ export default function ModelPage() {
                   {/* Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
 
-                  {/* Status Badge */}
-                  <div className="absolute top-3 left-3">
-                    {img.isActive ? (
-                      <span className="px-2 py-1 bg-green-500 text-white text-xs font-bold rounded">
-                        ● ACTIVE
-                      </span>
-                    ) : (
-                      <span className="px-2 py-1 bg-gray-700 text-gray-300 text-xs font-bold rounded">
-                        OFF
-                      </span>
-                    )}
+                  {/* Usage Pills */}
+                  <div className="absolute top-3 left-3 flex flex-wrap gap-1">
+                    {(['ghost', 'pinned', 'massDm'] as ImageUse[]).map(use => {
+                      const active = (img.uses || []).includes(use)
+                      const label = use === 'massDm' ? 'DM' : use === 'ghost' ? 'Ghost' : 'Pin'
+                      return (
+                        <button
+                          key={use}
+                          onClick={() => toggleUse(img.id, use)}
+                          className={`px-2 py-0.5 text-xs font-bold rounded transition ${
+                            active
+                              ? 'bg-green-500 text-white'
+                              : 'bg-gray-700/80 text-gray-400 hover:bg-gray-600'
+                          }`}
+                        >
+                          {label}
+                        </button>
+                      )
+                    })}
                   </div>
 
                   {/* Vault Status - Clickable */}
@@ -408,20 +442,10 @@ export default function ModelPage() {
                     })()}
                     <div className="flex gap-2">
                       <button
-                        onClick={() => toggleActive(img.id)}
-                        className={`flex-1 py-2 rounded-lg text-sm font-medium transition ${
-                          img.isActive
-                            ? 'bg-gray-700 hover:bg-gray-600 text-white'
-                            : 'bg-green-600 hover:bg-green-700 text-white'
-                        }`}
-                      >
-                        {img.isActive ? 'Deactivate' : 'Activate'}
-                      </button>
-                      <button
                         onClick={() => deleteImage(img.id)}
-                        className="px-3 py-2 bg-red-600/80 hover:bg-red-600 rounded-lg text-white text-sm"
+                        className="flex-1 py-2 bg-red-600/80 hover:bg-red-600 rounded-lg text-white text-sm font-medium"
                       >
-                        🗑
+                        🗑 Delete
                       </button>
                     </div>
                   </div>
