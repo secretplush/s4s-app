@@ -147,6 +147,7 @@ function Step1Verify({ username, setUsername, verified, setVerified, accountInfo
 }) {
   const [checking, setChecking] = useState(false)
   const [error, setError] = useState('')
+  const [sfsStatus, setSfsStatus] = useState<'idle' | 'creating' | 'done' | 'error'>('idle')
 
   const verify = async () => {
     if (!username.trim()) return
@@ -164,6 +165,23 @@ function Step1Verify({ username, setUsername, verified, setVerified, accountInfo
       if (found) {
         setVerified(true)
         setAccountInfo(found)
+        // Auto-create SFS Exclude list
+        setSfsStatus('creating')
+        try {
+          const sfsRes = await fetch('/api/create-sfs-exclude-list', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: username.trim().toLowerCase() }),
+          })
+          const sfsData = await sfsRes.json()
+          if (sfsRes.ok && sfsData.listId) {
+            setSfsStatus('done')
+          } else {
+            setSfsStatus('error')
+          }
+        } catch {
+          setSfsStatus('error')
+        }
       } else {
         setError('Account not found. Connect this account on app.onlyfansapi.com first.')
       }
@@ -214,6 +232,16 @@ function Step1Verify({ username, setUsername, verified, setVerified, accountInfo
               <div className="text-sm text-gray-400">@{username} — Connected</div>
             </div>
           </div>
+        )}
+
+        {sfsStatus === 'creating' && (
+          <div className="mt-3 text-sm text-gray-400 animate-pulse">⏳ Creating SFS Exclude list...</div>
+        )}
+        {sfsStatus === 'done' && (
+          <div className="mt-3 text-sm text-green-400">✅ SFS Exclude list created</div>
+        )}
+        {sfsStatus === 'error' && (
+          <div className="mt-3 text-sm text-yellow-400">⚠️ Could not create SFS Exclude list (can be done manually later)</div>
         )}
       </div>
 
