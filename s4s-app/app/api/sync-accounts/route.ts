@@ -16,7 +16,7 @@ export interface SyncedAccount {
 
 export async function GET() {
   try {
-    const res = await fetch(`${OF_API_BASE}/accounts`, {
+    const res = await fetch(`${OF_API_BASE}/accounts?limit=200`, {
       headers: { 'Authorization': `Bearer ${OF_API_KEY}` },
       cache: 'no-store',
     })
