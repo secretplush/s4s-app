@@ -2,15 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
-
-interface ConnectedModel {
-  username: string
-  displayName: string
-  accountId: string
-  fans: number
-  earnings: number
-  avatar: string
-}
+import { useModels } from '@/lib/use-models'
 
 interface RailwayStats {
   isRunning: boolean
@@ -21,44 +13,32 @@ interface RailwayStats {
 }
 
 export default function NetworkPage() {
-  const [models, setModels] = useState<ConnectedModel[]>([])
-  const [loading, setLoading] = useState(true)
+  const { models, loading: modelsLoading } = useModels()
   const [railwayStats, setRailwayStats] = useState<RailwayStats | null>(null)
   const [error, setError] = useState<string | null>(null)
 
-  const loadData = useCallback(async () => {
+  const loadRailway = useCallback(async () => {
     try {
-      const [modelsRes, railwayRes] = await Promise.all([
-        fetch('/api/sync-accounts'),
-        fetch('/api/railway?endpoint=stats')
-      ])
-      
-      const modelsData = await modelsRes.json()
-      const railwayData = await railwayRes.json().catch(() => null)
-
-      if (modelsData.accounts) {
-        setModels(modelsData.accounts.sort((a: ConnectedModel, b: ConnectedModel) => 
-          (b.earnings || 0) - (a.earnings || 0)
-        ))
-      }
-      if (railwayData) setRailwayStats(railwayData)
+      const res = await fetch('/api/railway?endpoint=stats')
+      const data = await res.json().catch(() => null)
+      if (data) setRailwayStats(data)
       setError(null)
     } catch (err: any) {
       setError(err.message)
-    } finally {
-      setLoading(false)
     }
   }, [])
 
   useEffect(() => {
-    loadData()
-    const interval = setInterval(loadData, 30000)
+    loadRailway()
+    const interval = setInterval(loadRailway, 30000)
     return () => clearInterval(interval)
-  }, [loadData])
+  }, [loadRailway])
 
+  const sortedModels = [...models].sort((a, b) => (b.totalEarnings || 0) - (a.totalEarnings || 0))
   const connectedCount = models.length
   const totalFans = models.reduce((sum, m) => sum + (m.fans || 0), 0)
-  const totalEarnings = models.reduce((sum, m) => sum + (m.earnings || 0), 0)
+  const totalEarnings = models.reduce((sum, m) => sum + (m.totalEarnings || 0), 0)
+  const loading = modelsLoading
 
   if (loading) {
     return (
@@ -79,7 +59,7 @@ export default function NetworkPage() {
             <span className="text-xs text-gray-500">Live from OF API + Railway</span>
           </div>
           <button
-            onClick={() => { setLoading(true); loadData() }}
+            onClick={() => loadRailway()}
             className="px-3 py-1.5 bg-gray-800 hover:bg-gray-700 rounded text-sm"
           >
             🔄 Refresh
@@ -156,8 +136,8 @@ export default function NetworkPage() {
               </tr>
             </thead>
             <tbody>
-              {models.map((model, i) => {
-                const ltv = model.fans > 0 && model.earnings > 0 ? model.earnings / model.fans : 0
+              {sortedModels.map((model, i) => {
+                const ltv = model.fans > 0 && model.totalEarnings > 0 ? model.totalEarnings / model.fans : 0
                 const isFeatured = railwayStats?.pinned?.featuredGirls?.includes(model.username)
                 return (
                   <tr key={model.username} className="border-b border-gray-800/50 hover:bg-gray-800/30">
@@ -177,7 +157,7 @@ export default function NetworkPage() {
                     </td>
                     <td className="px-4 py-3 text-right text-white">{model.fans?.toLocaleString() || '—'}</td>
                     <td className="px-4 py-3 text-right text-emerald-400">
-                      {model.earnings > 0 ? `$${model.earnings > 1000000 ? `${(model.earnings / 1000000).toFixed(1)}M` : model.earnings.toLocaleString()}` : '—'}
+                      {model.totalEarnings > 0 ? `$${model.totalEarnings > 1000000 ? `${(model.totalEarnings / 1000000).toFixed(1)}M` : model.totalEarnings.toLocaleString()}` : '—'}
                     </td>
                     <td className="px-4 py-3 text-right text-gray-300">
                       {ltv > 0 ? `$${ltv.toFixed(2)}` : '—'}
