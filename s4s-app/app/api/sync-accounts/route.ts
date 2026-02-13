@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server'
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 const OF_API_BASE = 'https://app.onlyfansapi.com/api'
 const OF_API_KEY = process.env.OF_API_KEY || 'ofapi_bT4J1Er2YBow46EihDfjlSFf5HRmiM15M4DCOoHn7889d8b4'
 
@@ -42,7 +45,13 @@ export async function GET() {
       }
     }).filter((a: SyncedAccount) => a.username)
 
-    return NextResponse.json({ accounts, total: accounts.length })
+    return NextResponse.json({ accounts, total: accounts.length }, {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate',
+        'CDN-Cache-Control': 'no-store',
+        'Vercel-CDN-Cache-Control': 'no-store',
+      }
+    })
   } catch (e) {
     console.error('Sync accounts error:', e)
     return NextResponse.json({ error: String(e) }, { status: 500 })
