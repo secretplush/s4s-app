@@ -79,8 +79,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: `No media ID returned` }, { status: 500 })
     }
 
-    // Wait for rate limit
-    await new Promise(r => setTimeout(r, 11000))
+    // Wait for OF to process upload (reduced from 11s)
+    await new Promise(r => setTimeout(r, 3000))
 
     // Create post to generate vault entry
     const postRes = await fetch(`${OF_API_BASE}/${accountId}/posts`, {

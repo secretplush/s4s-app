@@ -112,8 +112,8 @@ async function uploadToVault(username: string, imageBase64: string, filename: st
       return { vaultId: null, error: `No media ID returned from upload: ${JSON.stringify(uploadData)}` }
     }
 
-    // Wait for OF rate limit (10 seconds between upload and post)
-    await new Promise(r => setTimeout(r, 11000))
+    // Wait for OF to process upload (reduced from 11s — testing faster)
+    await new Promise(r => setTimeout(r, 3000))
 
     // Step 2: Create a post with the media (this generates vault_id)
     const postRes = await fetch(`${OF_API_BASE}/${accountId}/posts`, {
