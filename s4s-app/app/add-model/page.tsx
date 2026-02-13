@@ -585,58 +585,84 @@ function Step4ReverseDistribute({ username, allModels, onNext, onBack }: {
       return
     }
 
-    setProgress({ current: 0, total: allPending.length, label: `Compressing ${allPending.length} images...` })
+    // Phase 1: Upload all images in parallel (one per request, no body size issue)
+    setProgress({ current: 0, total: allPending.length, label: `Uploading ${allPending.length} images to OF...` })
 
-    // Compress all images
-    const compressed = await Promise.all(
-      allPending.map(async (p) => ({
-        ...p,
-        base64: await compressImage(p.base64, 400 * 1024)
-      }))
+    const uploadResults = await Promise.all(
+      allPending.map(async (p, idx) => {
+        try {
+          const res = await fetch('/api/upload-media', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              targetUsername: username,
+              base64: p.base64,
+              filename: `${p.sourceUsername}_promo.jpg`
+            })
+          })
+          const data = await res.json()
+          if (data.mediaId) {
+            setProgress(prev => ({ ...prev, current: prev.current + 1 }))
+            return { ...p, mediaId: data.mediaId, error: null }
+          }
+          return { ...p, mediaId: null, error: data.error || 'No media ID' }
+        } catch (e) {
+          return { ...p, mediaId: null, error: String(e) }
+        }
+      })
     )
 
-    // Send in batches of 5 to stay under Vercel's 4.5MB body size limit
-    const BATCH_SIZE = 5
-    let totalSuccess = 0
-
-    for (let i = 0; i < compressed.length; i += BATCH_SIZE) {
-      const batch = compressed.slice(i, i + BATCH_SIZE)
-      setProgress({ current: i, total: compressed.length, label: `Uploading batch ${Math.floor(i / BATCH_SIZE) + 1}/${Math.ceil(compressed.length / BATCH_SIZE)} (${batch.length} images)...` })
-
-      try {
-        const res = await fetch('/api/distribute-batch', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            targetUsername: username,
-            images: batch
-          })
-        })
-        const data = await res.json()
-
-        if (data.results) {
-          for (const r of data.results) {
-            if (r.vaultId) {
-              totalSuccess++
-              const allImgs = await loadImages(r.sourceUsername)
-              const updated = allImgs.map(i =>
-                (i as any).imageId === r.imageId || i.id === r.imageId
-                  ? { ...i, vaultIds: { ...i.vaultIds, [username]: r.vaultId } }
-                  : i
-              )
-              await saveImages(r.sourceUsername, updated)
-              setCompletedModels(prev => { const next = new Set(prev); next.add(r.sourceUsername); return next })
-            } else if (r.error) {
-              setErrors(prev => [...prev, { model: r.sourceUsername, error: r.error }])
-            }
-          }
-        }
-      } catch (e) {
-        setErrors(prev => [...prev, { model: `batch ${Math.floor(i / BATCH_SIZE) + 1}`, error: String(e) }])
-      }
+    const successUploads = uploadResults.filter(r => r.mediaId)
+    const failedUploads = uploadResults.filter(r => !r.mediaId)
+    for (const f of failedUploads) {
+      setErrors(prev => [...prev, { model: f.sourceUsername, error: f.error || 'Upload failed' }])
     }
 
-    setProgress({ current: totalSuccess, total: compressed.length, label: `Done! ${totalSuccess}/${compressed.length} succeeded` })
+    if (successUploads.length === 0) {
+      setDistributing(false)
+      setProgress({ current: 0, total: allPending.length, label: 'All uploads failed!' })
+      return
+    }
+
+    // Phase 2: Create batch posts to get vault IDs (tiny payload, just mediaIds)
+    setProgress({ current: 0, total: successUploads.length, label: `Creating posts to get vault IDs...` })
+
+    try {
+      const res = await fetch('/api/batch-post', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          targetUsername: username,
+          items: successUploads.map(u => ({
+            sourceUsername: u.sourceUsername,
+            imageId: u.imageId,
+            mediaId: u.mediaId
+          }))
+        })
+      })
+      const data = await res.json()
+      let totalSuccess = 0
+
+      if (data.results) {
+        for (const r of data.results) {
+          if (r.vaultId) {
+            totalSuccess++
+            const allImgs = await loadImages(r.sourceUsername)
+            const updated = allImgs.map(i =>
+              i.id === r.imageId ? { ...i, vaultIds: { ...i.vaultIds, [username]: r.vaultId } } : i
+            )
+            await saveImages(r.sourceUsername, updated)
+            setCompletedModels(prev => { const next = new Set(prev); next.add(r.sourceUsername); return next })
+          } else if (r.error) {
+            setErrors(prev => [...prev, { model: r.sourceUsername, error: r.error }])
+          }
+        }
+      }
+      setProgress({ current: totalSuccess, total: allPending.length, label: `Done! ${totalSuccess}/${allPending.length} succeeded` })
+    } catch (e) {
+      setErrors(prev => [...prev, { model: 'batch-post', error: String(e) }])
+    }
+
     setDistributing(false)
   }
 
