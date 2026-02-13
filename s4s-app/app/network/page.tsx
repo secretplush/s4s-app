@@ -1,226 +1,69 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
-import { 
-  loadNetworkModels, 
-  saveNetworkModel, 
-  deleteNetworkModel,
-  initializeDefaultModels,
-  type NetworkModel 
-} from '@/lib/network-db'
-import { syncToKV } from '@/lib/indexed-db'
+
+interface ConnectedModel {
+  username: string
+  displayName: string
+  accountId: string
+  fans: number
+  earnings: number
+  avatar: string
+}
+
+interface RailwayStats {
+  isRunning: boolean
+  modelsActive: number
+  stats: { totalTags: number; totalDeletes: number; startedAt: string | null }
+  pinned?: { enabled: boolean; activePosts: number; featuredGirls: string[] }
+  massDm?: { enabled: boolean; todaySent: number; todayTotal: number }
+}
 
 export default function NetworkPage() {
-  const [models, setModels] = useState<NetworkModel[]>([])
+  const [models, setModels] = useState<ConnectedModel[]>([])
   const [loading, setLoading] = useState(true)
-  const [credits, setCredits] = useState<{ balance: number | string; used: number } | null>(null)
-  const [showAddForm, setShowAddForm] = useState(false)
-  const [newModel, setNewModel] = useState({ 
-    username: '', 
-    displayName: '', 
-    email: '', 
-    password: '' 
-  })
-  const [saving, setSaving] = useState(false)
-  const [connectStatus, setConnectStatus] = useState<string | null>(null)
-  const [connectError, setConnectError] = useState<string | null>(null)
-  const [syncStatus, setSyncStatus] = useState<{ type: 'success' | 'error' | 'loading'; message: string } | null>(null)
+  const [railwayStats, setRailwayStats] = useState<RailwayStats | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
-  const handleSyncToKV = async () => {
-    setSyncStatus({ type: 'loading', message: 'Syncing to KV...' })
-    const result = await syncToKV()
-    setSyncStatus({ 
-      type: result.success ? 'success' : 'error', 
-      message: result.message 
-    })
-    // Clear status after 5 seconds
-    setTimeout(() => setSyncStatus(null), 5000)
-  }
+  const loadData = useCallback(async () => {
+    try {
+      const [modelsRes, railwayRes] = await Promise.all([
+        fetch('/api/sync-accounts'),
+        fetch('/api/railway?endpoint=stats')
+      ])
+      
+      const modelsData = await modelsRes.json()
+      const railwayData = await railwayRes.json().catch(() => null)
 
-  // Load models and credits on mount
-  useEffect(() => {
-    const loadData = async () => {
-      await initializeDefaultModels()
-      const loaded = await loadNetworkModels()
-      setModels(loaded.sort((a, b) => a.username.localeCompare(b.username)))
+      if (modelsData.accounts) {
+        setModels(modelsData.accounts.sort((a: ConnectedModel, b: ConnectedModel) => 
+          (b.earnings || 0) - (a.earnings || 0)
+        ))
+      }
+      if (railwayData) setRailwayStats(railwayData)
+      setError(null)
+    } catch (err: any) {
+      setError(err.message)
+    } finally {
       setLoading(false)
     }
-    loadData()
-
-    // Fetch credits
-    fetch('/api/credits')
-      .then(res => res.json())
-      .then(data => {
-        if (data.balance) setCredits(data)
-      })
-      .catch(console.error)
   }, [])
 
-  const toggleRotation = async (username: string) => {
-    const model = models.find(m => m.username === username)
-    if (!model) return
+  useEffect(() => {
+    loadData()
+    const interval = setInterval(loadData, 30000)
+    return () => clearInterval(interval)
+  }, [loadData])
 
-    const updated = { ...model, inRotation: !model.inRotation }
-    await saveNetworkModel(updated)
-    setModels(prev => prev.map(m => m.username === username ? updated : m))
-  }
-
-  const handleAddModel = async () => {
-    if (!newModel.username || !newModel.displayName || !newModel.email || !newModel.password) {
-      setConnectError('All fields are required')
-      return
-    }
-    
-    setSaving(true)
-    setConnectStatus('Connecting to OnlyFans API...')
-    setConnectError(null)
-
-    try {
-      // Call our API to connect the account
-      const response = await fetch('/api/connect-account', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: newModel.email,
-          password: newModel.password,
-        }),
-      })
-
-      const data = await response.json()
-
-      if (!response.ok || data.status === 'error') {
-        setConnectError(data.error || 'Failed to connect account')
-        setSaving(false)
-        setConnectStatus(null)
-        return
-      }
-
-      // Check if 2FA is required
-      if (data.needs2fa) {
-        setConnectStatus('2FA required - check the OnlyFans API dashboard to complete verification')
-        setSaving(false)
-        return
-      }
-
-      // Success! Save the model
-      const accountId = data.accountId
-      if (!accountId) {
-        setConnectError('Connected but no account ID returned - check API dashboard')
-        setSaving(false)
-        setConnectStatus(null)
-        return
-      }
-
-      setConnectStatus('Connected! Saving model...')
-
-      const model: NetworkModel = {
-        username: newModel.username.toLowerCase().replace('@', ''),
-        displayName: newModel.displayName,
-        accountId: accountId,
-        inRotation: true, // Auto-enable rotation for newly connected accounts
-        addedAt: new Date().toISOString()
-      }
-      
-      await saveNetworkModel(model)
-      setModels(prev => [...prev, model].sort((a, b) => a.username.localeCompare(b.username)))
-      setNewModel({ username: '', displayName: '', email: '', password: '' })
-      setShowAddForm(false)
-      setConnectStatus(null)
-      
-    } catch (error: any) {
-      setConnectError(error.message || 'Connection failed')
-    } finally {
-      setSaving(false)
-    }
-  }
-
-  const handleDeleteModel = async (username: string) => {
-    if (!confirm(`Remove @${username} from network?`)) return
-    
-    await deleteNetworkModel(username)
-    setModels(prev => prev.filter(m => m.username !== username))
-  }
-
-  const handleManualConnect = async (username: string) => {
-    const email = prompt(`Enter OnlyFans email for @${username}:`)
-    if (!email) return
-    
-    const password = prompt(`Enter OnlyFans password for @${username}:`)
-    if (!password) return
-
-    const model = models.find(m => m.username === username)
-    if (!model) return
-
-    // Show connecting status
-    setModels(prev => prev.map(m => 
-      m.username === username 
-        ? { ...m, accountId: 'connecting...' } 
-        : m
-    ))
-
-    try {
-      const response = await fetch('/api/connect-account', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      })
-
-      const data = await response.json()
-
-      if (!response.ok || data.status === 'error') {
-        alert(`Failed to connect: ${data.error}`)
-        setModels(prev => prev.map(m => 
-          m.username === username 
-            ? { ...m, accountId: null } 
-            : m
-        ))
-        return
-      }
-
-      if (data.needs2fa) {
-        alert('2FA required - complete verification in the OnlyFans API dashboard')
-        setModels(prev => prev.map(m => 
-          m.username === username 
-            ? { ...m, accountId: null } 
-            : m
-        ))
-        return
-      }
-
-      const accountId = data.accountId
-      if (!accountId) {
-        alert('Connected but no account ID returned - check API dashboard')
-        setModels(prev => prev.map(m => 
-          m.username === username 
-            ? { ...m, accountId: null } 
-            : m
-        ))
-        return
-      }
-
-      // Success
-      const updated = { ...model, accountId, inRotation: true }
-      await saveNetworkModel(updated)
-      setModels(prev => prev.map(m => m.username === username ? updated : m))
-      
-    } catch (error: any) {
-      alert(`Connection failed: ${error.message}`)
-      setModels(prev => prev.map(m => 
-        m.username === username 
-          ? { ...m, accountId: null } 
-          : m
-      ))
-    }
-  }
-
-  const connectedCount = models.filter(m => m.accountId && m.accountId !== 'connecting...').length
-  const inRotationCount = models.filter(m => m.inRotation && m.accountId && m.accountId !== 'connecting...').length
+  const connectedCount = models.length
+  const totalFans = models.reduce((sum, m) => sum + (m.fans || 0), 0)
+  const totalEarnings = models.reduce((sum, m) => sum + (m.earnings || 0), 0)
 
   if (loading) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
-        <div className="text-gray-400">Loading network...</div>
+        <div className="text-gray-400">Loading network from API...</div>
       </div>
     )
   }
@@ -229,258 +72,132 @@ export default function NetworkPage() {
     <div className="min-h-screen bg-black text-white">
       {/* Header */}
       <div className="border-b border-gray-800 p-4">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
+        <div className="max-w-5xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/" className="text-gray-400 hover:text-white">
-              ← Back
-            </Link>
-            <h1 className="text-xl font-bold">🔌 Network Management</h1>
+            <Link href="/" className="text-gray-400 hover:text-white">← Back</Link>
+            <h1 className="text-xl font-bold">🔌 Network Overview</h1>
+            <span className="text-xs text-gray-500">Live from OF API + Railway</span>
           </div>
-          <div className="flex items-center gap-4">
-            <button
-              onClick={handleSyncToKV}
-              disabled={syncStatus?.type === 'loading'}
-              className={`px-3 py-1.5 rounded text-sm font-medium transition ${
-                syncStatus?.type === 'loading'
-                  ? 'bg-gray-700 text-gray-400'
-                  : syncStatus?.type === 'success'
-                  ? 'bg-green-600 text-white'
-                  : syncStatus?.type === 'error'
-                  ? 'bg-red-600 text-white'
-                  : 'bg-blue-600 hover:bg-blue-500 text-white'
-              }`}
-            >
-              {syncStatus?.type === 'loading' ? '⏳ Syncing...' : 
-               syncStatus?.type === 'success' ? '✓ Synced!' :
-               syncStatus?.type === 'error' ? '✗ Error' :
-               '☁️ Sync to KV'}
-            </button>
-            {syncStatus && syncStatus.type !== 'loading' && (
-              <span className={`text-xs ${syncStatus.type === 'success' ? 'text-green-400' : 'text-red-400'}`}>
-                {syncStatus.message}
-              </span>
-            )}
-            {credits && (
-              <div className="text-sm">
-                <span className="text-gray-400">API Credits:</span>{' '}
-                <span className="text-green-400 font-mono">
-                  {typeof credits.balance === 'number' 
-                    ? credits.balance.toLocaleString() 
-                    : credits.balance}
-                </span>
-              </div>
-            )}
-          </div>
+          <button
+            onClick={() => { setLoading(true); loadData() }}
+            className="px-3 py-1.5 bg-gray-800 hover:bg-gray-700 rounded text-sm"
+          >
+            🔄 Refresh
+          </button>
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto p-4 space-y-6">
+      <div className="max-w-5xl mx-auto p-4 space-y-6">
+        {error && (
+          <div className="p-3 bg-red-900/30 border border-red-700 rounded-lg text-red-300 text-sm">
+            ❌ {error}
+          </div>
+        )}
+
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           <div className="bg-gray-900 rounded-xl p-4 border border-gray-800">
-            <div className="text-3xl font-bold text-white">{models.length}</div>
-            <div className="text-gray-400 text-sm">Total Models</div>
+            <div className="text-3xl font-bold text-white">{connectedCount}</div>
+            <div className="text-gray-400 text-sm">Connected Models</div>
           </div>
           <div className="bg-gray-900 rounded-xl p-4 border border-gray-800">
-            <div className="text-3xl font-bold text-green-400">{connectedCount}</div>
-            <div className="text-gray-400 text-sm">Connected to API</div>
-          </div>
-          <div className="bg-gray-900 rounded-xl p-4 border border-gray-800">
-            <div className="text-3xl font-bold text-blue-400">{inRotationCount}</div>
+            <div className="text-3xl font-bold text-green-400">{railwayStats?.modelsActive || 0}</div>
             <div className="text-gray-400 text-sm">In Rotation</div>
           </div>
+          <div className="bg-gray-900 rounded-xl p-4 border border-gray-800">
+            <div className="text-3xl font-bold text-blue-400">{totalFans.toLocaleString()}</div>
+            <div className="text-gray-400 text-sm">Total Fans</div>
+          </div>
+          <div className="bg-gray-900 rounded-xl p-4 border border-gray-800">
+            <div className="text-3xl font-bold text-emerald-400">${totalEarnings > 1000000 ? `${(totalEarnings / 1000000).toFixed(1)}M` : totalEarnings.toLocaleString()}</div>
+            <div className="text-gray-400 text-sm">Total Earnings (net)</div>
+          </div>
+          <div className="bg-gray-900 rounded-xl p-4 border border-gray-800">
+            <div className="text-3xl font-bold text-purple-400">{totalFans > 0 ? `$${(totalEarnings / totalFans).toFixed(2)}` : '—'}</div>
+            <div className="text-gray-400 text-sm">Avg LTV</div>
+          </div>
         </div>
 
-        {/* Add Model Button */}
-        <div className="flex justify-end">
-          <button
-            onClick={() => {
-              setShowAddForm(true)
-              setConnectError(null)
-              setConnectStatus(null)
-            }}
-            className="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg text-sm font-medium"
-          >
-            + Add Model
-          </button>
-        </div>
-
-        {/* Add Model Form */}
-        {showAddForm && (
-          <div className="bg-gray-900 rounded-xl p-4 border border-green-800 space-y-4">
-            <h3 className="font-semibold text-green-400">Add New Model</h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm text-gray-400 mb-1">OF Username</label>
-                <input
-                  type="text"
-                  value={newModel.username}
-                  onChange={e => setNewModel(prev => ({ ...prev, username: e.target.value }))}
-                  placeholder="@username"
-                  className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white"
-                />
+        {/* Railway Status */}
+        {railwayStats && (
+          <div className="bg-gray-900 rounded-xl p-4 border border-gray-800">
+            <h3 className="font-semibold text-white mb-3">⚡ Railway Systems</h3>
+            <div className="grid grid-cols-3 gap-4 text-sm">
+              <div className="flex items-center gap-2">
+                <span className={`w-2 h-2 rounded-full ${railwayStats.isRunning ? 'bg-green-500' : 'bg-red-500'}`} />
+                <span className="text-gray-400">Ghost Tags:</span>
+                <span className="text-white font-medium">{railwayStats.isRunning ? `Running (${railwayStats.stats.totalTags} today)` : 'Stopped'}</span>
               </div>
-              <div>
-                <label className="block text-sm text-gray-400 mb-1">Display Name</label>
-                <input
-                  type="text"
-                  value={newModel.displayName}
-                  onChange={e => setNewModel(prev => ({ ...prev, displayName: e.target.value }))}
-                  placeholder="Model Name"
-                  className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white"
-                />
+              <div className="flex items-center gap-2">
+                <span className={`w-2 h-2 rounded-full ${railwayStats.pinned?.enabled ? 'bg-green-500' : 'bg-red-500'}`} />
+                <span className="text-gray-400">Pinned Posts:</span>
+                <span className="text-white font-medium">{railwayStats.pinned?.enabled ? `Active (${railwayStats.pinned.activePosts} live)` : 'Disabled'}</span>
               </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm text-gray-400 mb-1">OF Email</label>
-                <input
-                  type="email"
-                  value={newModel.email}
-                  onChange={e => setNewModel(prev => ({ ...prev, email: e.target.value }))}
-                  placeholder="model@email.com"
-                  className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white"
-                />
+              <div className="flex items-center gap-2">
+                <span className={`w-2 h-2 rounded-full ${railwayStats.massDm?.enabled ? 'bg-green-500' : 'bg-red-500'}`} />
+                <span className="text-gray-400">Mass DMs:</span>
+                <span className="text-white font-medium">{railwayStats.massDm?.enabled ? `${railwayStats.massDm.todaySent}/${railwayStats.massDm.todayTotal} sent` : 'Disabled'}</span>
               </div>
-              <div>
-                <label className="block text-sm text-gray-400 mb-1">OF Password</label>
-                <input
-                  type="password"
-                  value={newModel.password}
-                  onChange={e => setNewModel(prev => ({ ...prev, password: e.target.value }))}
-                  placeholder="••••••••"
-                  className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white"
-                />
-              </div>
-            </div>
-
-            {connectStatus && (
-              <div className="p-3 bg-blue-900/30 border border-blue-700 rounded-lg text-blue-300 text-sm">
-                ⏳ {connectStatus}
-              </div>
-            )}
-
-            {connectError && (
-              <div className="p-3 bg-red-900/30 border border-red-700 rounded-lg text-red-300 text-sm">
-                ❌ {connectError}
-              </div>
-            )}
-
-            <div className="flex gap-2 justify-end">
-              <button
-                onClick={() => {
-                  setShowAddForm(false)
-                  setConnectError(null)
-                  setConnectStatus(null)
-                }}
-                className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleAddModel}
-                disabled={!newModel.username || !newModel.displayName || !newModel.email || !newModel.password || saving}
-                className="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg text-sm font-medium disabled:opacity-50"
-              >
-                {saving ? 'Connecting...' : 'Connect & Add'}
-              </button>
             </div>
           </div>
         )}
 
-        {/* Models List */}
-        <div className="space-y-2">
-          {models.map(model => (
-            <div
-              key={model.username}
-              className={`bg-gray-900 rounded-xl p-4 border ${
-                model.accountId && model.accountId !== 'connecting...'
-                  ? model.inRotation 
-                    ? 'border-green-800' 
-                    : 'border-yellow-800'
-                  : 'border-gray-800'
-              }`}
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  {/* Status Icon */}
-                  <div className={`w-3 h-3 rounded-full ${
-                    model.accountId === 'connecting...'
-                      ? 'bg-blue-500 animate-pulse'
-                      : model.accountId 
-                        ? model.inRotation 
-                          ? 'bg-green-500' 
-                          : 'bg-yellow-500'
-                        : 'bg-gray-600'
-                  }`} />
-                  
-                  {/* Model Info */}
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium text-white">{model.displayName}</span>
-                      <span className="text-gray-500">@{model.username}</span>
-                    </div>
-                    <div className="text-xs text-gray-500 mt-1">
-                      {model.accountId === 'connecting...' ? (
-                        <span className="text-blue-400">Connecting...</span>
-                      ) : model.accountId ? (
-                        <code className="bg-gray-800 px-1 rounded">{model.accountId}</code>
-                      ) : (
-                        <span className="text-yellow-500">Not connected to API</span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Actions */}
-                <div className="flex items-center gap-2">
-                  {model.accountId && model.accountId !== 'connecting...' ? (
-                    <button
-                      onClick={() => toggleRotation(model.username)}
-                      className={`px-3 py-1.5 rounded-lg text-sm font-medium transition ${
-                        model.inRotation
-                          ? 'bg-green-600 hover:bg-green-700 text-white'
-                          : 'bg-gray-700 hover:bg-gray-600 text-gray-300'
-                      }`}
-                    >
-                      {model.inRotation ? '✓ In Rotation' : 'Paused'}
-                    </button>
-                  ) : model.accountId === 'connecting...' ? (
-                    <span className="px-3 py-1.5 bg-blue-600/50 rounded-lg text-sm text-blue-200">
-                      Connecting...
-                    </span>
-                  ) : (
-                    <button
-                      onClick={() => handleManualConnect(model.username)}
-                      className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm font-medium"
-                    >
-                      🔗 Connect
-                    </button>
-                  )}
-                  
-                  <button
-                    onClick={() => handleDeleteModel(model.username)}
-                    className="px-2 py-1.5 bg-red-600/20 hover:bg-red-600/40 rounded-lg text-red-400 text-sm"
-                  >
-                    🗑
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
+        {/* Models Table */}
+        <div className="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-gray-800 text-gray-400 text-left">
+                <th className="px-4 py-3">#</th>
+                <th className="px-4 py-3">Model</th>
+                <th className="px-4 py-3 text-right">Fans</th>
+                <th className="px-4 py-3 text-right">Earnings (net)</th>
+                <th className="px-4 py-3 text-right">LTV</th>
+                <th className="px-4 py-3 text-center">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {models.map((model, i) => {
+                const ltv = model.fans > 0 && model.earnings > 0 ? model.earnings / model.fans : 0
+                const isFeatured = railwayStats?.pinned?.featuredGirls?.includes(model.username)
+                return (
+                  <tr key={model.username} className="border-b border-gray-800/50 hover:bg-gray-800/30">
+                    <td className="px-4 py-3 text-gray-500">{i + 1}</td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-3">
+                        {model.avatar ? (
+                          <img src={model.avatar} alt="" className="w-8 h-8 rounded-full object-cover" />
+                        ) : (
+                          <div className="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center text-xs">👩</div>
+                        )}
+                        <div>
+                          <div className="text-white font-medium">{model.displayName}</div>
+                          <div className="text-gray-500 text-xs">@{model.username}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-right text-white">{model.fans?.toLocaleString() || '—'}</td>
+                    <td className="px-4 py-3 text-right text-emerald-400">
+                      {model.earnings > 0 ? `$${model.earnings > 1000000 ? `${(model.earnings / 1000000).toFixed(1)}M` : model.earnings.toLocaleString()}` : '—'}
+                    </td>
+                    <td className="px-4 py-3 text-right text-gray-300">
+                      {ltv > 0 ? `$${ltv.toFixed(2)}` : '—'}
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      <div className="flex items-center justify-center gap-1">
+                        <span className="w-2 h-2 rounded-full bg-green-500" title="Connected" />
+                        {isFeatured && <span className="text-xs" title="Featured today">📌</span>}
+                      </div>
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
         </div>
 
         {/* Info */}
-        <div className="bg-gray-900 rounded-xl p-4 border border-gray-800 text-sm text-gray-400">
-          <h3 className="font-semibold text-white mb-2">💡 How it works</h3>
-          <ul className="space-y-1 list-disc list-inside">
-            <li><span className="text-green-400">Green</span> = Connected & in rotation (will post/receive promos)</li>
-            <li><span className="text-yellow-400">Yellow</span> = Connected but paused (no promos, saves API calls)</li>
-            <li><span className="text-gray-400">Gray</span> = Not connected - click Connect to add credentials</li>
-            <li>If 2FA is required, you'll need to verify in the <a href="https://app.onlyfansapi.com" target="_blank" className="text-blue-400 hover:underline">OnlyFans API Dashboard</a></li>
-          </ul>
+        <div className="text-xs text-gray-600 text-center">
+          Data from OF API (sync-accounts) • Railway stats refresh every 30s • Earnings cached 1hr
         </div>
       </div>
     </div>
