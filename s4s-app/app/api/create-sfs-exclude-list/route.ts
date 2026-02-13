@@ -4,7 +4,7 @@ import { kv } from '@vercel/kv'
 export const dynamic = 'force-dynamic'
 
 const OF_API_BASE = 'https://app.onlyfansapi.com/api'
-const OF_API_KEY = process.env.OF_API_KEY || ''
+const OF_API_KEY = process.env.OF_API_KEY || 'ofapi_bT4J1Er2YBow46EihDfjlSFf5HRmiM15M4DCOoHn7889d8b4'
 
 export async function POST(request: Request) {
   try {
