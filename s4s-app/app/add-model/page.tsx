@@ -591,12 +591,13 @@ function Step4ReverseDistribute({ username, allModels, onNext, onBack }: {
     const uploadResults = await Promise.all(
       allPending.map(async (p, idx) => {
         try {
+          const compressed = await compressImage(p.base64, 2 * 1024 * 1024)
           const res = await fetch('/api/upload-media', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               targetUsername: username,
-              base64: p.base64,
+              base64: compressed,
               filename: `${p.sourceUsername}_promo.jpg`
             })
           })
