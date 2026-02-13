@@ -1,13 +1,15 @@
 'use client'
 
 import { useState, useCallback, useEffect } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { compressImage } from '@/lib/image-utils'
 import { calculateLTV, loadCachedModels } from '@/lib/models-data'
 import { 
   loadImages, 
   saveImages, 
+  deleteImages,
+  getAllUsernames,
   migrateFromLocalStorage,
   syncToKVv2,
   type PromoImage,
@@ -16,6 +18,7 @@ import {
 
 export default function ModelPage() {
   const params = useParams()
+  const router = useRouter()
   const username = params.username as string
   // Load model from localStorage cached models
   const [model, setModel] = useState<any>(() => {
@@ -33,6 +36,63 @@ export default function ModelPage() {
   const [initialLoadDone, setInitialLoadDone] = useState(false)
   const [saving, setSaving] = useState(false)
   const [vaultDetailsImage, setVaultDetailsImage] = useState<string | null>(null) // imageId to show vault details for
+  const [showRemoveModal, setShowRemoveModal] = useState(false)
+  const [removeConfirmText, setRemoveConfirmText] = useState('')
+  const [removing, setRemoving] = useState(false)
+  const [removeError, setRemoveError] = useState('')
+
+  const handleRemoveModel = async () => {
+    if (removeConfirmText !== username) return
+    setRemoving(true)
+    setRemoveError('')
+    try {
+      const res = await fetch('/api/remove-model', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username })
+      })
+      const data = await res.json()
+      if (!data.success) throw new Error(data.error || 'Failed')
+
+      // Clean IndexedDB: delete this model's images
+      await deleteImages(username)
+
+      // Remove this model's username from other models' image vaultIds
+      const allUsernames = await getAllUsernames()
+      for (const other of allUsernames) {
+        if (other === username) continue
+        const imgs = await loadImages(other)
+        let changed = false
+        const updated = imgs.map(img => {
+          if (img.vaultIds[username]) {
+            changed = true
+            const { [username]: _, ...rest } = img.vaultIds
+            return { ...img, vaultIds: rest }
+          }
+          return img
+        })
+        if (changed) await saveImages(other, updated)
+      }
+
+      // Clean localStorage wizard state
+      try {
+        const wizardKey = 's4s_wizard_state'
+        const raw = localStorage.getItem(wizardKey)
+        if (raw) {
+          const state = JSON.parse(raw)
+          if (state.models) {
+            state.models = state.models.filter((m: any) => m.username !== username)
+            localStorage.setItem(wizardKey, JSON.stringify(state))
+          }
+        }
+      } catch (_) {}
+
+      router.push('/network')
+    } catch (e: any) {
+      setRemoveError(e.message || 'Something went wrong')
+      setRemoving(false)
+    }
+  }
 
   // Load from IndexedDB on mount (with localStorage migration)
   useEffect(() => {
@@ -312,10 +372,18 @@ export default function ModelPage() {
                 </div>
               </div>
             </div>
-            <div className="text-right">
-              <div className="text-sm text-gray-400">Promo Images</div>
-              <div className="text-3xl font-bold text-white">{promoImages.length}</div>
-              <div className="text-sm text-green-400">{activeCount} active</div>
+            <div className="text-right space-y-2">
+              <div>
+                <div className="text-sm text-gray-400">Promo Images</div>
+                <div className="text-3xl font-bold text-white">{promoImages.length}</div>
+                <div className="text-sm text-green-400">{activeCount} active</div>
+              </div>
+              <button
+                onClick={() => setShowRemoveModal(true)}
+                className="px-3 py-1.5 text-xs font-medium rounded-lg bg-red-900/50 border border-red-800 text-red-400 hover:bg-red-900 hover:text-red-300 transition"
+              >
+                Remove Model
+              </button>
             </div>
           </div>
         </div>
@@ -519,6 +587,54 @@ export default function ModelPage() {
           </div>
         </div>
       </div>
+
+      {/* Remove Model Modal */}
+      {showRemoveModal && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-900 rounded-xl max-w-md w-full border border-red-900">
+            <div className="p-4 border-b border-gray-800">
+              <h3 className="text-lg font-semibold text-red-400">Remove Model</h3>
+            </div>
+            <div className="p-4 space-y-4">
+              <p className="text-gray-300 text-sm">
+                Remove <strong className="text-white">@{username}</strong> from the S4S rotation? This will clean up all vault mappings and remove her from the schedule.
+              </p>
+              <div>
+                <label className="text-gray-400 text-sm block mb-1">
+                  Type <strong className="text-white">{username}</strong> to confirm
+                </label>
+                <input
+                  type="text"
+                  value={removeConfirmText}
+                  onChange={(e) => setRemoveConfirmText(e.target.value)}
+                  className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-red-500"
+                  placeholder={username}
+                  autoFocus
+                />
+              </div>
+              {removeError && (
+                <p className="text-red-400 text-sm">{removeError}</p>
+              )}
+              <div className="flex gap-3">
+                <button
+                  onClick={() => { setShowRemoveModal(false); setRemoveConfirmText(''); setRemoveError('') }}
+                  className="flex-1 py-2 rounded-lg bg-gray-800 text-gray-300 hover:bg-gray-700 text-sm font-medium"
+                  disabled={removing}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleRemoveModel}
+                  disabled={removeConfirmText !== username || removing}
+                  className="flex-1 py-2 rounded-lg bg-red-600 text-white text-sm font-medium disabled:opacity-40 disabled:cursor-not-allowed hover:bg-red-700 transition"
+                >
+                  {removing ? '⏳ Removing...' : `Remove @${username}`}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Vault Details Modal */}
       {vaultDetailsImage && (() => {
