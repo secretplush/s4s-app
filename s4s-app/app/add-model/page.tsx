@@ -564,60 +564,74 @@ function Step4ReverseDistribute({ username, allModels, onNext, onBack }: {
   const startDistribution = async () => {
     setDistributing(true)
     setErrors([])
-    let current = 0
-    const total = sourceImages.filter(s => !completedModels.has(s.username)).length
 
-    // Process 5 models in parallel for speed
-    const PARALLEL = 5
-    const pending = sourceImages.filter(s => !completedModels.has(s.username))
-    
-    for (let c = 0; c < pending.length; c += PARALLEL) {
-      const batch = pending.slice(c, c + PARALLEL)
-      
-      await Promise.all(batch.map(async (source) => {
-        current++
-        setProgress({ current: c + batch.length, total, label: `Uploading batch ${Math.floor(c / PARALLEL) + 1}... (${Math.min(c + PARALLEL, total)}/${total})` })
+    // Collect ALL images that need uploading
+    const allPending: { sourceUsername: string; imageId: string; base64: string }[] = []
+    for (const source of sourceImages) {
+      if (completedModels.has(source.username)) continue
+      for (const img of source.images) {
+        if (img.vaultIds[username]) continue
+        if (!img.base64) {
+          setErrors(prev => [...prev, { model: source.username, error: 'No base64 data' }])
+          continue
+        }
+        allPending.push({ sourceUsername: source.username, imageId: img.id, base64: img.base64 })
+      }
+    }
 
-        for (const img of source.images) {
-          if (img.vaultIds[username]) continue
-          if (!img.base64) {
-            setErrors(prev => [...prev, { model: source.username, error: 'No base64 data' }])
-            continue
-          }
+    if (allPending.length === 0) {
+      setDistributing(false)
+      setProgress({ current: 0, total: 0, label: 'Nothing to distribute!' })
+      return
+    }
 
-          try {
-            const compressed = await compressImage(img.base64)
-            const res = await fetch('/api/distribute-to-new-model', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                targetUsername: username,
-                sourceUsername: source.username,
-                imageId: img.id,
-                base64: compressed
-              })
-            })
-            const data = await res.json()
-            if (data.vaultId) {
-              const allImgs = await loadImages(source.username)
-              const updated = allImgs.map(i =>
-                i.id === img.id ? { ...i, vaultIds: { ...i.vaultIds, [username]: data.vaultId } } : i
-              )
-              await saveImages(source.username, updated)
-            } else {
-              setErrors(prev => [...prev, { model: source.username, error: data.error || 'No vault ID' }])
-            }
-          } catch (e) {
-            setErrors(prev => [...prev, { model: source.username, error: String(e) }])
+    setProgress({ current: 0, total: allPending.length, label: `Compressing ${allPending.length} images...` })
+
+    // Compress all images
+    const compressed = await Promise.all(
+      allPending.map(async (p) => ({
+        ...p,
+        base64: await compressImage(p.base64)
+      }))
+    )
+
+    setProgress({ current: 0, total: compressed.length, label: `Uploading ${compressed.length} images in batch...` })
+
+    // Send ALL images in one batch API call
+    try {
+      const res = await fetch('/api/distribute-batch', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          targetUsername: username,
+          images: compressed
+        })
+      })
+      const data = await res.json()
+
+      if (data.results) {
+        for (const r of data.results) {
+          if (r.vaultId) {
+            // Update source model's image in IndexedDB
+            const allImgs = await loadImages(r.sourceUsername)
+            const updated = allImgs.map(i =>
+              (i as any).imageId === r.imageId || i.id === r.imageId
+                ? { ...i, vaultIds: { ...i.vaultIds, [username]: r.vaultId } }
+                : i
+            )
+            await saveImages(r.sourceUsername, updated)
+            setCompletedModels(prev => { const next = new Set(prev); next.add(r.sourceUsername); return next })
+          } else if (r.error) {
+            setErrors(prev => [...prev, { model: r.sourceUsername, error: r.error }])
           }
         }
-
-        setCompletedModels(prev => { const next = new Set(prev); next.add(source.username); return next })
-      }))
+        setProgress({ current: data.summary?.successful || 0, total: compressed.length, label: `Done! ${data.summary?.successful || 0}/${compressed.length} succeeded` })
+      }
+    } catch (e) {
+      setErrors(prev => [...prev, { model: 'batch', error: String(e) }])
     }
 
     setDistributing(false)
-    setProgress(p => ({ ...p, label: 'Done!' }))
   }
 
   const allDone = loaded && sourceImages.length > 0 && sourceImages.every(s => completedModels.has(s.username))
