@@ -96,7 +96,9 @@ function generateRailwaySchedule(models: { id: string; username: string }[]): Re
 
 export async function GET() {
   const allModels = await getServerModels()
-  const schedule = generateRailwaySchedule(allModels)
+  const deactivated = (await kv.get<string[]>('deactivated_models')) || []
+  const activeModels = allModels.filter(m => !deactivated.includes(m.username))
+  const schedule = generateRailwaySchedule(activeModels)
   
   const totalTags = Object.values(schedule).reduce((sum, s) => sum + s.length, 0)
   const models = Object.keys(schedule).length
@@ -123,9 +125,11 @@ export async function POST() {
   const RAILWAY_URL = process.env.RAILWAY_URL || 'https://s4s-worker-production.up.railway.app'
   
   try {
-    // Generate fresh 24h schedule
+    // Generate fresh 24h schedule (excluding deactivated models)
     const allModels = await getServerModels()
-    const schedule = generateRailwaySchedule(allModels)
+    const deactivated = (await kv.get<string[]>('deactivated_models')) || []
+    const activeModels = allModels.filter(m => !deactivated.includes(m.username))
+    const schedule = generateRailwaySchedule(activeModels)
     
     const totalTags = Object.values(schedule).reduce((sum, s) => sum + s.length, 0)
     const models = Object.keys(schedule).length

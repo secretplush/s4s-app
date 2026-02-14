@@ -45,13 +45,19 @@ export default function ModelPage() {
   const [reactivating, setReactivating] = useState(false)
   const [deactivateMessage, setDeactivateMessage] = useState('')
 
-  // Check deactivation status on mount
+  // Check deactivation status from server on mount
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem('s4s:deactivated')
-      const list: string[] = raw ? JSON.parse(raw) : []
-      setIsDeactivated(list.includes(username))
-    } catch (_) {}
+    fetch('/api/deactivation-status?username=' + encodeURIComponent(username))
+      .then(r => r.json())
+      .then(d => setIsDeactivated(d.deactivated === true))
+      .catch(() => {
+        // Fallback to localStorage
+        try {
+          const raw = localStorage.getItem('s4s:deactivated')
+          const list: string[] = raw ? JSON.parse(raw) : []
+          setIsDeactivated(list.includes(username))
+        } catch (_) {}
+      })
   }, [username])
 
   const handleDeactivate = async () => {
@@ -66,11 +72,6 @@ export default function ModelPage() {
       const data = await res.json()
       if (!data.success) throw new Error(data.error || 'Failed')
 
-      // Add to deactivated list
-      const raw = localStorage.getItem('s4s:deactivated')
-      const list: string[] = raw ? JSON.parse(raw) : []
-      if (!list.includes(username)) list.push(username)
-      localStorage.setItem('s4s:deactivated', JSON.stringify(list))
       setIsDeactivated(true)
       setDeactivateMessage('Model deactivated — removed from rotation but data preserved')
       setTimeout(() => setDeactivateMessage(''), 4000)
@@ -85,82 +86,14 @@ export default function ModelPage() {
     setReactivating(true)
     setDeactivateMessage('')
     try {
-      // Build vault mappings from IndexedDB images
-      const images = await loadImages(username)
-      const allUsernames = await getAllUsernames()
-
-      // Build v1 asPromoter: this model's images have vaultIds for other models
-      const asPromoterV1: Record<string, string> = {}
-      for (const img of images) {
-        for (const [target, vaultId] of Object.entries(img.vaultIds)) {
-          if (target !== username) asPromoterV1[target] = vaultId
-        }
-      }
-
-      // Build v1 asTarget: other models' images that have a vaultId for this model
-      const asTargetV1: Record<string, string> = {}
-      for (const other of allUsernames) {
-        if (other === username) continue
-        const otherImgs = await loadImages(other)
-        for (const img of otherImgs) {
-          if (img.vaultIds[username]) {
-            asTargetV1[other] = img.vaultIds[username]
-          }
-        }
-      }
-
-      // Build v2 asPromoter
-      const asPromoterV2: Record<string, Record<string, string[]>> = {}
-      for (const img of images) {
-        const uses = img.uses || []
-        if (uses.length === 0) continue
-        for (const [target, vaultId] of Object.entries(img.vaultIds)) {
-          if (target === username) continue
-          if (!asPromoterV2[target]) asPromoterV2[target] = {}
-          for (const use of uses) {
-            if (!asPromoterV2[target][use]) asPromoterV2[target][use] = []
-            if (!asPromoterV2[target][use].includes(vaultId)) {
-              asPromoterV2[target][use].push(vaultId)
-            }
-          }
-        }
-      }
-
-      // Build v2 asTarget
-      const asTargetV2: Record<string, Record<string, string[]>> = {}
-      for (const other of allUsernames) {
-        if (other === username) continue
-        const otherImgs = await loadImages(other)
-        for (const img of otherImgs) {
-          if (!img.vaultIds[username]) continue
-          const uses = img.uses || []
-          if (uses.length === 0) continue
-          if (!asTargetV2[other]) asTargetV2[other] = {}
-          for (const use of uses) {
-            if (!asTargetV2[other][use]) asTargetV2[other][use] = []
-            if (!asTargetV2[other][use].includes(img.vaultIds[username])) {
-              asTargetV2[other][use].push(img.vaultIds[username])
-            }
-          }
-        }
-      }
-
       const res = await fetch('/api/reactivate-model', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          username,
-          vaultMappingsV1: { asPromoter: asPromoterV1, asTarget: asTargetV1 },
-          vaultMappingsV2: { asPromoter: asPromoterV2, asTarget: asTargetV2 }
-        })
+        body: JSON.stringify({ username })
       })
       const data = await res.json()
       if (!data.success) throw new Error(data.error || 'Failed')
 
-      // Remove from deactivated list
-      const raw = localStorage.getItem('s4s:deactivated')
-      const list: string[] = raw ? JSON.parse(raw) : []
-      localStorage.setItem('s4s:deactivated', JSON.stringify(list.filter(u => u !== username)))
       setIsDeactivated(false)
       setDeactivateMessage('Model reactivated — back in rotation!')
       setTimeout(() => setDeactivateMessage(''), 4000)
