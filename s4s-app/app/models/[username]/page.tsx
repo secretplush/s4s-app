@@ -86,16 +86,76 @@ export default function ModelPage() {
     setReactivating(true)
     setDeactivateMessage('')
     try {
+      // Rebuild vault mappings from IndexedDB and push to server
+      const images = await loadImages(username)
+      const allUsernames = await getAllUsernames()
+
+      const asPromoterV1: Record<string, string> = {}
+      for (const img of images) {
+        for (const [target, vaultId] of Object.entries(img.vaultIds)) {
+          if (target !== username) asPromoterV1[target] = vaultId
+        }
+      }
+
+      const asTargetV1: Record<string, string> = {}
+      for (const other of allUsernames) {
+        if (other === username) continue
+        const otherImgs = await loadImages(other)
+        for (const img of otherImgs) {
+          if (img.vaultIds[username]) {
+            asTargetV1[other] = img.vaultIds[username]
+          }
+        }
+      }
+
+      const asPromoterV2: Record<string, Record<string, string[]>> = {}
+      for (const img of images) {
+        const uses = img.uses || []
+        if (uses.length === 0) continue
+        for (const [target, vaultId] of Object.entries(img.vaultIds)) {
+          if (target === username) continue
+          if (!asPromoterV2[target]) asPromoterV2[target] = {}
+          for (const use of uses) {
+            if (!asPromoterV2[target][use]) asPromoterV2[target][use] = []
+            if (!asPromoterV2[target][use].includes(vaultId)) {
+              asPromoterV2[target][use].push(vaultId)
+            }
+          }
+        }
+      }
+
+      const asTargetV2: Record<string, Record<string, string[]>> = {}
+      for (const other of allUsernames) {
+        if (other === username) continue
+        const otherImgs = await loadImages(other)
+        for (const img of otherImgs) {
+          if (!img.vaultIds[username]) continue
+          const uses = img.uses || []
+          if (uses.length === 0) continue
+          if (!asTargetV2[other]) asTargetV2[other] = {}
+          for (const use of uses) {
+            if (!asTargetV2[other][use]) asTargetV2[other][use] = []
+            if (!asTargetV2[other][use].includes(img.vaultIds[username])) {
+              asTargetV2[other][use].push(img.vaultIds[username])
+            }
+          }
+        }
+      }
+
       const res = await fetch('/api/reactivate-model', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username })
+        body: JSON.stringify({
+          username,
+          vaultMappingsV1: { asPromoter: asPromoterV1, asTarget: asTargetV1 },
+          vaultMappingsV2: { asPromoter: asPromoterV2, asTarget: asTargetV2 }
+        })
       })
       const data = await res.json()
       if (!data.success) throw new Error(data.error || 'Failed')
 
       setIsDeactivated(false)
-      setDeactivateMessage('Model reactivated — back in rotation!')
+      setDeactivateMessage('Model reactivated — vault mappings restored!')
       setTimeout(() => setDeactivateMessage(''), 4000)
     } catch (e: any) {
       setDeactivateMessage(`Error: ${e.message}`)
