@@ -1,0 +1,51 @@
+{
+  "lifetime": {
+    "replies": 0,
+    "ppvs_sent": 0,
+    "ppvs_unlocked": 0,
+    "revenue": 0.0,
+    "new_subs_welcomed": 0,
+    "upsells_sent": 0,
+    "tips": 0.0,
+    "opus_calls": 23
+  },
+  "today": {
+    "2026-02-23": {
+      "replies": 0,
+      "ppvs_sent": 0,
+      "ppvs_unlocked": 0,
+      "revenue": 0.0,
+      "new_subs": 0,
+      "upsells_sent": 0,
+      "tips": 0.0,
+      "opus_calls": 23
+    }
+  },
+  "fans": {},
+  "hourly": {
+    "2026-02-23-20": {
+      "replies": 0,
+      "ppvs_sent": 0,
+      "ppvs_unlocked": 0,
+      "revenue": 0.0
+    },
+    "2026-02-23-21": {
+      "replies": 0,
+      "ppvs_sent": 0,
+      "ppvs_unlocked": 0,
+      "revenue": 0.0
+    },
+    "2026-02-23-22": {
+      "replies": 0,
+      "ppvs_sent": 0,
+      "ppvs_unlocked": 0,
+      "revenue": 0.0
+    },
+    "2026-02-23-23": {
+      "replies": 0,
+      "ppvs_sent": 0,
+      "ppvs_unlocked": 0,
+      "revenue": 0.0
+    }
+  }
+}

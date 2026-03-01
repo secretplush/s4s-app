@@ -1,0 +1,12 @@
+{
+  "last_bump_run": null,
+  "sent_messages": {},
+  "bump_count_this_cycle": 0,
+  "cycle_start": null,
+  "stats": {
+    "attempted": 0,
+    "sent": 0,
+    "unsent": 0,
+    "failures": []
+  }
+}

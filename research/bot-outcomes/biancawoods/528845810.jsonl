@@ -1,0 +1,14 @@
+{"ts":1771880603,"type":"outcome","event":"replied"}
+{"ts":1771880605,"type":"action","action":"text","fan_state":"new","fan_total_spent":0.0}
+{"ts":1771880642,"type":"outcome","event":"replied"}
+{"ts":1771880643,"type":"action","action":"text","fan_state":"engaged","fan_total_spent":0.0}
+{"ts":1771880655,"type":"outcome","event":"replied"}
+{"ts":1771880657,"type":"action","action":"text","fan_state":"engaged","fan_total_spent":0.0}
+{"ts":1771880671,"type":"outcome","event":"replied"}
+{"ts":1771880672,"type":"action","action":"text","fan_state":"engaged","fan_total_spent":0.0}
+{"ts":1771880678,"type":"outcome","event":"replied"}
+{"ts":1771880680,"type":"action","action":"free_media","content_key":"sexting3_pic","hook":"vulnerability","fan_state":"engaged","fan_total_spent":0.0}
+{"ts":1771880702,"type":"outcome","event":"replied"}
+{"ts":1771880704,"type":"action","action":"ppv","content_key":"combo8","price":18,"hook":"vulnerability","fan_state":"engaged","fan_total_spent":0.0}
+{"ts":1771887864,"type":"outcome","event":"replied"}
+{"ts":1771887866,"type":"action","action":"ppv","content_key":"combo7","price":18,"hook":"vulnerability","fan_state":"pitched","fan_total_spent":0.0}

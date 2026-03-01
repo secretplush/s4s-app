@@ -1,0 +1,252 @@
+{
+  "fans": {
+    "451406954": {
+      "last_seen_message_id": "8630134311987",
+      "last_seen_ts": 1771566148237,
+      "name": "Kyle Omarion",
+      "last_processed_at": 1771977541538
+    },
+    "97399362": {
+      "last_seen_message_id": "8630321931975",
+      "last_seen_ts": 1771567644701,
+      "name": "Erik",
+      "last_processed_at": 1771901774251
+    },
+    "219023487": {
+      "last_seen_message_id": "8630268350417",
+      "last_seen_ts": 1771567194316,
+      "name": "silly rabbit"
+    },
+    "505488901": {
+      "last_seen_message_id": "8630367162983",
+      "last_seen_ts": 1771568034000,
+      "name": "JD"
+    },
+    "25933090": {
+      "last_seen_message_id": "8630213692070",
+      "last_seen_ts": 1771566743929,
+      "name": "candyapple"
+    },
+    "34801621": {
+      "last_seen_message_id": "8630331230897",
+      "last_seen_ts": 1771567739645,
+      "name": "Markuss"
+    },
+    "125090141": {
+      "last_seen_message_id": "8630293212056",
+      "last_seen_ts": 1771567374231,
+      "name": "Darrel james"
+    },
+    "499790221": {
+      "last_seen_ts": 1771567442779,
+      "name": "Bryan V"
+    },
+    "512187582": {
+      "last_seen_message_id": "8630350545222",
+      "last_seen_ts": 1771568078000,
+      "name": "Liam",
+      "last_processed_at": 1771967005894
+    },
+    "521631870": {
+      "last_seen_message_id": "8630316451549",
+      "last_seen_ts": 1771567556644,
+      "name": "Catalin"
+    },
+    "284207635": {
+      "last_seen_message_id": "8630356997394",
+      "last_seen_ts": 1771567967000,
+      "name": "Sergio"
+    },
+    "546791879": {
+      "last_seen_message_id": "8634397978702",
+      "last_seen_ts": 1771567795398,
+      "name": "",
+      "last_processed_at": 1771976387521
+    },
+    "152554038": {
+      "last_seen_message_id": "8630369151239",
+      "last_seen_ts": 1771568445000,
+      "name": "Mark"
+    },
+    "423072315": {
+      "last_processed_at": 1771944574128
+    },
+    "497315454": {
+      "last_processed_at": 1771880310803
+    },
+    "253633826": {
+      "last_processed_at": 1771880809135
+    },
+    "486446722": {
+      "last_processed_at": 1771889899369
+    },
+    "2830433": {
+      "last_processed_at": 1771979710743
+    },
+    "33985433": {
+      "last_processed_at": 1771884700085
+    },
+    "212554562": {
+      "last_processed_at": 1771953763652
+    },
+    "386420401": {
+      "last_processed_at": 1771893377362
+    },
+    "389104580": {
+      "last_processed_at": 1771893415724
+    },
+    "552438606": {
+      "last_processed_at": 1771967319753
+    },
+    "426789148": {
+      "last_processed_at": 1771943803025
+    },
+    "354426412": {
+      "last_processed_at": 1771974997230
+    },
+    "464595513": {
+      "last_processed_at": 1771969465597
+    },
+    "22772442": {
+      "last_processed_at": 1771948561868
+    },
+    "549478004": {
+      "last_processed_at": 1771976510075
+    },
+    "414151380": {
+      "last_processed_at": 1771950952039
+    },
+    "24880528": {
+      "last_processed_at": 1771949804229
+    },
+    "528049916": {
+      "last_processed_at": 1771950319611
+    },
+    "62894564": {
+      "last_processed_at": 1771950742348
+    },
+    "543879480": {
+      "last_processed_at": 1771976156505
+    },
+    "328493673": {
+      "last_processed_at": 1771951339133
+    },
+    "530070488": {
+      "last_processed_at": 1771951342105
+    },
+    "419974855": {
+      "last_processed_at": 1771976537027
+    },
+    "524124892": {
+      "last_processed_at": 1771952821296
+    },
+    "421244784": {
+      "last_processed_at": 1771951357862
+    },
+    "553149872": {
+      "last_processed_at": 1771951779336
+    },
+    "117378998": {
+      "last_processed_at": 1771952517246
+    },
+    "512000643": {
+      "last_processed_at": 1771952773139
+    },
+    "440217620": {
+      "last_processed_at": 1771952737768
+    },
+    "544589172": {
+      "last_processed_at": 1771952978045
+    },
+    "551631756": {
+      "last_processed_at": 1771953421368
+    },
+    "121331731": {
+      "last_processed_at": 1771970597988
+    },
+    "444363690": {
+      "last_processed_at": 1771953650665
+    },
+    "392277238": {
+      "last_processed_at": 1771964862578
+    },
+    "433648749": {
+      "last_processed_at": 1771966195980
+    },
+    "502135990": {
+      "last_processed_at": 1771971237958
+    },
+    "131183119": {
+      "last_processed_at": 1771965200311
+    },
+    "219522503": {
+      "last_processed_at": 1771967512037
+    },
+    "363847082": {
+      "last_processed_at": 1771967488082
+    },
+    "545628353": {
+      "last_processed_at": 1771979670695
+    },
+    "519455717": {
+      "last_processed_at": 1771967367773
+    },
+    "2224463": {
+      "last_processed_at": 1771967376206
+    },
+    "383285549": {
+      "last_processed_at": 1771969868004
+    },
+    "498832781": {
+      "last_processed_at": 1771968151849
+    },
+    "545996223": {
+      "last_processed_at": 1771970487339
+    },
+    "359554079": {
+      "last_processed_at": 1771970321295
+    },
+    "242522568": {
+      "last_processed_at": 1771970655687
+    },
+    "248434194": {
+      "last_processed_at": 1771970842144
+    },
+    "536923232": {
+      "last_processed_at": 1771970944960
+    },
+    "273709966": {
+      "last_processed_at": 1771971877399
+    },
+    "456568179": {
+      "last_processed_at": 1771974185398
+    },
+    "527301372": {
+      "last_processed_at": 1771974306671
+    },
+    "530808479": {
+      "last_processed_at": 1771974358390
+    },
+    "478996723": {
+      "last_processed_at": 1771975526008
+    },
+    "491465196": {
+      "last_processed_at": 1771977840647
+    },
+    "269560340": {
+      "last_processed_at": 1771978239690
+    },
+    "418957514": {
+      "last_processed_at": 1771978295073
+    },
+    "543655743": {
+      "last_processed_at": 1771978746494
+    },
+    "226207836": {
+      "last_processed_at": 1771979507123
+    },
+    "149466096": {
+      "last_processed_at": 1771979363543
+    }
+  }
+}

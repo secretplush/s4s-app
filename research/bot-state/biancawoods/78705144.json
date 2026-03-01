@@ -1,0 +1,17 @@
+{
+  "fan_id": 78705144,
+  "state": "pitched",
+  "name": "",
+  "messages_sent": 2,
+  "messages_received": 2,
+  "total_spent": 0.0,
+  "last_ppv_price": 18,
+  "content_sent": [
+    "gfe_selfie",
+    "combo1"
+  ],
+  "last_interaction_ts": 1771880414,
+  "created_ts": 1771880364,
+  "signals": [],
+  "notes": ""
+}

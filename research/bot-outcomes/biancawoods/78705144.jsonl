@@ -1,0 +1,4 @@
+{"ts":1771880364,"type":"outcome","event":"replied"}
+{"ts":1771880365,"type":"action","action":"text","fan_state":"new","fan_total_spent":0.0}
+{"ts":1771880412,"type":"outcome","event":"replied"}
+{"ts":1771880414,"type":"action","action":"ppv","content_key":"combo1","price":18,"hook":"buying_signal","fan_state":"engaged","fan_total_spent":0.0}

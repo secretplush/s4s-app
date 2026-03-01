@@ -1,0 +1,24 @@
+{
+  "fan_id": 253633826,
+  "state": "pitched",
+  "name": "",
+  "messages_sent": 8,
+  "messages_received": 9,
+  "total_spent": 0.0,
+  "last_ppv_price": 18,
+  "content_sent": [
+    "gfe_selfie",
+    "combo10",
+    "combo1",
+    "combo5",
+    "combo8",
+    "combo13"
+  ],
+  "last_interaction_ts": 1771881351,
+  "created_ts": 1771880571,
+  "signals": [],
+  "notes": "",
+  "save_trigger": "rejection_signal",
+  "save_trigger_text": "Nah I\u2019d rather see you with it off",
+  "save_trigger_ts": 1771880766.471433
+}

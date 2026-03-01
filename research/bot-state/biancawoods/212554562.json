@@ -1,0 +1,16 @@
+{
+  "fan_id": 212554562,
+  "state": "engaged",
+  "name": "",
+  "messages_sent": 4,
+  "messages_received": 4,
+  "total_spent": 0.0,
+  "last_ppv_price": null,
+  "content_sent": [
+    "sexting2_pic"
+  ],
+  "last_interaction_ts": 1771888000,
+  "created_ts": 1771883986,
+  "signals": [],
+  "notes": ""
+}

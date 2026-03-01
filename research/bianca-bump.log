@@ -1,0 +1,203 @@
+[2026-02-20 11:11:11] No previous mass msg to unsend.
+[2026-02-20 11:11:13] Active fans excluded: 10
+[2026-02-20 11:11:13] Sending mass bump: "are u ignoring me 😤💕" + photo 4083927380
+[2026-02-20 11:11:13]   Excluding 5 lists + 10 active fans
+[2026-02-20 11:11:13]   ❌ Failed (404): {'error': 'Not Found'}
+[2026-02-20 11:11:13] Done.
+Step 1: Deleting previous bump...
+Deleting mass bump campaign 35966118359...
+  ✅ Deleted: "hiiii remember me? 🙈"
+     Sent to: 8373 fans, 75 viewed
+
+Step 2: Sending new bump...
+Getting active chatters to exclude...
+  50 active chatters will be excluded
+
+Sending mass bump: "heyyy u 💕 been thinking about u" + photo 4084332827...
+  ✅ Sent! mass_message_id=35968297159
+     canUnsend=True
+
+✅ Bump cycle complete.
+
+=== MASS BUMP HEALTH REPORT ===
+Last bump ID: 35968297159
+Last bump time: 2026-02-20T12:13:37-0400
+Last bump text: heyyy u 💕 been thinking about u
+Total bumps sent: 2
+
+Recent history (2 entries):
+  [2026-02-20T11:13:09-0400] id=35966118359 "hiiii remember me? 🙈" (excluded 46 users)
+  [2026-02-20T12:13:37-0400] id=35968297159 "heyyy u 💕 been thinking about u" (excluded 50 users)
+===============================
+
+Step 1: Deleting previous bump...
+Deleting mass bump campaign 35968297159...
+  ❌ Delete failed: 404 — {"error": "ONLYFANS_COM_ERROR", "message": "The requested OnlyFans resource was not found.", "description": "This error happened most probably because of a bug in the OnlyFans.com API or you sent wron
+⚠️ Delete failed — continuing with send anyway
+
+Step 2: Sending new bump...
+Getting active chatters to exclude...
+  50 active chatters will be excluded
+
+Sending mass bump: "bored and looking cute rn 😏 wanna see?" + photo 4084332368...
+  ✅ Sent! mass_message_id=35970529795
+     canUnsend=True
+
+✅ Bump cycle complete.
+
+=== MASS BUMP HEALTH REPORT ===
+Last bump ID: 35970529795
+Last bump time: 2026-02-20T13:13:48-0400
+Last bump text: bored and looking cute rn 😏 wanna see?
+Total bumps sent: 3
+
+Recent history (3 entries):
+  [2026-02-20T11:13:09-0400] id=35966118359 "hiiii remember me? 🙈" (excluded 46 users)
+  [2026-02-20T12:13:37-0400] id=35968297159 "heyyy u 💕 been thinking about u" (excluded 50 users)
+  [2026-02-20T13:13:48-0400] id=35970529795 "bored and looking cute rn 😏 wanna see?" (excluded 50 users)
+===============================
+
+Step 1: Deleting previous bump...
+Deleting mass bump campaign 35970529795...
+  ✅ Deleted: "bored and looking cute rn 😏 wanna see?"
+     Sent to: 8371 fans, 64 viewed
+
+Step 2: Sending new bump...
+Getting active chatters to exclude...
+  49 active chatters will be excluded
+
+Sending mass bump: "miss talking to u 🥺" + photo 4295115608...
+  ✅ Sent! mass_message_id=35972806754
+     canUnsend=True
+
+✅ Bump cycle complete.
+
+=== MASS BUMP HEALTH REPORT ===
+Last bump ID: 35972806754
+Last bump time: 2026-02-20T14:14:00-0400
+Last bump text: miss talking to u 🥺
+Total bumps sent: 4
+
+Recent history (4 entries):
+  [2026-02-20T11:13:09-0400] id=35966118359 "hiiii remember me? 🙈" (excluded 46 users)
+  [2026-02-20T12:13:37-0400] id=35968297159 "heyyy u 💕 been thinking about u" (excluded 50 users)
+  [2026-02-20T13:13:48-0400] id=35970529795 "bored and looking cute rn 😏 wanna see?" (excluded 50 users)
+  [2026-02-20T14:14:00-0400] id=35972806754 "miss talking to u 🥺" (excluded 49 users)
+===============================
+
+Step 1: Deleting previous bump...
+Deleting mass bump campaign 35972806754...
+  ❌ Delete failed: 404 — {"error": "ONLYFANS_COM_ERROR", "message": "The requested OnlyFans resource was not found.", "description": "This error happened most probably because of a bug in the OnlyFans.com API or you sent wron
+⚠️ Delete failed — continuing with send anyway
+
+Step 2: Sending new bump...
+Getting active chatters to exclude...
+  18 active chatters will be excluded
+
+Sending mass bump: "hiiii remember me? 🙈" + photo 4118094218...
+  ✅ Sent! mass_message_id=35975102614
+     canUnsend=True
+
+✅ Bump cycle complete.
+
+=== MASS BUMP HEALTH REPORT ===
+Last bump ID: 35975102614
+Last bump time: 2026-02-20T15:14:02-0400
+Last bump text: hiiii remember me? 🙈
+Total bumps sent: 5
+
+Recent history (5 entries):
+  [2026-02-20T11:13:09-0400] id=35966118359 "hiiii remember me? 🙈" (excluded 46 users)
+  [2026-02-20T12:13:37-0400] id=35968297159 "heyyy u 💕 been thinking about u" (excluded 50 users)
+  [2026-02-20T13:13:48-0400] id=35970529795 "bored and looking cute rn 😏 wanna see?" (excluded 50 users)
+  [2026-02-20T14:14:00-0400] id=35972806754 "miss talking to u 🥺" (excluded 49 users)
+  [2026-02-20T15:14:02-0400] id=35975102614 "hiiii remember me? 🙈" (excluded 18 users)
+===============================
+
+Step 1: Deleting previous bump...
+Deleting mass bump campaign 35975102614...
+  ✅ Deleted: "hiiii remember me? 🙈"
+     Sent to: 8409 fans, 58 viewed
+
+Step 2: Sending new bump...
+Getting active chatters to exclude...
+  26 active chatters will be excluded
+
+Sending mass bump: "heyyy u 💕 been thinking about u" + photo 4084332833...
+  ✅ Sent! mass_message_id=35977448941
+     canUnsend=True
+
+✅ Bump cycle complete.
+
+=== MASS BUMP HEALTH REPORT ===
+Last bump ID: 35977448941
+Last bump time: 2026-02-20T16:14:05-0400
+Last bump text: heyyy u 💕 been thinking about u
+Total bumps sent: 6
+
+Recent history (6 entries):
+  [2026-02-20T12:13:37-0400] id=35968297159 "heyyy u 💕 been thinking about u" (excluded 50 users)
+  [2026-02-20T13:13:48-0400] id=35970529795 "bored and looking cute rn 😏 wanna see?" (excluded 50 users)
+  [2026-02-20T14:14:00-0400] id=35972806754 "miss talking to u 🥺" (excluded 49 users)
+  [2026-02-20T15:14:02-0400] id=35975102614 "hiiii remember me? 🙈" (excluded 18 users)
+  [2026-02-20T16:14:05-0400] id=35977448941 "heyyy u 💕 been thinking about u" (excluded 26 users)
+===============================
+
+Step 1: Deleting previous bump...
+Deleting mass bump campaign 35977448941...
+  ❌ Delete failed: 404 — {"error": "ONLYFANS_COM_ERROR", "message": "The requested OnlyFans resource was not found.", "description": "This error happened most probably because of a bug in the OnlyFans.com API or you sent wron
+⚠️ Delete failed — continuing with send anyway
+
+Step 2: Sending new bump...
+Getting active chatters to exclude...
+  29 active chatters will be excluded
+
+Sending mass bump: "pssst 😘" + photo 4271207724...
+  ✅ Sent! mass_message_id=35979840765
+     canUnsend=True
+
+✅ Bump cycle complete.
+
+=== MASS BUMP HEALTH REPORT ===
+Last bump ID: 35979840765
+Last bump time: 2026-02-20T17:14:07-0400
+Last bump text: pssst 😘
+Total bumps sent: 7
+
+Recent history (7 entries):
+  [2026-02-20T13:13:48-0400] id=35970529795 "bored and looking cute rn 😏 wanna see?" (excluded 50 users)
+  [2026-02-20T14:14:00-0400] id=35972806754 "miss talking to u 🥺" (excluded 49 users)
+  [2026-02-20T15:14:02-0400] id=35975102614 "hiiii remember me? 🙈" (excluded 18 users)
+  [2026-02-20T16:14:05-0400] id=35977448941 "heyyy u 💕 been thinking about u" (excluded 26 users)
+  [2026-02-20T17:14:07-0400] id=35979840765 "pssst 😘" (excluded 29 users)
+===============================
+
+Step 1: Deleting previous bump...
+Deleting mass bump campaign 35979840765...
+  ✅ Deleted: "pssst 😘"
+     Sent to: 8407 fans, 75 viewed
+
+Step 2: Sending new bump...
+Getting active chatters to exclude...
+  30 active chatters will be excluded
+
+Sending mass bump: "are u ignoring me 😤💕" + photo 4083927380...
+  ✅ Sent! mass_message_id=35982292545
+     canUnsend=True
+
+✅ Bump cycle complete.
+
+=== MASS BUMP HEALTH REPORT ===
+Last bump ID: 35982292545
+Last bump time: 2026-02-20T18:14:09-0400
+Last bump text: are u ignoring me 😤💕
+Total bumps sent: 8
+
+Recent history (8 entries):
+  [2026-02-20T14:14:00-0400] id=35972806754 "miss talking to u 🥺" (excluded 49 users)
+  [2026-02-20T15:14:02-0400] id=35975102614 "hiiii remember me? 🙈" (excluded 18 users)
+  [2026-02-20T16:14:05-0400] id=35977448941 "heyyy u 💕 been thinking about u" (excluded 26 users)
+  [2026-02-20T17:14:07-0400] id=35979840765 "pssst 😘" (excluded 29 users)
+  [2026-02-20T18:14:09-0400] id=35982292545 "are u ignoring me 😤💕" (excluded 30 users)
+===============================
+

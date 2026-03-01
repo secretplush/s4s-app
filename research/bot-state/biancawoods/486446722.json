@@ -1,0 +1,25 @@
+{
+  "fan_id": 486446722,
+  "state": "pitched",
+  "name": "",
+  "messages_sent": 20,
+  "messages_received": 22,
+  "total_spent": 0.0,
+  "last_ppv_price": 18,
+  "content_sent": [
+    "gfe_selfie",
+    "sexting1_pic",
+    "sexting3_pic",
+    "combo10",
+    "combo9",
+    "combo13",
+    "combo3",
+    "combo4",
+    "combo8",
+    "combo12"
+  ],
+  "last_interaction_ts": 1771888036,
+  "created_ts": 1771877570,
+  "signals": [],
+  "notes": ""
+}

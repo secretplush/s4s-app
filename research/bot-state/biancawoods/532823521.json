@@ -1,0 +1,21 @@
+{
+  "fan_id": 532823521,
+  "state": "pitched",
+  "name": "",
+  "messages_sent": 8,
+  "messages_received": 8,
+  "total_spent": 0.0,
+  "last_ppv_price": 18,
+  "content_sent": [
+    "gfe_selfie",
+    "sexting1_pic",
+    "sexting2_pic",
+    "combo1",
+    "combo7",
+    "combo8"
+  ],
+  "last_interaction_ts": 1771888196,
+  "created_ts": 1771887845,
+  "signals": [],
+  "notes": ""
+}

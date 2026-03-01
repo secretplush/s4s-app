@@ -1,0 +1,17 @@
+{
+  "fan_id": 97399362,
+  "state": "engaged",
+  "name": "",
+  "messages_sent": 5,
+  "messages_received": 5,
+  "total_spent": 0.0,
+  "last_ppv_price": null,
+  "content_sent": [
+    "sexting3_pic",
+    "sexting2_pic"
+  ],
+  "last_interaction_ts": 1771882695,
+  "created_ts": 1771881494,
+  "signals": [],
+  "notes": ""
+}

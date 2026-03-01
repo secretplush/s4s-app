@@ -1,0 +1,16 @@
+{
+  "fan_id": 466236309,
+  "state": "greeted",
+  "name": "",
+  "messages_sent": 1,
+  "messages_received": 1,
+  "total_spent": 0.0,
+  "last_ppv_price": null,
+  "content_sent": [
+    "gfe_selfie"
+  ],
+  "last_interaction_ts": 1771887587,
+  "created_ts": 1771887586,
+  "signals": [],
+  "notes": ""
+}

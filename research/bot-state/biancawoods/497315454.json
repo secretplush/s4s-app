@@ -1,0 +1,24 @@
+{
+  "fan_id": 497315454,
+  "state": "buyer",
+  "name": "",
+  "messages_sent": 9,
+  "messages_received": 13,
+  "total_spent": 92.0,
+  "last_ppv_price": 18,
+  "content_sent": [
+    "gfe_selfie",
+    "sexting2_pic",
+    "combo10",
+    "combo13",
+    "combo3",
+    "combo4"
+  ],
+  "last_interaction_ts": 1771878837,
+  "created_ts": 1771877351,
+  "signals": [],
+  "notes": "",
+  "save_trigger": "rejection_signal",
+  "save_trigger_text": "Alright. You just look great, no matter what you do. I probably need to stop, so I can save up my money for my bills. \ud83e\udee0",
+  "save_trigger_ts": 1771878837.808707
+}

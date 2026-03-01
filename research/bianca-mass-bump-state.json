@@ -1,0 +1,83 @@
+{
+  "last_mass_bump_id": 36131528541,
+  "last_mass_bump_ts": "2026-02-23T18:57:43-0400",
+  "last_mass_bump_text": "pssst \ud83d\ude18",
+  "bump_count": 11,
+  "history": [
+    {
+      "id": 35966118359,
+      "text": "hiiii remember me? \ud83d\ude48",
+      "photo": "4084332834",
+      "ts": "2026-02-20T11:13:09-0400",
+      "excluded_users": 46
+    },
+    {
+      "id": 35968297159,
+      "text": "heyyy u \ud83d\udc95 been thinking about u",
+      "photo": "4084332827",
+      "ts": "2026-02-20T12:13:37-0400",
+      "excluded_users": 50
+    },
+    {
+      "id": 35970529795,
+      "text": "bored and looking cute rn \ud83d\ude0f wanna see?",
+      "photo": "4084332368",
+      "ts": "2026-02-20T13:13:48-0400",
+      "excluded_users": 50
+    },
+    {
+      "id": 35972806754,
+      "text": "miss talking to u \ud83e\udd7a",
+      "photo": "4295115608",
+      "ts": "2026-02-20T14:14:00-0400",
+      "excluded_users": 49
+    },
+    {
+      "id": 35975102614,
+      "text": "hiiii remember me? \ud83d\ude48",
+      "photo": "4118094218",
+      "ts": "2026-02-20T15:14:02-0400",
+      "excluded_users": 18
+    },
+    {
+      "id": 35977448941,
+      "text": "heyyy u \ud83d\udc95 been thinking about u",
+      "photo": "4084332833",
+      "ts": "2026-02-20T16:14:05-0400",
+      "excluded_users": 26
+    },
+    {
+      "id": 35979840765,
+      "text": "pssst \ud83d\ude18",
+      "photo": "4271207724",
+      "ts": "2026-02-20T17:14:07-0400",
+      "excluded_users": 29
+    },
+    {
+      "id": 35982292545,
+      "text": "are u ignoring me \ud83d\ude24\ud83d\udc95",
+      "photo": "4083927380",
+      "ts": "2026-02-20T18:14:09-0400",
+      "excluded_users": 30
+    }
+  ],
+  "last_mass_bump_ts_epoch": 1771887461.924076,
+  "exclude_list_members": [
+    2830433,
+    33985433,
+    78705144,
+    80628428,
+    82337469,
+    97399362,
+    179342065,
+    212554562,
+    282667330,
+    302909671,
+    339896627,
+    392277238,
+    423072315,
+    435895497,
+    465889856,
+    512798597
+  ]
+}

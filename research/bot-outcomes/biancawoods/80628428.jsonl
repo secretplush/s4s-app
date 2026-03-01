@@ -1,0 +1,10 @@
+{"ts":1771884104,"type":"outcome","event":"replied"}
+{"ts":1771884106,"type":"action","action":"text","fan_state":"new","fan_total_spent":0.0}
+{"ts":1771884137,"type":"outcome","event":"replied"}
+{"ts":1771884138,"type":"action","action":"text","fan_state":"engaged","fan_total_spent":0.0}
+{"ts":1771884149,"type":"outcome","event":"replied"}
+{"ts":1771884152,"type":"action","action":"text","fan_state":"engaged","fan_total_spent":0.0}
+{"ts":1771884195,"type":"outcome","event":"replied"}
+{"ts":1771884197,"type":"action","action":"ppv","content_key":"combo13","price":18,"hook":"sexual_match","fan_state":"engaged","fan_total_spent":0.0}
+{"ts":1771887700,"type":"outcome","event":"replied"}
+{"ts":1771887703,"type":"action","action":"ppv","content_key":"combo6","price":18,"hook":"exclusivity","fan_state":"pitched","fan_total_spent":0.0}

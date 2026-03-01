@@ -1,0 +1,17 @@
+{
+  "fan_id": 451406954,
+  "state": "ppv_sent",
+  "name": "",
+  "messages_sent": 5,
+  "messages_received": 4,
+  "total_spent": 0.0,
+  "last_ppv_price": 15,
+  "content_sent": [
+    "gfe_selfie",
+    "sexting1_vid_15"
+  ],
+  "last_interaction_ts": 1771889368,
+  "created_ts": 1771887776,
+  "signals": [],
+  "notes": ""
+}

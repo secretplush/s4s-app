@@ -1,0 +1,14 @@
+{"ts":1771880491,"type":"outcome","event":"replied"}
+{"ts":1771880492,"type":"action","action":"text","fan_state":"new","fan_total_spent":0.0}
+{"ts":1771880516,"type":"outcome","event":"replied"}
+{"ts":1771880517,"type":"action","action":"free_media","content_key":"sexting1_pic","hook":"sexual_match","fan_state":"engaged","fan_total_spent":0.0}
+{"ts":1771880529,"type":"outcome","event":"replied"}
+{"ts":1771880531,"type":"action","action":"text","fan_state":"engaged","fan_total_spent":0.0}
+{"ts":1771880590,"type":"outcome","event":"replied"}
+{"ts":1771880592,"type":"action","action":"text","fan_state":"engaged","fan_total_spent":0.0}
+{"ts":1771884522,"type":"outcome","event":"replied"}
+{"ts":1771884524,"type":"action","action":"free_media","content_key":"sexting1_pic","hook":"vulnerability","fan_state":"engaged","fan_total_spent":0.0}
+{"ts":1771884556,"type":"outcome","event":"replied"}
+{"ts":1771884558,"type":"action","action":"ppv","content_key":"combo13","price":18,"hook":"sexual_match","fan_state":"engaged","fan_total_spent":0.0}
+{"ts":1771887865,"type":"outcome","event":"replied"}
+{"ts":1771887868,"type":"action","action":"ppv","content_key":"combo5","price":18,"hook":"sexual_match","fan_state":"pitched","fan_total_spent":0.0}

@@ -1,0 +1,787 @@
+🔍 OF Training Data Harvester
+   Output: /Users/moltplush/.openclaw/workspace/research/training-conversations.jsonl
+           /Users/moltplush/.openclaw/workspace/research/training-outcomes.jsonl
+
+Found 65 accounts
+
+[1/65] Processing adalyndean...
+
+============================================================
+Harvesting: adalyndean (model OF ID: 524210690)
+============================================================
+  Fetching transactions...
+  Got 200 transactions
+  Revenue: $3785.87 from 100 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 194 msgs, 0 purchases
+
+[2/65] Processing tatumhill...
+
+============================================================
+Harvesting: tatumhill (model OF ID: 550722663)
+============================================================
+  Fetching transactions...
+  Got 2 transactions
+  Revenue: $40.69 from 1 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 189 msgs, 0 purchases
+
+[3/65] Processing siennavane...
+
+============================================================
+Harvesting: siennavane (model OF ID: 552046899)
+============================================================
+  Fetching transactions...
+  Got 13 transactions
+  Revenue: $199.87 from 10 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 242 msgs, 1 purchases
+
+[4/65] Processing zoeygraceee...
+
+============================================================
+Harvesting: zoeygraceee (model OF ID: 545965569)
+============================================================
+  Fetching transactions...
+  Got 63 transactions
+  Revenue: $1531.77 from 20 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 267 msgs, 0 purchases
+
+[5/65] Processing islawest...
+
+============================================================
+Harvesting: islawest (model OF ID: 549328997)
+============================================================
+  Fetching transactions...
+  Got 1 transactions
+  Revenue: $19.90 from 1 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 125 msgs, 0 purchases
+
+[6/65] Processing jennilii...
+
+============================================================
+Harvesting: jennilii (model OF ID: 453550853)
+============================================================
+  Fetching transactions...
+  Got 58 transactions
+  Revenue: $1918.80 from 20 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 383 msgs, 1 purchases
+
+[7/65] Processing carinawestbrook...
+
+============================================================
+Harvesting: carinawestbrook (model OF ID: 549709157)
+============================================================
+  Fetching transactions...
+  Got 48 transactions
+  Revenue: $969.59 from 34 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 200 msgs, 0 purchases
+
+[8/65] Processing jadexwilde...
+
+============================================================
+Harvesting: jadexwilde (model OF ID: 539897163)
+============================================================
+  Fetching transactions...
+  Got 20 transactions
+  Revenue: $437.98 from 12 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 203 msgs, 0 purchases
+
+[9/65] Processing itstaylorbrooke...
+
+============================================================
+Harvesting: itstaylorbrooke (model OF ID: 466363781)
+============================================================
+  Fetching transactions...
+  Got 60 transactions
+  Revenue: $2167.23 from 26 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 392 msgs, 0 purchases
+[10/65] isabelleegracee — not authenticated, skipping
+
+[11/65] Processing sarakinsley...
+
+============================================================
+Harvesting: sarakinsley (model OF ID: 476487062)
+============================================================
+  Fetching transactions...
+  Got 82 transactions
+  Revenue: $2918.23 from 41 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 135 msgs, 0 purchases
+
+[12/65] Processing juliaabrooks...
+
+============================================================
+Harvesting: juliaabrooks (model OF ID: 500046142)
+============================================================
+  Fetching transactions...
+  Got 184 transactions
+  Revenue: $7685.89 from 95 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 151 msgs, 0 purchases
+
+[13/65] Processing sophiamurphy...
+
+============================================================
+Harvesting: sophiamurphy (model OF ID: 473145525)
+============================================================
+  Fetching transactions...
+  Got 198 transactions
+  Revenue: $6595.70 from 68 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 335 msgs, 1 purchases
+
+[14/65] Processing camilaxcruz...
+
+============================================================
+Harvesting: camilaxcruz (model OF ID: 510450852)
+============================================================
+  Fetching transactions...
+  Got 127 transactions
+  Revenue: $5215.47 from 59 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 147 msgs, 2 purchases
+
+[15/65] Processing itsskylarrae...
+
+============================================================
+Harvesting: itsskylarrae (model OF ID: 424654683)
+============================================================
+  Fetching transactions...
+  Got 276 transactions
+  Revenue: $8537.46 from 136 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 203 msgs, 2 purchases
+
+[16/65] Processing tessaxsloane...
+
+============================================================
+Harvesting: tessaxsloane (model OF ID: 546262457)
+============================================================
+  Fetching transactions...
+  Got 165 transactions
+  Revenue: $3483.16 from 77 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 226 msgs, 4 purchases
+
+[17/65] Processing andreaelizabethxo...
+
+============================================================
+Harvesting: andreaelizabethxo (model OF ID: 403964285)
+============================================================
+  Fetching transactions...
+  Got 332 transactions
+  Revenue: $17212.67 from 101 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 241 msgs, 0 purchases
+
+[18/65] Processing ellieharperr...
+
+============================================================
+Harvesting: ellieharperr (model OF ID: 454606985)
+============================================================
+  Fetching transactions...
+  Got 102 transactions
+  Revenue: $3698.19 from 41 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 175 msgs, 0 purchases
+
+[19/65] Processing giselemars...
+
+============================================================
+Harvesting: giselemars (model OF ID: 545734498)
+============================================================
+  Fetching transactions...
+  Got 88 transactions
+  Revenue: $2175.54 from 43 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 195 msgs, 0 purchases
+
+[20/65] Processing brittanyhalden...
+
+============================================================
+Harvesting: brittanyhalden (model OF ID: 533424099)
+============================================================
+  Fetching transactions...
+  Got 500 transactions
+  Revenue: $23654.44 from 159 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 184 msgs, 1 purchases
+
+[21/65] Processing nickyecker...
+
+============================================================
+Harvesting: nickyecker (model OF ID: 146647878)
+============================================================
+  Fetching transactions...
+  Got 231 transactions
+  Revenue: $10259.18 from 99 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 136 msgs, 0 purchases
+
+[22/65] Processing taylorskully...
+
+============================================================
+Harvesting: taylorskully (model OF ID: 223858500)
+============================================================
+  Fetching transactions...
+  Got 397 transactions
+  Revenue: $21905.93 from 182 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 330 msgs, 0 purchases
+
+[23/65] Processing lilywestt...
+
+============================================================
+Harvesting: lilywestt (model OF ID: 548468140)
+============================================================
+  Fetching transactions...
+  Got 116 transactions
+  Revenue: $2336.88 from 56 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 256 msgs, 3 purchases
+
+[24/65] Processing carlyyyb...
+
+============================================================
+Harvesting: carlyyyb (model OF ID: 491936581)
+============================================================
+  Fetching transactions...
+  Got 222 transactions
+  Revenue: $6721.87 from 110 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 179 msgs, 0 purchases
+
+[25/65] Processing madsabigail...
+
+============================================================
+Harvesting: madsabigail (model OF ID: 407687198)
+============================================================
+  Fetching transactions...
+  Got 244 transactions
+  Revenue: $11678.02 from 114 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 193 msgs, 0 purchases
+
+[26/65] Processing winterclaire...
+
+============================================================
+Harvesting: winterclaire (model OF ID: 323501945)
+============================================================
+  Fetching transactions...
+  Got 335 transactions
+  Revenue: $19152.72 from 104 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 302 msgs, 0 purchases
+
+[27/65] Processing caddieissues...
+
+============================================================
+Harvesting: caddieissues (model OF ID: 312240305)
+============================================================
+  Fetching transactions...
+  Got 439 transactions
+  Revenue: $31141.10 from 196 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 149 msgs, 0 purchases
+
+[28/65] Processing saralovexx...
+
+============================================================
+Harvesting: saralovexx (model OF ID: 235828734)
+============================================================
+  Fetching transactions...
+  Got 500 transactions
+  Revenue: $31072.08 from 213 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 355 msgs, 6 purchases
+
+[29/65] Processing kybabyrae...
+
+============================================================
+Harvesting: kybabyrae (model OF ID: 266229164)
+============================================================
+  Fetching transactions...
+  Got 500 transactions
+  Revenue: $46342.34 from 184 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 192 msgs, 0 purchases
+
+[30/65] Processing chloecollinsxo...
+
+============================================================
+Harvesting: chloecollinsxo (model OF ID: 454173529)
+============================================================
+  Fetching transactions...
+  Got 241 transactions
+  Revenue: $7334.47 from 121 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 189 msgs, 1 purchases
+
+[31/65] Processing rachelxbennett...
+
+============================================================
+Harvesting: rachelxbennett (model OF ID: 508185708)
+============================================================
+  Fetching transactions...
+  Got 183 transactions
+  Revenue: $8149.87 from 82 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 189 msgs, 0 purchases
+
+[32/65] Processing kaitlynxbeckham...
+
+============================================================
+Harvesting: kaitlynxbeckham (model OF ID: 509229864)
+============================================================
+  Fetching transactions...
+  Got 75 transactions
+  Revenue: $2096.26 from 39 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 304 msgs, 4 purchases
+
+[33/65] Processing keelydavidson...
+
+============================================================
+Harvesting: keelydavidson (model OF ID: 532946867)
+============================================================
+  Fetching transactions...
+  Got 54 transactions
+  Revenue: $1069.13 from 31 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 267 msgs, 2 purchases
+
+[34/65] Processing caraaawesley...
+
+============================================================
+Harvesting: caraaawesley (model OF ID: 548211529)
+============================================================
+  Fetching transactions...
+  Got 46 transactions
+  Revenue: $1204.98 from 27 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 117 msgs, 0 purchases
+
+[35/65] Processing skyyroseee...
+
+============================================================
+Harvesting: skyyroseee (model OF ID: 548240223)
+============================================================
+  Fetching transactions...
+  Got 86 transactions
+  Revenue: $3048.88 from 45 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 263 msgs, 0 purchases
+
+[36/65] Processing yourrfavblondie...
+
+============================================================
+Harvesting: yourrfavblondie (model OF ID: 539053779)
+============================================================
+  Fetching transactions...
+  Got 46 transactions
+  Revenue: $1342.69 from 23 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 165 msgs, 0 purchases
+
+[37/65] Processing thesarasky...
+
+============================================================
+Harvesting: thesarasky (model OF ID: 273686795)
+============================================================
+  Fetching transactions...
+  Got 431 transactions
+  Revenue: $21167.39 from 190 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 221 msgs, 1 purchases
+
+[38/65] Processing chelseapaige...
+
+============================================================
+Harvesting: chelseapaige (model OF ID: 543526823)
+============================================================
+  Fetching transactions...
+  Got 135 transactions
+  Revenue: $5048.00 from 61 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 254 msgs, 0 purchases
+
+[39/65] Processing dollyrhodesss...
+
+============================================================
+Harvesting: dollyrhodesss (model OF ID: 515556945)
+============================================================
+  Fetching transactions...
+  Got 410 transactions
+  Revenue: $20125.55 from 178 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 276 msgs, 5 purchases
+
+[40/65] Processing lilyyymonroee...
+
+============================================================
+Harvesting: lilyyymonroee (model OF ID: 499585049)
+============================================================
+  Fetching transactions...
+  Got 475 transactions
+  Revenue: $29722.15 from 269 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 245 msgs, 0 purchases
+
+[41/65] Processing lindamarievip...
+
+============================================================
+Harvesting: lindamarievip (model OF ID: 122926191)
+============================================================
+  Fetching transactions...
+  Got 438 transactions
+  Revenue: $18171.49 from 162 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 318 msgs, 0 purchases
+
+[42/65] Processing laceythomass...
+
+============================================================
+Harvesting: laceythomass (model OF ID: 465737449)
+============================================================
+  Fetching transactions...
+  Got 500 transactions
+  Revenue: $29196.65 from 254 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 152 msgs, 1 purchases
+
+[43/65] Processing kaliblakexo...
+
+============================================================
+Harvesting: kaliblakexo (model OF ID: 507053395)
+============================================================
+  Fetching transactions...
+  Got 500 transactions
+  Revenue: $18077.64 from 194 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 202 msgs, 0 purchases
+
+[44/65] Processing jessicaparkerrr...
+
+============================================================
+Harvesting: jessicaparkerrr (model OF ID: 507343013)
+============================================================
+  Fetching transactions...
+  Got 306 transactions
+  Revenue: $14870.00 from 132 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 200 msgs, 1 purchases
+
+[45/65] Processing xoharperr...
+
+============================================================
+Harvesting: xoharperr (model OF ID: 420471223)
+============================================================
+  Fetching transactions...
+  Got 259 transactions
+  Revenue: $9233.01 from 120 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 171 msgs, 1 purchases
+
+[46/65] Processing tyybabyy...
+
+============================================================
+Harvesting: tyybabyy (model OF ID: 43518697)
+============================================================
+  Fetching transactions...
+  Got 500 transactions
+  Revenue: $29347.75 from 190 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 199 msgs, 0 purchases
+
+[47/65] Processing itsmealexisrae...
+
+============================================================
+Harvesting: itsmealexisrae (model OF ID: 343036974)
+============================================================
+  Fetching transactions...
+  Got 324 transactions
+  Revenue: $12604.25 from 145 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 142 msgs, 1 purchases
+
+[48/65] Processing lolaxmae...
+
+============================================================
+Harvesting: lolaxmae (model OF ID: 538873960)
+============================================================
+  Fetching transactions...
+  Got 87 transactions
+  Revenue: $2703.43 from 42 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 220 msgs, 0 purchases
+
+[49/65] Processing rebeccabrownn...
+
+============================================================
+Harvesting: rebeccabrownn (model OF ID: 548279176)
+============================================================
+  Fetching transactions...
+  Got 245 transactions
+  Revenue: $9677.09 from 111 buyers
+  Fetching top 30 chats...
+  Got 19 chats
+  ✅ 19 chats, 351 msgs, 0 purchases
+
+[50/65] Processing oliviabrookess...
+
+============================================================
+Harvesting: oliviabrookess (model OF ID: 466573608)
+============================================================
+  Fetching transactions...
+  Got 500 transactions
+  Revenue: $15078.06 from 268 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 254 msgs, 0 purchases
+
+[51/65] Processing milliexhart...
+
+============================================================
+Harvesting: milliexhart (model OF ID: 544695119)
+============================================================
+  Fetching transactions...
+  Got 351 transactions
+  Revenue: $10164.23 from 145 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 218 msgs, 0 purchases
+
+[52/65] Processing zoepriceee...
+
+============================================================
+Harvesting: zoepriceee (model OF ID: 544182349)
+============================================================
+  Fetching transactions...
+  Got 350 transactions
+  Revenue: $12136.26 from 166 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 203 msgs, 0 purchases
+
+[53/65] Processing novaleighh...
+
+============================================================
+Harvesting: novaleighh (model OF ID: 543468095)
+============================================================
+  Fetching transactions...
+  Got 437 transactions
+  Revenue: $12274.59 from 178 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 274 msgs, 2 purchases
+
+[54/65] Processing lucymonroee...
+
+============================================================
+Harvesting: lucymonroee (model OF ID: 543659016)
+============================================================
+  Fetching transactions...
+  Got 332 transactions
+  Revenue: $9687.06 from 147 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 212 msgs, 0 purchases
+
+[55/65] Processing chloecookk...
+
+============================================================
+Harvesting: chloecookk (model OF ID: 543655743)
+============================================================
+  Fetching transactions...
+  Got 500 transactions
+  Revenue: $36160.05 from 222 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 174 msgs, 0 purchases
+
+[56/65] Processing jackiesmithh...
+
+============================================================
+Harvesting: jackiesmithh (model OF ID: 527476418)
+============================================================
+  Fetching transactions...
+  Got 152 transactions
+  Revenue: $3901.52 from 77 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 233 msgs, 3 purchases
+
+[57/65] Processing brookeewest...
+
+============================================================
+Harvesting: brookeewest (model OF ID: 531889164)
+============================================================
+  Fetching transactions...
+  Got 116 transactions
+  Revenue: $2922.30 from 73 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 215 msgs, 0 purchases
+
+[58/65] Processing ayaaann...
+
+============================================================
+Harvesting: ayaaann (model OF ID: 525242883)
+============================================================
+  Fetching transactions...
+  Got 299 transactions
+  Revenue: $10180.06 from 121 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 177 msgs, 0 purchases
+
+[59/65] Processing chloeecavalli...
+
+============================================================
+Harvesting: chloeecavalli (model OF ID: 537028788)
+============================================================
+  Fetching transactions...
+  Got 201 transactions
+  Revenue: $6242.60 from 103 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 181 msgs, 1 purchases
+
+[60/65] Processing sadieeblake...
+
+============================================================
+Harvesting: sadieeblake (model OF ID: 526616700)
+============================================================
+  Fetching transactions...
+  Got 500 transactions
+  Revenue: $25755.59 from 170 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 208 msgs, 3 purchases
+
+[61/65] Processing lolasinclairr...
+
+============================================================
+Harvesting: lolasinclairr (model OF ID: 543872404)
+============================================================
+  Fetching transactions...
+  Got 487 transactions
+  Revenue: $15677.87 from 206 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 171 msgs, 2 purchases
+
+[62/65] Processing maddieharperr...
+
+============================================================
+Harvesting: maddieharperr (model OF ID: 529687791)
+============================================================
+  Fetching transactions...
+  Got 275 transactions
+  Revenue: $7860.78 from 119 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 159 msgs, 2 purchases
+
+[63/65] Processing zoeemonroe...
+
+============================================================
+Harvesting: zoeemonroe (model OF ID: 522110263)
+============================================================
+  Fetching transactions...
+  Got 299 transactions
+  Revenue: $8067.82 from 128 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 140 msgs, 0 purchases
+
+[64/65] Processing biancaawoods...
+
+============================================================
+Harvesting: biancaawoods (model OF ID: 525755724)
+============================================================
+  Fetching transactions...
+  Got 201 transactions
+  Revenue: $4401.09 from 120 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 276 msgs, 2 purchases
+
+[65/65] Processing aviannaarose...
+
+============================================================
+Harvesting: aviannaarose (model OF ID: 532745754)
+============================================================
+  Fetching transactions...
+  Got 241 transactions
+  Revenue: $7742.20 from 76 buyers
+  Fetching top 30 chats...
+  Got 10 chats
+  ✅ 10 chats, 224 msgs, 0 purchases
+
+============================================================
+HARVEST COMPLETE
+============================================================
+Accounts: 64
+Messages: 14,043
+Outcomes: 53
+Revenue:  $705,301.33
+
+Files:
+  /Users/moltplush/.openclaw/workspace/research/training-conversations.jsonl
+  /Users/moltplush/.openclaw/workspace/research/training-outcomes.jsonl
+  /Users/moltplush/.openclaw/workspace/research/training-summary.json

@@ -1,0 +1,754 @@
+{
+  "tracking_started": "2026-02-20T02:11:00Z",
+  "tracking_ends": "2026-02-20T03:11:00Z",
+  "periods": [
+    {
+      "start": "2026-02-20T02:11:00Z",
+      "inbound_events": 10,
+      "replies_sent": 33,
+      "purchases": 1,
+      "purchase_total_usd": 18.0,
+      "ppv_offers_sent": 10,
+      "ppv_total_price": 197.0,
+      "validation_replacements": 1,
+      "hallucinated_keys": [
+        "sexting_tease_topless"
+      ],
+      "bump_deletes": 0,
+      "reply_latencies_sec": [],
+      "fans_processed": [
+        "219023487",
+        "505488901",
+        "451406954",
+        "551736336",
+        "152554038",
+        "386484616",
+        "97399362",
+        "7803576",
+        "502135990",
+        "420778807",
+        "351310769",
+        "533877523"
+      ]
+    }
+  ],
+  "current_period": {
+    "start": "2026-02-20T02:26:00Z",
+    "inbound_events": 4,
+    "replies_sent": 4,
+    "purchases": 1,
+    "purchase_total_usd": 50.0,
+    "ppv_offers_sent": 0,
+    "ppv_total_price": 0,
+    "validation_replacements": 0,
+    "hallucinated_keys": [],
+    "bump_deletes": 0,
+    "reply_latencies_sec": [],
+    "fans_processed": [
+      "97399362",
+      "152554038"
+    ]
+  },
+  "spawns": [
+    {
+      "fan_id": 363847082,
+      "action": "ppv",
+      "content_key": "combo1",
+      "price": 18,
+      "ts": 1771967488083
+    },
+    {
+      "fan_id": 219522503,
+      "action": "ppv",
+      "content_key": "combo2",
+      "price": 18,
+      "ts": 1771967512038
+    },
+    {
+      "fan_id": 121331731,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771967724297
+    },
+    {
+      "fan_id": 546791879,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771967745835
+    },
+    {
+      "fan_id": 546791879,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771967799446
+    },
+    {
+      "fan_id": 383285549,
+      "action": "ppv",
+      "content_key": "custom_tier6_tryon",
+      "price": 70,
+      "ts": 1771967875721
+    },
+    {
+      "fan_id": 121331731,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771967896977
+    },
+    {
+      "fan_id": 383285549,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771967989051
+    },
+    {
+      "fan_id": 121331731,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771968022023
+    },
+    {
+      "fan_id": 546791879,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771968049061
+    },
+    {
+      "fan_id": 498832781,
+      "action": "free_media",
+      "content_key": "gfe_selfie",
+      "price": null,
+      "ts": 1771968084035
+    },
+    {
+      "fan_id": 383285549,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771968111307
+    },
+    {
+      "fan_id": 498832781,
+      "action": "ppv",
+      "content_key": "combo1",
+      "price": 18,
+      "ts": 1771968151851
+    },
+    {
+      "fan_id": 121331731,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771968176055
+    },
+    {
+      "fan_id": 546791879,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771968269318
+    },
+    {
+      "fan_id": 464595513,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771968322054
+    },
+    {
+      "fan_id": 121331731,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771968342821
+    },
+    {
+      "fan_id": 464595513,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771968391556
+    },
+    {
+      "fan_id": 545628353,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771968442690
+    },
+    {
+      "fan_id": 121331731,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771968464491
+    },
+    {
+      "fan_id": 464595513,
+      "action": "free_media",
+      "content_key": "gfe_selfie",
+      "price": null,
+      "ts": 1771968807025
+    },
+    {
+      "fan_id": 545628353,
+      "action": "ppv",
+      "content_key": "combo2",
+      "price": 18,
+      "ts": 1771968810294
+    },
+    {
+      "fan_id": 121331731,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771968812714
+    },
+    {
+      "fan_id": 546791879,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771968815127
+    },
+    {
+      "fan_id": 383285549,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771968817271
+    },
+    {
+      "fan_id": 545628353,
+      "action": "ppv",
+      "content_key": "combo2",
+      "price": 18,
+      "ts": 1771969284660
+    },
+    {
+      "fan_id": 545996223,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771969360537
+    },
+    {
+      "fan_id": 545996223,
+      "action": "free_media",
+      "content_key": "sexting1_pic",
+      "price": null,
+      "ts": 1771969437577
+    },
+    {
+      "fan_id": 464595513,
+      "action": "ppv",
+      "content_key": "combo1",
+      "price": 18,
+      "ts": 1771969465599
+    },
+    {
+      "fan_id": 545996223,
+      "action": "ppv",
+      "content_key": "combo1",
+      "price": 18,
+      "ts": 1771969494902
+    },
+    {
+      "fan_id": 383285549,
+      "action": "ppv",
+      "content_key": "custom_tier3_topless",
+      "price": 70,
+      "ts": 1771969868005
+    },
+    {
+      "fan_id": 359554079,
+      "action": "free_media",
+      "content_key": "booty_pic",
+      "price": null,
+      "ts": 1771969955210
+    },
+    {
+      "fan_id": 121331731,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771970246265
+    },
+    {
+      "fan_id": 546791879,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771970293682
+    },
+    {
+      "fan_id": 359554079,
+      "action": "ppv",
+      "content_key": "combo1",
+      "price": 18,
+      "ts": 1771970321297
+    },
+    {
+      "fan_id": 545996223,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771970386557
+    },
+    {
+      "fan_id": 121331731,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771970412460
+    },
+    {
+      "fan_id": 545996223,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771970448921
+    },
+    {
+      "fan_id": 545996223,
+      "action": "ppv",
+      "content_key": "combo2",
+      "price": 18,
+      "ts": 1771970487340
+    },
+    {
+      "fan_id": 121331731,
+      "action": "ppv",
+      "content_key": "sexting1_vid_15",
+      "price": 15,
+      "ts": 1771970597989
+    },
+    {
+      "fan_id": 242522568,
+      "action": "ppv",
+      "content_key": "combo1",
+      "price": 18,
+      "ts": 1771970655688
+    },
+    {
+      "fan_id": 248434194,
+      "action": "free_media",
+      "content_key": "gfe_selfie",
+      "price": null,
+      "ts": 1771970842145
+    },
+    {
+      "fan_id": 546791879,
+      "action": "ppv",
+      "content_key": "combo1",
+      "price": 18,
+      "ts": 1771970853574
+    },
+    {
+      "fan_id": 536923232,
+      "action": "free_media",
+      "content_key": "gfe_selfie",
+      "price": null,
+      "ts": 1771970864265
+    },
+    {
+      "fan_id": 273709966,
+      "action": "free_media",
+      "content_key": "gfe_selfie",
+      "price": null,
+      "ts": 1771970894588
+    },
+    {
+      "fan_id": 536923232,
+      "action": "ppv",
+      "content_key": "combo1",
+      "price": 18,
+      "ts": 1771970944961
+    },
+    {
+      "fan_id": 273709966,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771971235416
+    },
+    {
+      "fan_id": 502135990,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771971237960
+    },
+    {
+      "fan_id": 546791879,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771971422995
+    },
+    {
+      "fan_id": 273709966,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771971688037
+    },
+    {
+      "fan_id": 273709966,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771971877401
+    },
+    {
+      "fan_id": 546791879,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771972010384
+    },
+    {
+      "fan_id": 546791879,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771972388744
+    },
+    {
+      "fan_id": 543879480,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771972821689
+    },
+    {
+      "fan_id": 546791879,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771972893212
+    },
+    {
+      "fan_id": 543879480,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771972956921
+    },
+    {
+      "fan_id": 543879480,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771973250483
+    },
+    {
+      "fan_id": 543879480,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771973344229
+    },
+    {
+      "fan_id": 546791879,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771973836538
+    },
+    {
+      "fan_id": 456568179,
+      "action": "free_media",
+      "content_key": "gfe_selfie",
+      "price": null,
+      "ts": 1771974185399
+    },
+    {
+      "fan_id": 546791879,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771974201068
+    },
+    {
+      "fan_id": 546791879,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771974293602
+    },
+    {
+      "fan_id": 527301372,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771974306672
+    },
+    {
+      "fan_id": 530808479,
+      "action": "free_media",
+      "content_key": "gfe_selfie",
+      "price": null,
+      "ts": 1771974358392
+    },
+    {
+      "fan_id": 546791879,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771974418122
+    },
+    {
+      "fan_id": 543879480,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771974478276
+    },
+    {
+      "fan_id": 543879480,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771974599872
+    },
+    {
+      "fan_id": 543879480,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771974718095
+    },
+    {
+      "fan_id": 543879480,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771974821672
+    },
+    {
+      "fan_id": 354426412,
+      "action": "free_media",
+      "content_key": "gfe_selfie",
+      "price": null,
+      "ts": 1771974997232
+    },
+    {
+      "fan_id": 478996723,
+      "action": "ppv",
+      "content_key": "combo3",
+      "price": 22,
+      "ts": 1771975526010
+    },
+    {
+      "fan_id": 546791879,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771975636413
+    },
+    {
+      "fan_id": 546791879,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771976025025
+    },
+    {
+      "fan_id": 543879480,
+      "action": "ppv",
+      "content_key": "combo5",
+      "price": 25,
+      "ts": 1771976156507
+    },
+    {
+      "fan_id": 546791879,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771976163405
+    },
+    {
+      "fan_id": 546791879,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771976387522
+    },
+    {
+      "fan_id": 549478004,
+      "action": "free_media",
+      "content_key": "gfe_selfie",
+      "price": null,
+      "ts": 1771976414470
+    },
+    {
+      "fan_id": 419974855,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771976447838
+    },
+    {
+      "fan_id": 549478004,
+      "action": "free_media",
+      "content_key": "gfe_selfie",
+      "price": null,
+      "ts": 1771976510077
+    },
+    {
+      "fan_id": 419974855,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771976537028
+    },
+    {
+      "fan_id": 451406954,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771977051084
+    },
+    {
+      "fan_id": 451406954,
+      "action": "free_media",
+      "content_key": "custom_tier3_topless",
+      "price": null,
+      "ts": 1771977061015
+    },
+    {
+      "fan_id": 451406954,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771977541539
+    },
+    {
+      "fan_id": 491465196,
+      "action": "free_media",
+      "content_key": "gfe_selfie",
+      "price": null,
+      "ts": 1771977840648
+    },
+    {
+      "fan_id": 269560340,
+      "action": "free_media",
+      "content_key": "gfe_selfie",
+      "price": null,
+      "ts": 1771977855815
+    },
+    {
+      "fan_id": 418957514,
+      "action": "free_media",
+      "content_key": "gfe_selfie",
+      "price": null,
+      "ts": 1771977913107
+    },
+    {
+      "fan_id": 418957514,
+      "action": "free_media",
+      "content_key": "gfe_selfie",
+      "price": null,
+      "ts": 1771978010081
+    },
+    {
+      "fan_id": 269560340,
+      "action": "free_media",
+      "content_key": "gfe_selfie",
+      "price": null,
+      "ts": 1771978027909
+    },
+    {
+      "fan_id": 269560340,
+      "action": "free_media",
+      "content_key": "gfe_selfie",
+      "price": null,
+      "ts": 1771978139005
+    },
+    {
+      "fan_id": 418957514,
+      "action": "free_media",
+      "content_key": "sexting1_pic",
+      "price": null,
+      "ts": 1771978156681
+    },
+    {
+      "fan_id": 269560340,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771978239691
+    },
+    {
+      "fan_id": 418957514,
+      "action": "free_media",
+      "content_key": "booty_pic",
+      "price": null,
+      "ts": 1771978295074
+    },
+    {
+      "fan_id": 543655743,
+      "action": "free_media",
+      "content_key": "gfe_selfie",
+      "price": null,
+      "ts": 1771978746495
+    },
+    {
+      "fan_id": 226207836,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771979135565
+    },
+    {
+      "fan_id": 149466096,
+      "action": "free_media",
+      "content_key": "gfe_selfie",
+      "price": null,
+      "ts": 1771979363545
+    },
+    {
+      "fan_id": 226207836,
+      "action": "ppv",
+      "content_key": "custom_tier3_topless",
+      "price": 70,
+      "ts": 1771979405610
+    },
+    {
+      "fan_id": 226207836,
+      "action": "ppv",
+      "content_key": "combo1",
+      "price": 18,
+      "ts": 1771979507125
+    },
+    {
+      "fan_id": 2830433,
+      "action": "free_media",
+      "content_key": "gfe_selfie",
+      "price": null,
+      "ts": 1771979576372
+    },
+    {
+      "fan_id": 545628353,
+      "action": "ppv",
+      "content_key": "combo1",
+      "price": 18,
+      "ts": 1771979670696
+    },
+    {
+      "fan_id": 2830433,
+      "action": "text",
+      "content_key": "",
+      "price": null,
+      "ts": 1771979710745
+    }
+  ]
+}

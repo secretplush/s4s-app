@@ -1,0 +1,21 @@
+{
+  "fan_id": 121331731,
+  "state": "pitched",
+  "name": "",
+  "messages_sent": 8,
+  "messages_received": 8,
+  "total_spent": 0.0,
+  "last_ppv_price": 18,
+  "content_sent": [
+    "gfe_selfie",
+    "combo12",
+    "sexting2_pic",
+    "combo4",
+    "combo6",
+    "combo3"
+  ],
+  "last_interaction_ts": 1771879202,
+  "created_ts": 1771877571,
+  "signals": [],
+  "notes": ""
+}

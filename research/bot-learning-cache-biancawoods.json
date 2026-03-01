@@ -1,0 +1,154 @@
+{
+  "computed_at": 1771888868.094126,
+  "stats": {
+    "total_actions": 182,
+    "total_outcomes": 217,
+    "conversion_by_price": {
+      "18": {
+        "sent": 51,
+        "bought": 0,
+        "rate": 0.0
+      }
+    },
+    "conversion_by_content": {
+      "combo1": {
+        "sent": 4,
+        "bought": 0,
+        "rate": 0.0
+      },
+      "combo10": {
+        "sent": 3,
+        "bought": 0,
+        "rate": 0.0
+      },
+      "combo11": {
+        "sent": 2,
+        "bought": 0,
+        "rate": 0.0
+      },
+      "combo12": {
+        "sent": 3,
+        "bought": 0,
+        "rate": 0.0
+      },
+      "combo13": {
+        "sent": 8,
+        "bought": 0,
+        "rate": 0.0
+      },
+      "combo2": {
+        "sent": 2,
+        "bought": 0,
+        "rate": 0.0
+      },
+      "combo3": {
+        "sent": 4,
+        "bought": 0,
+        "rate": 0.0
+      },
+      "combo4": {
+        "sent": 6,
+        "bought": 0,
+        "rate": 0.0
+      },
+      "combo5": {
+        "sent": 3,
+        "bought": 0,
+        "rate": 0.0
+      },
+      "combo6": {
+        "sent": 3,
+        "bought": 0,
+        "rate": 0.0
+      },
+      "combo7": {
+        "sent": 7,
+        "bought": 0,
+        "rate": 0.0
+      },
+      "combo8": {
+        "sent": 4,
+        "bought": 0,
+        "rate": 0.0
+      },
+      "combo9": {
+        "sent": 2,
+        "bought": 0,
+        "rate": 0.0
+      }
+    },
+    "conversion_by_hook": {
+      "sexual_match": {
+        "used": 45
+      },
+      "buying_signal": {
+        "used": 4
+      },
+      "vulnerability": {
+        "used": 29
+      },
+      "exclusivity": {
+        "used": 1
+      }
+    },
+    "conversion_by_hour": {
+      "20": {
+        "sent": 13,
+        "bought": 0,
+        "rate": 0.0
+      },
+      "21": {
+        "sent": 26,
+        "bought": 0,
+        "rate": 0.0
+      },
+      "22": {
+        "sent": 3,
+        "bought": 0,
+        "rate": 0.0
+      },
+      "23": {
+        "sent": 9,
+        "bought": 0,
+        "rate": 0.0
+      }
+    },
+    "ghost_rate_by_stage": {
+      "engaged": {
+        "actions": 91,
+        "ghosts": 0,
+        "rate": 0.0
+      },
+      "new": {
+        "actions": 33,
+        "ghosts": 0,
+        "rate": 0.0
+      },
+      "pitched": {
+        "actions": 58,
+        "ghosts": 0,
+        "rate": 0.0
+      }
+    },
+    "avg_msgs_to_first_buy": 13.0,
+    "top_hooks": [
+      {
+        "hook": "sexual_match",
+        "count": 45
+      },
+      {
+        "hook": "vulnerability",
+        "count": 29
+      },
+      {
+        "hook": "buying_signal",
+        "count": 4
+      },
+      {
+        "hook": "exclusivity",
+        "count": 1
+      }
+    ],
+    "computed_at": 1771888868
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "fan_id": 524173290,
+  "state": "engaged",
+  "name": "",
+  "messages_sent": 4,
+  "messages_received": 4,
+  "total_spent": 0.0,
+  "last_ppv_price": null,
+  "content_sent": [
+    "gfe_selfie"
+  ],
+  "last_interaction_ts": 1771887145,
+  "created_ts": 1771887090,
+  "signals": [],
+  "notes": ""
+}

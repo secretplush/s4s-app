@@ -1,0 +1,24 @@
+{
+  "fan_id": 2830433,
+  "state": "pitched",
+  "name": "",
+  "messages_sent": 16,
+  "messages_received": 18,
+  "total_spent": 0.0,
+  "last_ppv_price": 18,
+  "content_sent": [
+    "gfe_selfie",
+    "combo13",
+    "combo1",
+    "combo6",
+    "combo7",
+    "combo3",
+    "combo4",
+    "combo12",
+    "combo2"
+  ],
+  "last_interaction_ts": 1771882418,
+  "created_ts": 1771881996,
+  "signals": [],
+  "notes": ""
+}

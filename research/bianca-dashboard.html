@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bianca Operator Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #0f0f13;
+            color: #e0e0e0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+        
+        /* Header Bar */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #1a1a24;
+            border-radius: 16px;
+            padding: 20px 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .toggle-btn {
+            background: #2a2a34;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #fff;
+            min-width: 140px;
+        }
+        
+        .toggle-btn.enabled {
+            background: linear-gradient(135deg, #4ade80, #22c55e);
+            box-shadow: 0 4px 15px rgba(74, 222, 128, 0.3);
+        }
+        
+        .toggle-btn.disabled {
+            background: linear-gradient(135deg, #f87171, #ef4444);
+            box-shadow: 0 4px 15px rgba(248, 113, 113, 0.3);
+        }
+        
+        .toggle-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0,0,0,0.4);
+        }
+        
+        .header-status {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 14px;
+        }
+        
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #4ade80;
+            animation: pulse 2s infinite;
+        }
+        
+        .status-dot.error {
+            background: #f87171;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .uptime {
+            color: #aaa;
+        }
+        
+        .last-webhook {
+            color: #888;
+            font-size: 12px;
+        }
+        
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .stat-card {
+            background: #1a1a24;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #2a2a34;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+        
+        .stat-value {
+            font-size: 2.2em;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+        
+        .stat-label {
+            font-size: 0.85em;
+            color: #888;
+            font-weight: 500;
+        }
+        
+        .stat-card.green .stat-value { color: #4ade80; }
+        .stat-card.yellow .stat-value { color: #facc15; }
+        .stat-card.blue .stat-value { color: #60a5fa; }
+        .stat-card.purple .stat-value { color: #c084fc; }
+        .stat-card.red .stat-value { color: #f87171; }
+        .stat-card.orange .stat-value { color: #fb923c; }
+        
+        /* Main Content Layout */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        
+        /* Activity Feed */
+        .activity-feed {
+            background: #1a1a24;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #2a2a34;
+        }
+        
+        .section-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .activity-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .activity-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            border-radius: 12px;
+            border-left: 4px solid #666;
+            transition: all 0.2s ease;
+        }
+        
+        .activity-item:hover {
+            background: #22222e;
+            transform: translateX(4px);
+        }
+        
+        .activity-item.ppv { border-left-color: #4ade80; background: rgba(74, 222, 128, 0.05); }
+        .activity-item.free { border-left-color: #60a5fa; background: rgba(96, 165, 250, 0.05); }
+        .activity-item.text { border-left-color: #888; background: rgba(136, 136, 136, 0.05); }
+        .activity-item.purchase { border-left-color: #facc15; background: rgba(250, 204, 21, 0.05); }
+        
+        .activity-content {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+        
+        .activity-main {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 4px;
+        }
+        
+        .fan-name {
+            font-weight: 600;
+            color: #fff;
+        }
+        
+        .activity-action {
+            color: #aaa;
+            font-size: 0.9em;
+        }
+        
+        .activity-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .tier-badge {
+            background: #3b2a1a;
+            color: #f59e0b;
+            font-size: 0.7em;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        .activity-time {
+            color: #666;
+            font-size: 0.8em;
+        }
+        
+        /* Queue Panel */
+        .queue-panel {
+            background: #1a1a24;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #2a2a34;
+        }
+        
+        .queue-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #2a2a34;
+        }
+        
+        .queue-item:last-child {
+            border-bottom: none;
+        }
+        
+        .queue-fan {
+            font-weight: 600;
+            color: #fff;
+        }
+        
+        .queue-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .priority-badge {
+            font-size: 0.7em;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+        
+        .priority-badge.whale { background: #fbbf24; color: #451a03; }
+        .priority-badge.buyer { background: #8b5cf6; color: #1e1b4b; }
+        .priority-badge.new { background: #10b981; color: #064e3b; }
+        .priority-badge.active { background: #f472b6; color: #831843; }
+        
+        .queue-time {
+            color: #888;
+            font-size: 0.85em;
+        }
+        
+        .empty-state {
+            text-align: center;
+            color: #666;
+            padding: 40px;
+            font-style: italic;
+        }
+        
+        /* Fan Table */
+        .fan-table-section {
+            background: #1a1a24;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #2a2a34;
+            margin-bottom: 24px;
+        }
+        
+        .fan-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+        
+        .fan-table th {
+            text-align: left;
+            color: #888;
+            font-weight: 600;
+            padding: 12px 16px;
+            border-bottom: 2px solid #2a2a34;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        
+        .fan-table th:hover {
+            color: #fff;
+        }
+        
+        .fan-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #1f1f2a;
+        }
+        
+        .fan-table tr:hover {
+            background: #22222e;
+            cursor: pointer;
+        }
+        
+        .buyer-badge {
+            font-size: 0.75em;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        
+        .buyer-badge.whale { background: #fbbf24; color: #451a03; }
+        .buyer-badge.buyer { background: #8b5cf6; color: #1e1b4b; }
+        .buyer-badge.new { background: #10b981; color: #064e3b; }
+        
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 100;
+            overflow-y: auto;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .modal-content {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #1a1a24;
+            border-radius: 20px;
+            border: 1px solid #2a2a34;
+            overflow: hidden;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px;
+            border-bottom: 1px solid #2a2a34;
+        }
+        
+        .modal-title {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #fff;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 1.5em;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+        
+        .close-btn:hover {
+            background: #2a2a34;
+            color: #fff;
+        }
+        
+        .modal-body {
+            padding: 24px;
+        }
+        
+        .conversation {
+            max-height: 500px;
+            overflow-y: auto;
+            background: #0f0f13;
+            border-radius: 12px;
+            padding: 16px;
+        }
+        
+        .message {
+            margin-bottom: 12px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            max-width: 85%;
+        }
+        
+        .message.bianca {
+            background: #1e3a8a;
+            color: #dbeafe;
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .message.fan {
+            background: #374151;
+            color: #d1d5db;
+            border-bottom-left-radius: 4px;
+        }
+        
+        .message-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 0.8em;
+            opacity: 0.8;
+        }
+        
+        .message-badges {
+            display: flex;
+            gap: 4px;
+        }
+        
+        .message-badge {
+            font-size: 0.7em;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        .badge-signal { background: #7c3aed; color: #c4b5fd; }
+        .badge-price { background: #d97706; color: #fed7aa; }
+        .badge-key { background: #065f46; color: #a7f3d0; }
+        .badge-action { background: #dc2626; color: #fecaca; }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 16px;
+            }
+            
+            .header-left {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .fan-table {
+                font-size: 0.8em;
+            }
+        }
+        
+        /* Loading States */
+        .loading {
+            animation: shimmer 1.5s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Bar -->
+        <div class="header">
+            <div class="header-left">
+                <button id="toggleBtn" class="toggle-btn disabled" onclick="toggleSystem()">
+                    DISABLED
+                </button>
+                <div class="header-status">
+                    <div id="healthDot" class="status-dot"></div>
+                    <div class="uptime">Uptime: <span id="uptime">--</span></div>
+                </div>
+            </div>
+            <div class="last-webhook">
+                Last webhook: <span id="lastWebhook">--</span>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid" id="statsCards">
+            <div class="stat-card green loading">
+                <div class="stat-value">--</div>
+                <div class="stat-label">Revenue Today</div>
+            </div>
+            <div class="stat-card yellow loading">
+                <div class="stat-value">--</div>
+                <div class="stat-label">Pending Revenue</div>
+            </div>
+            <div class="stat-card blue loading">
+                <div class="stat-value">-- / --</div>
+                <div class="stat-label">PPVs Sent / Opened</div>
+            </div>
+            <div class="stat-card purple loading">
+                <div class="stat-value">--</div>
+                <div class="stat-label">Opus Calls</div>
+            </div>
+            <div class="stat-card red loading">
+                <div class="stat-value">--</div>
+                <div class="stat-label">Errors</div>
+            </div>
+            <div class="stat-card orange loading">
+                <div class="stat-value">--</div>
+                <div class="stat-label">Queue Depth</div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="content-grid">
+            <!-- Live Activity Feed -->
+            <div class="activity-feed">
+                <div class="section-title">
+                    ⚡ Live Activity Feed
+                    <div style="margin-left: auto; font-size: 0.8em; color: #666;">
+                        Updates every 10s
+                    </div>
+                </div>
+                <div id="activityList" class="activity-list">
+                    <div class="empty-state loading">Loading activity...</div>
+                </div>
+            </div>
+
+            <!-- Queue Panel -->
+            <div class="queue-panel">
+                <div class="section-title">📬 Queue</div>
+                <div id="queueList">
+                    <div class="empty-state loading">Loading queue...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fan Table -->
+        <div class="fan-table-section">
+            <div class="section-title">👥 Fan Management</div>
+            <table class="fan-table">
+                <thead>
+                    <tr>
+                        <th onclick="sortTable(0)">Fan</th>
+                        <th onclick="sortTable(1)">Total Spent</th>
+                        <th onclick="sortTable(2)">PPVs Sent</th>
+                        <th onclick="sortTable(3)">PPVs Opened</th>
+                        <th onclick="sortTable(4)">Conversion %</th>
+                        <th onclick="sortTable(5)">Last Action</th>
+                    </tr>
+                </thead>
+                <tbody id="fanTableBody">
+                    <tr>
+                        <td colspan="6" class="empty-state loading">Loading fans...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        let dashboardData = null;
+        let activityRefreshInterval = null;
+        let statsRefreshInterval = null;
+        let healthCheckInterval = null;
+
+        // Initialize dashboard
+        async function init() {
+            await loadDashboardData();
+            startAutoRefresh();
+            startHealthCheck();
+        }
+
+        // Load main dashboard data
+        async function loadDashboardData() {
+            try {
+                const response = await fetch('/dashboard-data');
+                dashboardData = await response.json();
+                updateDashboard();
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+                showError('Failed to load dashboard data');
+            }
+        }
+
+        // Update all dashboard components
+        function updateDashboard() {
+            if (!dashboardData) return;
+            
+            updateHeader();
+            updateStatsCards();
+            updateQueue();
+            updateFanTable();
+        }
+
+        // Update header with system status
+        function updateHeader() {
+            const daemon = dashboardData.daemon_status || {};
+            const toggleBtn = document.getElementById('toggleBtn');
+            const uptime = document.getElementById('uptime');
+            const lastWebhook = document.getElementById('lastWebhook');
+            
+            // Update toggle button
+            toggleBtn.className = `toggle-btn ${daemon.enabled ? 'enabled' : 'disabled'}`;
+            toggleBtn.textContent = daemon.enabled ? 'ENABLED' : 'DISABLED';
+            
+            // Update uptime
+            uptime.textContent = daemon.uptime || '--';
+            
+            // Update last webhook
+            const lastWebhookTime = dashboardData.today_stats?.last_webhook;
+            if (lastWebhookTime) {
+                const date = new Date(lastWebhookTime);
+                lastWebhook.textContent = date.toLocaleString();
+            } else {
+                lastWebhook.textContent = 'Never';
+            }
+        }
+
+        // Update stats cards
+        function updateStatsCards() {
+            const today = dashboardData.today_stats || {};
+            const lifetime = dashboardData.lifetime_stats || {};
+            
+            // Calculate values
+            const revenueToday = today.revenue || 0;
+            const ppvsSent = today.ppvs_sent || 0;
+            const ppvsOpened = today.ppvs_unlocked || 0;
+            const conversionRate = ppvsSent > 0 ? ((ppvsOpened / ppvsSent) * 100).toFixed(1) : 0;
+            const pendingRevenue = Math.max(0, (ppvsSent - ppvsOpened) * (revenueToday / Math.max(ppvsOpened, 1)));
+            const opusCalls = today.opus_calls || 0;
+            const errors = today.errors || 0;
+            const queueDepth = dashboardData.queue?.length || 0;
+
+            // Update cards
+            const cards = document.querySelectorAll('.stat-card');
+            
+            cards[0].querySelector('.stat-value').textContent = `$${revenueToday.toFixed(0)}`;
+            cards[0].classList.remove('loading');
+            
+            cards[1].querySelector('.stat-value').textContent = `$${pendingRevenue.toFixed(0)}`;
+            cards[1].classList.remove('loading');
+            
+            cards[2].querySelector('.stat-value').textContent = `${ppvsSent} / ${ppvsOpened}`;
+            cards[2].querySelector('.stat-label').innerHTML = `PPVs Sent / Opened<br><small>${conversionRate}% conversion</small>`;
+            cards[2].classList.remove('loading');
+            
+            cards[3].querySelector('.stat-value').textContent = opusCalls;
+            cards[3].classList.remove('loading');
+            
+            cards[4].querySelector('.stat-value').textContent = errors;
+            cards[4].className = `stat-card ${errors > 0 ? 'red' : 'gray'} ${errors > 0 ? '' : 'loading'}`;
+            cards[4].classList.remove('loading');
+            
+            cards[5].querySelector('.stat-value').textContent = queueDepth;
+            cards[5].classList.remove('loading');
+        }
+
+        // Update activity feed
+        async function updateActivityFeed() {
+            try {
+                const response = await fetch('/dashboard-data');
+                const data = await response.json();
+                const activities = data.recent_activity || [];
+                
+                const activityList = document.getElementById('activityList');
+                
+                if (activities.length === 0) {
+                    activityList.innerHTML = '<div class="empty-state">No recent activity</div>';
+                    return;
+                }
+                
+                activityList.innerHTML = activities.slice(0, 50).map(activity => {
+                    const actionType = getActionType(activity.action);
+                    const timeAgo = getTimeAgo(activity.ts);
+                    const tierBadge = getTierBadge(activity.content_key);
+                    
+                    return `
+                        <div class="activity-item ${actionType}">
+                            <div class="activity-content">
+                                <div class="activity-main">
+                                    <span class="fan-name">${activity.name || activity.fan_id}</span>
+                                    <span class="activity-action">${activity.action}</span>
+                                </div>
+                                <div class="activity-meta">
+                                    ${tierBadge}
+                                    <span class="activity-time">${timeAgo}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                // Auto-scroll to newest
+                activityList.scrollTop = 0;
+                
+            } catch (error) {
+                console.error('Error updating activity feed:', error);
+            }
+        }
+
+        // Update queue
+        function updateQueue() {
+            const queue = dashboardData.queue || [];
+            const queueList = document.getElementById('queueList');
+            
+            if (queue.length === 0) {
+                queueList.innerHTML = '<div class="empty-state">No fans waiting ✓</div>';
+                return;
+            }
+            
+            queueList.innerHTML = queue.map(item => {
+                const waitTime = formatWaitTime(item.age_s);
+                const priorityClass = getPriorityClass(item.priority);
+                
+                return `
+                    <div class="queue-item">
+                        <div class="queue-fan">${item.name || item.fan_id}</div>
+                        <div class="queue-meta">
+                            <span class="priority-badge ${priorityClass}">${item.priority}</span>
+                            <span class="queue-time">${waitTime}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Update fan table
+        function updateFanTable() {
+            const fans = dashboardData.fans || [];
+            const tableBody = document.getElementById('fanTableBody');
+            
+            if (fans.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="6" class="empty-state">No fan data available</td></tr>';
+                return;
+            }
+            
+            tableBody.innerHTML = fans.map(fan => `
+                <tr onclick="showFanModal('${fan.fan_id}')">
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <strong>${fan.name || fan.fan_id}</strong>
+                            <span class="buyer-badge ${getBuyerClass(fan.buyer_type)}">${fan.buyer_type || 'NEW'}</span>
+                        </div>
+                    </td>
+                    <td>$${(fan.spent || 0).toFixed(2)}</td>
+                    <td>${fan.ppvs_sent || 0}</td>
+                    <td>${fan.ppvs_unlocked || 0}</td>
+                    <td>${fan.conv || 0}%</td>
+                    <td>${fan.last_action || '--'}</td>
+                </tr>
+            `).join('');
+        }
+
+        // Show fan modal
+        async function showFanModal(fanId) {
+            try {
+                const response = await fetch(`/dashboard/fan/${fanId}`);
+                const fan = await response.json();
+                
+                const modal = document.createElement('div');
+                modal.className = 'modal';
+                modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
+                
+                modal.innerHTML = `
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <div class="modal-title">${fan.name || fan.fan_id}</div>
+                            <button class="close-btn" onclick="this.closest('.modal').remove()">✕</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="stats-grid" style="margin-bottom: 20px;">
+                                <div class="stat-card blue">
+                                    <div class="stat-value">$${(fan.total_spent || 0).toFixed(2)}</div>
+                                    <div class="stat-label">Total Spent</div>
+                                </div>
+                                <div class="stat-card purple">
+                                    <div class="stat-value">${fan.message_count || 0}</div>
+                                    <div class="stat-label">Messages</div>
+                                </div>
+                                <div class="stat-card orange">
+                                    <div class="stat-value">${fan.buyer_type || 'NEW'}</div>
+                                    <div class="stat-label">Buyer Type</div>
+                                </div>
+                            </div>
+                            
+                            ${fan.notes ? `
+                                <div style="background: #22222e; padding: 12px; border-radius: 8px; margin-bottom: 16px;">
+                                    <strong>Notes:</strong> ${fan.notes}
+                                </div>
+                            ` : ''}
+                            
+                            <div class="section-title">💬 Conversation History</div>
+                            <div class="conversation" id="conversation-${fanId}">
+                                ${renderConversation(fan.recent_msgs || [])}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+                
+            } catch (error) {
+                console.error('Error loading fan details:', error);
+                alert('Failed to load fan details');
+            }
+        }
+
+        // Render conversation messages
+        function renderConversation(messages) {
+            if (!messages.length) {
+                return '<div class="empty-state">No conversation history</div>';
+            }
+            
+            return messages.map(msg => {
+                const isBianca = msg.from === 'b';
+                const timestamp = msg.ts ? new Date(msg.ts * 1000).toLocaleTimeString() : '';
+                
+                let badges = '';
+                if (msg.signals) badges += `<span class="message-badge badge-signal">${msg.signals}</span>`;
+                if (msg.price) badges += `<span class="message-badge badge-price">$${msg.price}</span>`;
+                if (msg.key) badges += `<span class="message-badge badge-key">${msg.key}</span>`;
+                if (msg.action) badges += `<span class="message-badge badge-action">${msg.action}</span>`;
+                
+                return `
+                    <div class="message ${isBianca ? 'bianca' : 'fan'}">
+                        <div class="message-header">
+                            <span>${isBianca ? '🤖 Bianca' : '👤 Fan'}</span>
+                            <span>${timestamp}</span>
+                            <div class="message-badges">${badges}</div>
+                        </div>
+                        <div>${msg.text || '(media)'}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Toggle system on/off
+        async function toggleSystem() {
+            try {
+                const response = await fetch('/toggle', { method: 'POST' });
+                const result = await response.json();
+                
+                const toggleBtn = document.getElementById('toggleBtn');
+                const isEnabled = result.status === 'enabled';
+                
+                toggleBtn.className = `toggle-btn ${isEnabled ? 'enabled' : 'disabled'}`;
+                toggleBtn.textContent = isEnabled ? 'ENABLED' : 'DISABLED';
+                
+                // Refresh dashboard data
+                await loadDashboardData();
+                
+            } catch (error) {
+                console.error('Error toggling system:', error);
+                showError('Failed to toggle system status');
+            }
+        }
+
+        // Health check
+        async function checkHealth() {
+            try {
+                const response = await fetch('/health');
+                const health = await response.json();
+                
+                const healthDot = document.getElementById('healthDot');
+                healthDot.className = `status-dot ${health.status === 'ok' ? '' : 'error'}`;
+                
+            } catch (error) {
+                const healthDot = document.getElementById('healthDot');
+                healthDot.className = 'status-dot error';
+            }
+        }
+
+        // Start auto-refresh intervals
+        function startAutoRefresh() {
+            // Refresh activity feed every 10 seconds
+            activityRefreshInterval = setInterval(updateActivityFeed, 10000);
+            
+            // Refresh full dashboard every 30 seconds
+            statsRefreshInterval = setInterval(loadDashboardData, 30000);
+        }
+
+        // Start health check
+        function startHealthCheck() {
+            healthCheckInterval = setInterval(checkHealth, 5000);
+        }
+
+        // Utility functions
+        function getActionType(action) {
+            if (!action) return 'text';
+            const lower = action.toLowerCase();
+            if (lower.includes('ppv') || lower.includes('unlock')) return 'ppv';
+            if (lower.includes('tip') || lower.includes('purchase') || lower.includes('buy')) return 'purchase';
+            if (lower.includes('free') || lower.includes('hook')) return 'free';
+            return 'text';
+        }
+
+        function getTierBadge(contentKey) {
+            if (!contentKey) return '';
+            const tier = contentKey.match(/L(\d+)/);
+            if (tier) {
+                return `<span class="tier-badge">L${tier[1]}</span>`;
+            }
+            return '';
+        }
+
+        function getTimeAgo(timestamp) {
+            if (!timestamp) return '';
+            const now = Date.now() / 1000;
+            const diff = now - new Date(timestamp).getTime() / 1000;
+            
+            if (diff < 60) return `${Math.floor(diff)}s ago`;
+            if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+            if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+            return `${Math.floor(diff / 86400)}d ago`;
+        }
+
+        function formatWaitTime(seconds) {
+            if (seconds < 60) return `${seconds}s`;
+            if (seconds < 3600) return `${Math.floor(seconds / 60)}m`;
+            return `${Math.floor(seconds / 3600)}h`;
+        }
+
+        function getPriorityClass(priority) {
+            const lower = priority?.toLowerCase() || '';
+            if (lower.includes('whale')) return 'whale';
+            if (lower.includes('buyer')) return 'buyer';
+            if (lower.includes('new')) return 'new';
+            if (lower.includes('active')) return 'active';
+            return 'new';
+        }
+
+        function getBuyerClass(buyerType) {
+            const lower = buyerType?.toLowerCase() || '';
+            if (lower.includes('whale')) return 'whale';
+            if (lower.includes('buyer')) return 'buyer';
+            return 'new';
+        }
+
+        function sortTable(columnIndex) {
+            // Basic table sorting implementation
+            const table = document.querySelector('.fan-table');
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            
+            rows.sort((a, b) => {
+                const aText = a.cells[columnIndex]?.textContent.trim() || '';
+                const bText = b.cells[columnIndex]?.textContent.trim() || '';
+                
+                // Try to parse as numbers first
+                const aNum = parseFloat(aText.replace(/[$,]/g, ''));
+                const bNum = parseFloat(bText.replace(/[$,]/g, ''));
+                
+                if (!isNaN(aNum) && !isNaN(bNum)) {
+                    return bNum - aNum; // Descending for numbers
+                }
+                
+                return aText.localeCompare(bText);
+            });
+            
+            rows.forEach(row => tbody.appendChild(row));
+        }
+
+        function showError(message) {
+            // Simple error display
+            const errorDiv = document.createElement('div');
+            errorDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #f87171;
+                color: #fff;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 1000;
+                animation: slideIn 0.3s ease;
+            `;
+            errorDiv.textContent = message;
+            
+            document.body.appendChild(errorDiv);
+            
+            setTimeout(() => {
+                errorDiv.remove();
+            }, 5000);
+        }
+
+        // Initialize dashboard when page loads
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
