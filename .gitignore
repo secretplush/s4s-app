@@ -3,3 +3,5 @@ node_modules/
 .vercel
 .env*.local
 research/gcp-service-account.json
+chatbot-dashboard/
+plush-bot/
