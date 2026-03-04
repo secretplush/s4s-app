@@ -219,20 +219,39 @@ export async function POST(req: NextRequest) {
     const failed = results.filter(r => r.vaultId === null)
 
     // Save successful vault mappings to KV
+    // Schema: mappings[promoter][target] = vaultId
+    // sourceUsername = the model whose photo this is (the target being promoted)
+    // result.username = the model whose vault it was uploaded to (the promoter)
     if (successful.length > 0) {
       try {
         const mappings = (await kv.get('vault_mappings') as Record<string, Record<string, string>>) || {}
-        if (!mappings[sourceUsername]) {
-          mappings[sourceUsername] = {}
-        }
         for (const result of successful) {
-          mappings[sourceUsername][result.username] = result.vaultId!
+          const promoter = result.username  // vault owner = promoter
+          const target = sourceUsername       // image owner = who gets promoted
+          if (!mappings[promoter]) mappings[promoter] = {}
+          mappings[promoter][target] = result.vaultId!
         }
         await kv.set('vault_mappings', mappings)
-        console.log(`Saved ${successful.length} vault mappings for ${sourceUsername} to KV`)
+        console.log(`Saved ${successful.length} vault mappings for ${sourceUsername} (as target) to KV`)
       } catch (kvError) {
         console.error('Failed to save vault mappings to KV:', kvError)
       }
+    }
+
+    // Store promo image in KV for future server-side redistribution
+    try {
+      const match = imageBase64.match(/^data:(.+);base64,(.+)$/)
+      if (match) {
+        const rawSize = Math.ceil(match[2].length * 3 / 4)
+        if (rawSize < 500 * 1024) {
+          await kv.set(`promo_image:${sourceUsername}`, imageBase64)
+          console.log(`Stored promo image for ${sourceUsername} (${(rawSize / 1024).toFixed(0)}KB)`)
+        } else {
+          console.log(`Promo image for ${sourceUsername} too large (${(rawSize / 1024).toFixed(0)}KB), skipping KV store`)
+        }
+      }
+    } catch (e) {
+      console.error('Failed to store promo image in KV:', e)
     }
 
     return NextResponse.json({

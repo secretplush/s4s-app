@@ -176,6 +176,188 @@ function LiveS4SStatus() {
   )
 }
 
+function SystemStatusBar() {
+  const [stats, setStats] = useState<any>(null)
+
+  const fetchStats = useCallback(async () => {
+    try {
+      const res = await fetch('/api/railway?endpoint=stats', { cache: 'no-store' })
+      if (res.ok) setStats(await res.json())
+    } catch {}
+  }, [])
+
+  useEffect(() => {
+    fetchStats()
+    const interval = setInterval(fetchStats, 60000)
+    return () => clearInterval(interval)
+  }, [fetchStats])
+
+  if (!stats) return <div className="bg-gray-900 rounded-xl p-3 border border-gray-800 animate-pulse h-14" />
+
+  const pending = stats.pendingDeletes ?? 0
+  const maxOverdue = stats.pendingDeletesList?.reduce((max: number, d: any) => Math.max(max, d.overdueBy ?? 0), 0) ?? 0
+  const pendingColor = pending > 300 ? 'text-red-400' : pending > 100 ? 'text-yellow-400' : 'text-green-400'
+  const overdueColor = maxOverdue > 600 ? 'text-red-400' : 'text-green-400'
+
+  return (
+    <div className="bg-gray-900 rounded-xl p-3 border border-gray-800 flex items-center justify-between gap-4 flex-wrap">
+      <div className="flex items-center gap-2">
+        <span className={`w-2 h-2 rounded-full ${stats.isRunning ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
+        <span className="text-sm text-gray-400">Models Active:</span>
+        <span className="text-sm font-bold text-white">{stats.modelsActive ?? '?'}</span>
+      </div>
+      <div className="flex items-center gap-2">
+        <span className="text-sm text-gray-400">Pending Deletes:</span>
+        <span className={`text-sm font-bold ${pendingColor}`}>{pending}</span>
+      </div>
+      <div className="flex items-center gap-2">
+        <span className="text-sm text-gray-400">Max Overdue:</span>
+        <span className={`text-sm font-bold ${overdueColor}`}>{maxOverdue}s</span>
+      </div>
+      <div className="flex items-center gap-2">
+        <span className="text-sm text-gray-400">Tags Today:</span>
+        <span className="text-sm font-bold text-purple-400">{(stats.stats?.totalTags ?? 0).toLocaleString()}</span>
+      </div>
+      <div className="flex items-center gap-2">
+        <span className="text-sm text-gray-400">Deletes Today:</span>
+        <span className="text-sm font-bold text-cyan-400">{(stats.stats?.totalDeletes ?? 0).toLocaleString()}</span>
+      </div>
+    </div>
+  )
+}
+
+function ModelHealthGrid() {
+  const [data, setData] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+
+  const fetchHealth = useCallback(async () => {
+    try {
+      const res = await fetch('/api/vault-health', { cache: 'no-store' })
+      if (res.ok) setData(await res.json())
+    } catch {}
+    setLoading(false)
+  }, [])
+
+  useEffect(() => {
+    fetchHealth()
+    const interval = setInterval(fetchHealth, 60000)
+    return () => clearInterval(interval)
+  }, [fetchHealth])
+
+  if (loading) return <div className="bg-gray-900 rounded-xl p-6 border border-gray-800 animate-pulse h-40" />
+  if (!data) return <div className="text-red-400 text-sm">Failed to load vault health</div>
+
+  const allModels = [...(data.unhealthy || []), ...(data.healthy || [])]
+
+  return (
+    <div className="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden">
+      <div className="px-6 py-4 border-b border-gray-800 flex items-center justify-between">
+        <h3 className="text-lg font-semibold text-white">🏥 Model Health Grid</h3>
+        <div className="flex items-center gap-3 text-sm">
+          <span className="text-green-400">✅ {data.summary?.healthy ?? 0} healthy</span>
+          <span className="text-red-400">❌ {data.summary?.unhealthy ?? 0} unhealthy</span>
+        </div>
+      </div>
+      <div className="max-h-96 overflow-y-auto">
+        <table className="w-full">
+          <thead className="bg-gray-800/50 sticky top-0">
+            <tr>
+              <th className="text-left px-4 py-2 text-sm font-medium text-gray-400">Model</th>
+              <th className="text-right px-4 py-2 text-sm font-medium text-gray-400">Vault</th>
+              <th className="text-center px-4 py-2 text-sm font-medium text-gray-400">Status</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-800">
+            {allModels.map((m: any) => {
+              const ratio = m.expected > 0 ? m.targets / m.expected : 1
+              const isHealthy = ratio >= 0.9
+              return (
+                <tr key={m.username} className="hover:bg-gray-800/30">
+                  <td className="px-4 py-2 text-sm text-white font-medium">@{m.username}</td>
+                  <td className="px-4 py-2 text-sm text-right font-mono">
+                    <span className={isHealthy ? 'text-green-400' : 'text-red-400'}>
+                      {m.completeness} {isHealthy ? '✅' : '❌'}
+                    </span>
+                  </td>
+                  <td className="px-4 py-2 text-center">
+                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                      isHealthy ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
+                    }`}>
+                      {Math.round(ratio * 100)}%
+                    </span>
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
+
+function PromotionBalance() {
+  const [data, setData] = useState<{ models: { username: string; scheduled: number; executed: number }[]; total: number; avg: number } | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  const fetchPromo = useCallback(async () => {
+    try {
+      const res = await fetch('/api/railway?endpoint=dashboard', { cache: 'no-store' })
+      if (!res.ok) return
+      const dash = await res.json()
+      const gt = dash.ghostTags || {}
+      const perModel = gt.perModel || {}
+      const models = Object.entries(perModel).map(([username, data]: [string, any]) => ({
+        username,
+        scheduled: data.total || 0,
+        executed: data.executed || 0,
+      })).sort((a, b) => a.scheduled - b.scheduled)
+      setData({ models, total: gt.totalTagsToday || 0, avg: gt.avgPerModel || 0 })
+    } catch {}
+    setLoading(false)
+  }, [])
+
+  useEffect(() => {
+    fetchPromo()
+    const interval = setInterval(fetchPromo, 60000)
+    return () => clearInterval(interval)
+  }, [fetchPromo])
+
+  if (loading) return <div className="bg-gray-900 rounded-xl p-6 border border-gray-800 animate-pulse h-40" />
+  if (!data) return null
+
+  const minScheduled = data.models.length > 0 ? Math.min(...data.models.map(m => m.scheduled)) : 0
+  const maxScheduled = data.models.length > 0 ? Math.max(...data.models.map(m => m.scheduled)) : 0
+  const isBalanced = maxScheduled - minScheduled <= 2
+
+  return (
+    <div className="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden">
+      <div className="px-6 py-4 border-b border-gray-800">
+        <h3 className="text-lg font-semibold text-white">📊 Promotion Balance</h3>
+        <p className="text-xs text-gray-500 mt-1">Scheduled ghost tags per model today — {data.total} total across {data.models.length} models</p>
+      </div>
+      <div className="px-6 py-3 border-b border-gray-800">
+        <div className="flex items-center gap-4">
+          <span className={`text-sm font-medium ${isBalanced ? 'text-green-400' : 'text-yellow-400'}`}>
+            {isBalanced ? '✅ Balanced' : '⚠️ Imbalanced'} — each model gets {minScheduled === maxScheduled ? minScheduled : `${minScheduled}-${maxScheduled}`} tags/day
+          </span>
+          <span className="text-xs text-gray-500">avg: {data.avg}/model</span>
+        </div>
+      </div>
+      <div className="max-h-64 overflow-y-auto">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-1 p-4">
+          {data.models.map(({ username, scheduled, executed }) => (
+            <div key={username} className="flex items-center justify-between px-2 py-1 rounded bg-gray-800/50 text-sm">
+              <span className="text-gray-300 truncate">@{username}</span>
+              <span className="text-white font-mono ml-2">{executed}/{scheduled}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function DashboardView({ rotationStatus, models }: { rotationStatus: string; models: Model[] }) {
   const NETWORK_STATS = computeNetworkStats(models)
   const sortedByFans = [...models].sort((a, b) => b.fans - a.fans)
@@ -183,6 +365,9 @@ function DashboardView({ rotationStatus, models }: { rotationStatus: string; mod
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-bold text-white">Dashboard</h2>
+
+      {/* System Status Bar */}
+      <SystemStatusBar />
       
       {/* Stats Grid */}
       <div className="grid grid-cols-5 gap-4">
@@ -267,6 +452,12 @@ function DashboardView({ rotationStatus, models }: { rotationStatus: string; mod
           <LiveS4SStatus />
         </div>
       </a>
+
+      {/* Model Health Grid */}
+      <ModelHealthGrid />
+
+      {/* Promotion Balance */}
+      <PromotionBalance />
     </div>
   )
 }
@@ -292,32 +483,14 @@ function VaultGapsModal({ models, onClose }: { models: Model[]; onClose: () => v
     setFixResults([])
     setFixProgress(null)
     try {
-      // Scan IndexedDB only — this is the source of truth (matches model page counts)
-      const allUsernames = models.map(m => m.username)
+      // Fetch server-side vault mappings (KV) — this is what the rotation actually uses
+      const res = await fetch('/api/vault-gaps')
+      if (!res.ok) throw new Error(`Server error: ${res.status}`)
+      const data = await res.json()
 
-      const gapsFound: VaultGap[] = []
-      let total = 0
-
-      for (const target of allUsernames) {
-        const missing: string[] = []
-        for (const source of allUsernames) {
-          if (source === target) continue
-          // Check ALL images in IndexedDB, not just active
-          const images = await loadImages(source)
-          const hasVaultId = images.some(img => img.vaultIds?.[target])
-          if (!hasVaultId) {
-            missing.push(source)
-          }
-        }
-        if (missing.length > 0) {
-          gapsFound.push({ targetUsername: target, missingFrom: missing })
-          total += missing.length
-        }
-      }
-
-      setGaps(gapsFound)
-      setTotalGaps(total)
-      setModelsWithGaps(gapsFound.length)
+      setGaps(data.gaps || [])
+      setTotalGaps(data.totalGaps || 0)
+      setModelsWithGaps(data.modelsWithGaps || 0)
     } catch (e) {
       console.error(e)
     }
@@ -363,16 +536,17 @@ function VaultGapsModal({ models, onClose }: { models: Model[]; onClose: () => v
     setFixing(true)
     setFixResults([])
 
-    // Reorganize gaps by SOURCE model instead of target
-    // This lets us use /api/distribute which processes targets in PARALLEL (fast)
-    // instead of /api/sync-new-model which processes sequentially (times out)
-    const sourceToTargets: Record<string, string[]> = {}
+    // Gap format: {targetUsername: "X", missingFrom: ["A","B"]}
+    // Means: A and B don't have X's photo in their vault (can't promote X)
+    // Fix: load X's promo image, distribute to A and B's vaults
+    // Group by the model whose photo we need (targetUsername = image source)
+    const imageSourceToVaults: Record<string, string[]> = {}
     for (const gap of gaps) {
-      for (const sourceUsername of gap.missingFrom) {
-        if (!sourceToTargets[sourceUsername]) sourceToTargets[sourceUsername] = []
-        sourceToTargets[sourceUsername].push(gap.targetUsername)
-      }
+      if (!imageSourceToVaults[gap.targetUsername]) imageSourceToVaults[gap.targetUsername] = []
+      imageSourceToVaults[gap.targetUsername].push(...gap.missingFrom)
     }
+    // Rename for compatibility with rest of function
+    const sourceToTargets = imageSourceToVaults
 
     let completed = 0
     const results: { label: string; success: boolean; error?: string }[] = []
@@ -399,31 +573,25 @@ function VaultGapsModal({ models, onClose }: { models: Model[]; onClose: () => v
 
       try {
         // Chunk targets into groups of 3 to avoid API timeouts and rate limits
-        const CHUNK_SIZE = 3
-        const allChunkResults: any[] = []
-        
-        for (let ci = 0; ci < targetUsernames.length; ci += CHUNK_SIZE) {
-          const chunk = targetUsernames.slice(ci, ci + CHUNK_SIZE)
-          setFixProgress({ current: completed, total: totalGaps, label: `📤 ${sourceUsername} → batch ${Math.floor(ci/CHUNK_SIZE)+1}/${Math.ceil(targetUsernames.length/CHUNK_SIZE)}` })
-          
-          const res = await fetch('/api/distribute', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              imageBase64: await compressImage(activeImg.base64),
-              filename: activeImg.filename || `${sourceUsername}_promo.jpg`,
-              sourceUsername,
-              targetUsernames: chunk
-            })
+        setFixProgress({ current: completed, total: totalGaps, label: `📤 ${sourceUsername} → ${targetUsernames.length} models` })
+
+        const res = await fetch('/api/distribute', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            imageBase64: await compressImage(activeImg.base64),
+            filename: activeImg.filename || `${sourceUsername}_promo.jpg`,
+            sourceUsername,
+            targetUsernames
           })
-          const text = await res.text()
-          let chunkData: any
-          try {
-            chunkData = JSON.parse(text)
-          } catch {
-            throw new Error(text.slice(0, 100))
-          }
-          if (chunkData.results) allChunkResults.push(...chunkData.results)
+        })
+        const text = await res.text()
+        let allChunkResults: any[]
+        try {
+          const parsed = JSON.parse(text)
+          allChunkResults = parsed.results || []
+        } catch {
+          throw new Error(text.slice(0, 100))
         }
         
         // Update vaultIds in IndexedDB image
@@ -481,7 +649,7 @@ function VaultGapsModal({ models, onClose }: { models: Model[]; onClose: () => v
         </div>
 
         <p className="text-sm text-gray-400 mb-4">
-          Scans which models are missing OTHER models&apos; promo images in their vault. e.g. &quot;@tessa — 49 missing&quot; means 49 models haven&apos;t distributed their image TO tessa&apos;s vault yet.
+          Shows which models can&apos;t promote others because they&apos;re missing photos. e.g. &quot;@lindsay — can&apos;t promote 67 models&quot; means lindsay needs photos of those models distributed to her vault.
         </p>
 
         {/* Loading state */}
@@ -493,7 +661,7 @@ function VaultGapsModal({ models, onClose }: { models: Model[]; onClose: () => v
             {totalGaps === 0 ? (
               <div className="mb-4 p-4 rounded-lg bg-green-500/10 border border-green-500/30 text-center">
                 <p className="text-green-400 text-lg font-bold">✅ All vaults are fully synced!</p>
-                <p className="text-green-400/70 text-sm mt-1">Every model&apos;s promo image exists in every other model&apos;s vault.</p>
+                <p className="text-green-400/70 text-sm mt-1">Every model can promote every other model.</p>
               </div>
             ) : (
               <div className="mb-4 p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
@@ -503,39 +671,51 @@ function VaultGapsModal({ models, onClose }: { models: Model[]; onClose: () => v
               </div>
             )}
 
-            {/* Expandable per-model list */}
-            {gaps.length > 0 && (
-              <div className="mb-4 space-y-1 max-h-60 overflow-y-auto">
-                {gaps.map(g => (
-                  <div key={g.targetUsername} className="border border-gray-700 rounded-lg overflow-hidden">
-                    <button
-                      onClick={() => toggleExpand(g.targetUsername)}
-                      className="w-full flex items-center justify-between px-3 py-2 bg-gray-800 hover:bg-gray-750 text-left"
-                    >
-                      <span className="text-sm text-white">@{g.targetUsername}&apos;s vault</span>
-                      <span className="text-xs text-red-400">{g.missingFrom.length} models haven&apos;t sent their photo here {expanded.has(g.targetUsername) ? '▲' : '▼'}</span>
-                    </button>
-                    {expanded.has(g.targetUsername) && (
-                      <div className="px-3 py-2 bg-gray-800/50">
-                        <p className="text-xs text-gray-500 mb-2">These models need to distribute their promo image → @{g.targetUsername}&apos;s vault:</p>
-                        <div className="flex flex-wrap gap-1">
-                        {g.missingFrom.map(m => (
-                          <span key={m} className="text-xs px-2 py-0.5 bg-red-500/20 text-red-400 rounded inline-flex items-center gap-1">
-                            @{m}
-                            <button
-                              onClick={(e) => { e.stopPropagation(); dismissGap(m, g.targetUsername) }}
-                              className="ml-0.5 hover:text-green-400 text-red-300"
-                              title="Dismiss false positive"
-                            >✕</button>
-                          </span>
-                        ))}
+            {/* Regroup: by promoter (missingFrom) instead of by target */}
+            {gaps.length > 0 && (() => {
+              // Invert: gaps is [{targetUsername, missingFrom[]}] → we want [{promoter, cantPromote[]}]
+              const promoterGaps: Record<string, string[]> = {}
+              for (const g of gaps) {
+                for (const src of g.missingFrom) {
+                  if (!promoterGaps[src]) promoterGaps[src] = []
+                  promoterGaps[src].push(g.targetUsername)
+                }
+              }
+              const sorted = Object.entries(promoterGaps).sort((a, b) => b[1].length - a[1].length)
+
+              return (
+                <div className="mb-4 space-y-1 max-h-60 overflow-y-auto">
+                  {sorted.map(([promoter, cantPromote]) => (
+                    <div key={promoter} className="border border-gray-700 rounded-lg overflow-hidden">
+                      <button
+                        onClick={() => toggleExpand(promoter)}
+                        className="w-full flex items-center justify-between px-3 py-2 bg-gray-800 hover:bg-gray-750 text-left"
+                      >
+                        <span className="text-sm text-white">@{promoter}</span>
+                        <span className="text-xs text-red-400">can&apos;t promote {cantPromote.length} models {expanded.has(promoter) ? '▲' : '▼'}</span>
+                      </button>
+                      {expanded.has(promoter) && (
+                        <div className="px-3 py-2 bg-gray-800/50">
+                          <p className="text-xs text-gray-500 mb-2">@{promoter} needs these models&apos; photos distributed to her vault:</p>
+                          <div className="flex flex-wrap gap-1">
+                          {cantPromote.map(t => (
+                            <span key={t} className="text-xs px-2 py-0.5 bg-red-500/20 text-red-400 rounded inline-flex items-center gap-1">
+                              @{t}
+                              <button
+                                onClick={(e) => { e.stopPropagation(); dismissGap(promoter, t) }}
+                                className="ml-0.5 hover:text-green-400 text-red-300"
+                                title="Dismiss"
+                              >✕</button>
+                            </span>
+                          ))}
+                          </div>
                         </div>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )
+            })()}
           </>
         )}
 

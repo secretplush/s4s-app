@@ -326,14 +326,22 @@ export default function ModelPage() {
   const [distributing, setDistributing] = useState(false)
   const [distributeProgress, setDistributeProgress] = useState('')
 
-  const handleDistribute = async (imageId: string) => {
+  const handleDistribute = async (imageId: string, forceAll = false) => {
     const image = promoImages.find(img => img.id === imageId)
     if (!image || !image.base64) return
 
-    // Only distribute to models that DON'T have this image yet
-    const targetUsernames = allModels
-      .filter((m: any) => m.username !== username && !image.vaultIds[m.username])
-      .map((m: any) => m.username)
+    let targetUsernames: string[]
+    if (forceAll) {
+      // Force redistribute to ALL models (ignores local cache)
+      targetUsernames = allModels
+        .filter((m: any) => m.username !== username)
+        .map((m: any) => m.username)
+    } else {
+      // Only distribute to models that DON'T have this image yet (local check)
+      targetUsernames = allModels
+        .filter((m: any) => m.username !== username && !image.vaultIds[m.username])
+        .map((m: any) => m.username)
+    }
     
     if (targetUsernames.length === 0) {
       setDistributeProgress('✓ All vaults already have this image')
@@ -637,7 +645,7 @@ export default function ModelPage() {
                       onClick={() => setVaultDetailsImage(img.id)}
                       className="px-2 py-1 bg-black/50 hover:bg-black/70 text-gray-300 text-xs rounded cursor-pointer transition"
                     >
-                      {Object.keys(img.vaultIds).length}/{allModels.length - 1} vaults
+                      {Object.keys(img.vaultIds).filter(k => allModels.some((m: any) => m.username === k)).length}/{allModels.length - 1} vaults
                     </button>
                   </div>
 
@@ -646,17 +654,29 @@ export default function ModelPage() {
                     {/* Distribute Button - only shows if missing vaults */}
                     {(() => {
                       const missingCount = allModels.filter((m: any) => m.username !== username && !img.vaultIds[m.username]).length
-                      return missingCount > 0 ? (
-                        <button
-                          onClick={() => handleDistribute(img.id)}
-                          disabled={distributing}
-                          className="w-full py-2 rounded-lg text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                          {distributing ? '⏳ Distributing...' : `📤 Distribute to ${missingCount} Vaults`}
-                        </button>
-                      ) : (
-                        <div className="w-full py-2 rounded-lg text-sm font-medium bg-green-600/50 text-green-200 text-center">
-                          ✓ In all vaults
+                      const totalOthers = allModels.length - 1
+                      return (
+                        <div className="space-y-1">
+                          {missingCount > 0 ? (
+                            <button
+                              onClick={() => handleDistribute(img.id)}
+                              disabled={distributing}
+                              className="w-full py-2 rounded-lg text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                              {distributing ? '⏳ Distributing...' : `📤 Distribute to ${missingCount} Vaults`}
+                            </button>
+                          ) : (
+                            <div className="w-full py-2 rounded-lg text-sm font-medium bg-green-600/50 text-green-200 text-center">
+                              ✓ In all vaults
+                            </div>
+                          )}
+                          <button
+                            onClick={() => handleDistribute(img.id, true)}
+                            disabled={distributing}
+                            className="w-full py-1.5 rounded-lg text-xs font-medium bg-gray-700 hover:bg-gray-600 text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            🔄 Force Redistribute to all {totalOthers}
+                          </button>
                         </div>
                       )
                     })()}

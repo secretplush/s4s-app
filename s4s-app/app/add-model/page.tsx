@@ -416,6 +416,8 @@ function Step3Distribute({ username, promoImages, setPromoImages, allModels, onN
   const [progress, setProgress] = useState({ imgIdx: 0, imgTotal: 0, modelIdx: 0, modelTotal: 0, label: '' })
   const [completedModels, setCompletedModels] = useState<Set<string>>(new Set())
   const [errors, setErrors] = useState<{ model: string; error: string }[]>([])
+  const [healthCheck, setHealthCheck] = useState<{ targets: number; expected: number; missing: string[] } | null>(null)
+  const [retrying, setRetrying] = useState(false)
 
   const activeImages = promoImages.filter(img => img.uses.length > 0)
   const otherModels = allModels.filter(m => m.username !== username)
@@ -488,6 +490,51 @@ function Step3Distribute({ username, promoImages, setPromoImages, allModels, onN
 
     setDistributing(false)
     setProgress(p => ({ ...p, label: 'Done!' }))
+
+    // Post-distribute validation
+    try {
+      const healthRes = await fetch(`/api/vault-health?username=${username}`)
+      const healthData = await healthRes.json()
+      const entry = [...(healthData.healthy || []), ...(healthData.unhealthy || [])][0]
+      if (entry) {
+        setHealthCheck({ targets: entry.targets, expected: entry.expected, missing: entry.missing })
+      }
+    } catch {}
+  }
+
+  const retryFailed = async () => {
+    if (!healthCheck?.missing.length) return
+    setRetrying(true)
+    const img = activeImages[0]
+    if (!img?.base64) { setRetrying(false); return }
+    try {
+      const compressed = await compressImage(img.base64)
+      const res = await fetch('/api/distribute-retry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sourceUsername: username,
+          targetUsernames: healthCheck.missing,
+          imageBase64: compressed
+        })
+      })
+      const data = await res.json()
+      if (data.results) {
+        for (const r of data.results) {
+          if (r.vaultId) {
+            setCompletedModels(prev => { const next = new Set(prev); next.add(r.username); return next })
+          }
+        }
+      }
+      // Re-check health
+      const healthRes = await fetch(`/api/vault-health?username=${username}`)
+      const healthData = await healthRes.json()
+      const entry = [...(healthData.healthy || []), ...(healthData.unhealthy || [])][0]
+      if (entry) {
+        setHealthCheck({ targets: entry.targets, expected: entry.expected, missing: entry.missing })
+      }
+    } catch {}
+    setRetrying(false)
   }
 
   const allDone = otherModels.length > 0 && otherModels.every(m => completedModels.has(m.username))
@@ -541,6 +588,27 @@ function Step3Distribute({ username, promoImages, setPromoImages, allModels, onN
         {allDone && (
           <div className="p-3 bg-green-500/10 border border-green-500/30 rounded-lg text-green-400 text-center font-bold">
             ✅ All {otherModels.length} vaults have her photos!
+          </div>
+        )}
+
+        {healthCheck && healthCheck.expected > 0 && (healthCheck.targets / healthCheck.expected) < 0.9 && (
+          <div className="mt-4 p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
+            <p className="text-red-400 font-bold">
+              ⚠️ Only {healthCheck.targets}/{healthCheck.expected} targets uploaded successfully. {healthCheck.missing.length} failed. Model should NOT be activated until all uploads complete.
+            </p>
+            <button
+              onClick={retryFailed}
+              disabled={retrying}
+              className="mt-3 px-4 py-2 bg-red-600 hover:bg-red-700 disabled:opacity-50 rounded-lg font-medium text-sm"
+            >
+              {retrying ? '⏳ Retrying...' : `🔄 Retry Failed (${healthCheck.missing.length})`}
+            </button>
+          </div>
+        )}
+
+        {healthCheck && healthCheck.expected > 0 && (healthCheck.targets / healthCheck.expected) >= 0.9 && (
+          <div className="mt-4 p-3 bg-green-500/10 border border-green-500/30 rounded-lg text-green-400 text-sm text-center">
+            ✅ Health check passed: {healthCheck.targets}/{healthCheck.expected} targets mapped
           </div>
         )}
       </div>
