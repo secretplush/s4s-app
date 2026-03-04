@@ -21,6 +21,25 @@ function DashboardContent() {
     }
   }, [tabParam])
   const [rotationStatus, setRotationStatus] = useState<'stopped' | 'running'>('stopped')
+  const [stats, setStats] = useState<any>(null)
+
+  // Fetch stats for rotation status and circuit breaker
+  const fetchStats = useCallback(async () => {
+    try {
+      const res = await fetch('/api/railway?endpoint=stats', { cache: 'no-store' })
+      if (res.ok) {
+        const data = await res.json()
+        setStats(data)
+        setRotationStatus(data.isRunning ? 'running' : 'stopped')
+      }
+    } catch {}
+  }, [])
+  
+  useEffect(() => {
+    fetchStats()
+    const interval = setInterval(fetchStats, 30000) // Update every 30s
+    return () => clearInterval(interval)
+  }, [fetchStats])
 
   return (
     <div className="min-h-screen bg-gray-950">
@@ -80,7 +99,20 @@ function DashboardContent() {
           <div className="mt-8 pt-4 border-t border-gray-800">
             <div className="text-xs text-gray-500 uppercase tracking-wider mb-3">Quick Actions</div>
             <button 
-              onClick={() => setRotationStatus(rotationStatus === 'running' ? 'stopped' : 'running')}
+              onClick={async () => {
+                const endpoint = rotationStatus === 'running' ? 'stop' : 'start'
+                try {
+                  const res = await fetch(`/api/railway?endpoint=${endpoint}`, { method: 'POST' })
+                  if (res.ok) {
+                    const data = await res.json()
+                    setRotationStatus(endpoint === 'start' ? 'running' : 'stopped')
+                    // Refresh stats after action
+                    setTimeout(fetchStats, 1000)
+                  }
+                } catch (e) {
+                  console.error('Failed to toggle rotation:', e)
+                }
+              }}
               className={`w-full py-2 px-3 rounded-lg font-medium text-sm transition ${
                 rotationStatus === 'running'
                   ? 'bg-red-600 hover:bg-red-700 text-white'
@@ -94,7 +126,12 @@ function DashboardContent() {
 
         {/* Main Content */}
         <main className="flex-1 p-6">
-          {activeTab === 'dashboard' && <DashboardView rotationStatus={rotationStatus} models={allModels} />}
+          {activeTab === 'dashboard' && (
+            <>
+              <CircuitBreakerBanner stats={stats} />
+              <DashboardView rotationStatus={rotationStatus} models={allModels} stats={stats} />
+            </>
+          )}
           {activeTab === 'models' && <ModelsView models={allModels} onRefresh={refreshModels} />}
         </main>
       </div>
@@ -108,6 +145,51 @@ export default function Dashboard() {
       <DashboardContent />
     </Suspense>
   )
+}
+
+function CircuitBreakerBanner({ stats }: { stats: any }) {
+  if (!stats?.deleteCircuitBreaker) return null
+  
+  const { consecutiveFailures, threshold, trippedAt, lastFailure } = stats.deleteCircuitBreaker
+  
+  // Show red banner if circuit breaker is tripped
+  if (trippedAt) {
+    return (
+      <div className="mb-6 bg-red-600 border border-red-500 rounded-xl p-4 text-white">
+        <div className="flex items-center gap-3">
+          <span className="text-2xl">🛑</span>
+          <div className="flex-1">
+            <div className="font-bold text-lg">CIRCUIT BREAKER TRIPPED</div>
+            <div className="text-red-100">
+              Rotation auto-stopped. Delete endpoint is failing. Contact OF API team.
+            </div>
+            <div className="text-xs text-red-200 mt-1">
+              Tripped at: {new Date(trippedAt).toLocaleString()}
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+  
+  // Show yellow warning if failures detected but not tripped
+  if (consecutiveFailures > 0) {
+    return (
+      <div className="mb-6 bg-yellow-600 border border-yellow-500 rounded-xl p-4 text-white">
+        <div className="flex items-center gap-3">
+          <span className="text-2xl">⚠️</span>
+          <div className="flex-1">
+            <div className="font-bold">Delete failures detected ({consecutiveFailures}/{threshold})</div>
+            <div className="text-yellow-100">
+              Rotation will auto-stop if this continues
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+  
+  return null
 }
 
 function LiveS4SStatus() {
@@ -176,8 +258,8 @@ function LiveS4SStatus() {
   )
 }
 
-function SystemStatusBar() {
-  const [stats, setStats] = useState<any>(null)
+function SystemStatusBar({ stats: propStats }: { stats?: any }) {
+  const [stats, setStats] = useState<any>(propStats)
 
   const fetchStats = useCallback(async () => {
     try {
@@ -187,10 +269,14 @@ function SystemStatusBar() {
   }, [])
 
   useEffect(() => {
-    fetchStats()
-    const interval = setInterval(fetchStats, 60000)
-    return () => clearInterval(interval)
-  }, [fetchStats])
+    if (!propStats) {
+      fetchStats()
+      const interval = setInterval(fetchStats, 60000)
+      return () => clearInterval(interval)
+    } else {
+      setStats(propStats)
+    }
+  }, [fetchStats, propStats])
 
   if (!stats) return <div className="bg-gray-900 rounded-xl p-3 border border-gray-800 animate-pulse h-14" />
 
@@ -199,28 +285,67 @@ function SystemStatusBar() {
   const pendingColor = pending > 300 ? 'text-red-400' : pending > 100 ? 'text-yellow-400' : 'text-green-400'
   const overdueColor = maxOverdue > 600 ? 'text-red-400' : 'text-green-400'
 
+  // Calculate delete success rate
+  const totalDeletes = stats.stats?.totalDeletes ?? 0
+  const totalDeleteFailures = stats.stats?.totalDeleteFailures ?? 0
+  const successRate = totalDeletes + totalDeleteFailures > 0 ? 
+    (totalDeletes / (totalDeletes + totalDeleteFailures) * 100) : 0
+  const successRateColor = successRate > 95 ? 'text-green-400' : successRate > 80 ? 'text-yellow-400' : 'text-red-400'
+
+  // Format average post life
+  const avgLatency = stats.avgDeleteLatency ?? null
+  let avgLifeText = '—'
+  let avgLifeColor = 'text-gray-400'
+  if (avgLatency) {
+    const minutes = Math.floor(avgLatency / 60)
+    const seconds = avgLatency % 60
+    avgLifeText = `${minutes}m ${seconds}s`
+    avgLifeColor = avgLatency < 360 ? 'text-green-400' : avgLatency < 600 ? 'text-yellow-400' : 'text-red-400' // <6min green, <10min yellow, >10min red
+  }
+
+  // Check for stale posts (>10 min overdue)
+  const stalePosts = stats.pendingDeletesList?.filter((p: any) => p.overdueBy > 600) ?? []
+
   return (
-    <div className="bg-gray-900 rounded-xl p-3 border border-gray-800 flex items-center justify-between gap-4 flex-wrap">
-      <div className="flex items-center gap-2">
-        <span className={`w-2 h-2 rounded-full ${stats.isRunning ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
-        <span className="text-sm text-gray-400">Models Active:</span>
-        <span className="text-sm font-bold text-white">{stats.modelsActive ?? '?'}</span>
-      </div>
-      <div className="flex items-center gap-2">
-        <span className="text-sm text-gray-400">Pending Deletes:</span>
-        <span className={`text-sm font-bold ${pendingColor}`}>{pending}</span>
-      </div>
-      <div className="flex items-center gap-2">
-        <span className="text-sm text-gray-400">Max Overdue:</span>
-        <span className={`text-sm font-bold ${overdueColor}`}>{maxOverdue}s</span>
-      </div>
-      <div className="flex items-center gap-2">
-        <span className="text-sm text-gray-400">Tags Today:</span>
-        <span className="text-sm font-bold text-purple-400">{(stats.stats?.totalTags ?? 0).toLocaleString()}</span>
-      </div>
-      <div className="flex items-center gap-2">
-        <span className="text-sm text-gray-400">Deletes Today:</span>
-        <span className="text-sm font-bold text-cyan-400">{(stats.stats?.totalDeletes ?? 0).toLocaleString()}</span>
+    <div className="space-y-3">
+      {/* Stale Post Alert */}
+      {stalePosts.length > 0 && (
+        <div className="bg-red-600 border border-red-500 rounded-xl p-3 text-white">
+          <div className="flex items-center gap-2">
+            <span className="text-lg">🔴</span>
+            <span className="font-bold">{stalePosts.length} posts overdue by &gt;10min</span>
+            <span className="text-red-200">— posts still visible on profiles!</span>
+          </div>
+        </div>
+      )}
+      
+      {/* Main Status Bar */}
+      <div className="bg-gray-900 rounded-xl p-3 border border-gray-800 flex items-center justify-between gap-4 flex-wrap">
+        <div className="flex items-center gap-2">
+          <span className={`w-2 h-2 rounded-full ${stats.isRunning ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
+          <span className="text-sm text-gray-400">Models Active:</span>
+          <span className="text-sm font-bold text-white">{stats.modelsActive ?? '?'}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-400">Success Rate:</span>
+          <span className={`text-sm font-bold ${successRateColor}`}>{successRate.toFixed(1)}%</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-400">Avg Post Life:</span>
+          <span className={`text-sm font-bold ${avgLifeColor}`}>{avgLifeText}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-400">Pending Deletes:</span>
+          <span className={`text-sm font-bold ${pendingColor}`}>{pending}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-400">Tags Today:</span>
+          <span className="text-sm font-bold text-purple-400">{(stats.stats?.totalTags ?? 0).toLocaleString()}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-400">Deletes Today:</span>
+          <span className="text-sm font-bold text-cyan-400">{(stats.stats?.totalDeletes ?? 0).toLocaleString()}</span>
+        </div>
       </div>
     </div>
   )
@@ -358,7 +483,7 @@ function PromotionBalance() {
   )
 }
 
-function DashboardView({ rotationStatus, models }: { rotationStatus: string; models: Model[] }) {
+function DashboardView({ rotationStatus, models, stats }: { rotationStatus: string; models: Model[]; stats?: any }) {
   const NETWORK_STATS = computeNetworkStats(models)
   const sortedByFans = [...models].sort((a, b) => b.fans - a.fans)
   
@@ -367,7 +492,7 @@ function DashboardView({ rotationStatus, models }: { rotationStatus: string; mod
       <h2 className="text-2xl font-bold text-white">Dashboard</h2>
 
       {/* System Status Bar */}
-      <SystemStatusBar />
+      <SystemStatusBar stats={stats} />
       
       {/* Stats Grid */}
       <div className="grid grid-cols-5 gap-4">
