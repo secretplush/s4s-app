@@ -493,7 +493,7 @@ function Step3Distribute({ username, promoImages, setPromoImages, allModels, onN
 
     // Post-distribute validation
     try {
-      const healthRes = await fetch(`/api/vault-health?username=${username}`)
+      const healthRes = await fetch(`/api/vault-health?username=${username}&direction=reverse`)
       const healthData = await healthRes.json()
       const entry = [...(healthData.healthy || []), ...(healthData.unhealthy || [])][0]
       if (entry) {
@@ -527,7 +527,7 @@ function Step3Distribute({ username, promoImages, setPromoImages, allModels, onN
         }
       }
       // Re-check health
-      const healthRes = await fetch(`/api/vault-health?username=${username}`)
+      const healthRes = await fetch(`/api/vault-health?username=${username}&direction=reverse`)
       const healthData = await healthRes.json()
       const entry = [...(healthData.healthy || []), ...(healthData.unhealthy || [])][0]
       if (entry) {

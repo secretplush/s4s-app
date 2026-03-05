@@ -23,6 +23,9 @@ async function getConnectedAccounts(): Promise<string[]> {
 export async function GET(req: NextRequest) {
   try {
     const filterUsername = req.nextUrl.searchParams.get('username')
+    // direction=reverse: check how many OTHER models have this username's photo in their vault
+    // (used by Step 3 "Distribute → All" which puts new model's photo into all other vaults)
+    const direction = req.nextUrl.searchParams.get('direction') || 'forward'
     const connectedAccounts = await getConnectedAccounts()
     const mappings = (await kv.get('vault_mappings') as Record<string, Record<string, string>>) || {}
 
@@ -36,10 +39,21 @@ export async function GET(req: NextRequest) {
     for (const username of usernames) {
       const expectedTargets = eligible.filter(u => u !== username)
       const expected = expectedTargets.length
-      const currentMappings = mappings[username] || {}
-      const actualTargets = Object.keys(currentMappings).filter(t => expectedTargets.includes(t))
-      const targets = actualTargets.length
-      const missing = expectedTargets.filter(t => !currentMappings[t])
+      let targets: number
+      let missing: string[]
+
+      if (direction === 'reverse') {
+        // Reverse: check how many promoters have this username as a target in their vault
+        const promotersWithPhoto = expectedTargets.filter(promoter => mappings[promoter]?.[username])
+        targets = promotersWithPhoto.length
+        missing = expectedTargets.filter(promoter => !mappings[promoter]?.[username])
+      } else {
+        // Forward (default): check what's in this username's vault
+        const currentMappings = mappings[username] || {}
+        const actualTargets = Object.keys(currentMappings).filter(t => expectedTargets.includes(t))
+        targets = actualTargets.length
+        missing = expectedTargets.filter(t => !currentMappings[t])
+      }
       const ratio = expected > 0 ? targets / expected : 1
 
       const entry = {
